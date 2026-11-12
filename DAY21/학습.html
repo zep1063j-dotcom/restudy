@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY21 오늘의 메뉴 고르기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<body data-day="21"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="active" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 21 / 읽기 · 수정 · 실행</div><h1>오늘의 메뉴 고르기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<section class="read-grid"><article><h2>01. 핵심 개념</h2><p>import·export, 기본·이름 내보내기, 모듈, npm·package.json·Vite</p></article><article><h2>02. 실행 흐름</h2><p>모듈 가져오기 → 버튼 연결 → 메뉴 배열을 함수에 전달 → 선택 결과 표시</p></article></section>
+<section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
+<h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
+<p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
+<dl class="definition-list"><dt>모듈</dt><dd>독립된 범위를 갖고 다른 파일과 필요한 값만 주고받는 코드 단위입니다.</dd><dt>export</dt><dd>다른 모듈이 사용할 값이나 함수를 이름으로 내보냅니다.</dd><dt>export default</dt><dd>모듈의 기본 내보내기를 정합니다. 가져오는 쪽은 중괄호 없이 지역 이름을 정할 수 있습니다.</dd><dt>import</dt><dd>다른 모듈의 값을 가져오는 문법입니다. 이름 내보내기와 기본 내보내기의 형태를 구분합니다.</dd><dt>npm / package.json</dt><dd>npm은 패키지와 프로젝트 명령을 관리하는 도구이고 package.json은 의존 패키지와 실행 명령 등의 정보를 담는 파일입니다.</dd><dt>Vite와 빌드</dt><dd>Vite는 개발 서버와 빌드 등을 돕는 도구입니다. 빌드는 소스를 배포할 형태로 처리하는 과정이며 개발 서버 실행과 구분합니다.</dd></dl>
+<div class="important-points"><h3>꼭 기억할 내용</h3><ul><li>내보낸 이름과 가져오는 이름이 맞는지, 기본·이름 내보내기를 혼동하지 않았는지 확인하세요.</li><li>이 예제는 더블클릭으로도 동작하도록 문자열에서 Blob 모듈을 만듭니다. 실제 수업처럼 별도 menu.js를 경로로 import한 구조와 다릅니다.</li><li>일반적인 별도 파일 모듈 연습은 file:// 대신 수업의 로컬 서버 환경에서 확인합니다.</li></ul></div>
+<details class="reading-guide"><summary>이 예제의 코드를 읽는 순서</summary><ol><li>moduleSource 문자열 안의 export와 export default를 읽습니다.</li><li>그 내용을 가진 모듈을 준비해 import가 완료될 때까지 기다립니다.</li><li>받아 온 menus와 pickMenu를 클릭 핸들러에서 사용합니다.</li><li>선택한 메뉴를 result에 표시합니다.</li></ol></details>
+<div class="confusions"><h3>자주 헷갈리는 부분</h3><div class="confusion-item"><h4>import의 중괄호는 장식일까요?</h4><p>이름으로 내보낸 항목을 가져오는지와 관련됩니다. 이 예제의 동적 import 구조분해와 수업의 정적 import 문법을 구분해서 읽으세요.</p></div><div class="confusion-item"><h4>npm install을 하면 개발 서버도 켜질까요?</h4><p>패키지 준비와 npm run dev 같은 실행 명령은 별도 단계입니다.</p></div></div>
+</section>
+<p class="notice">로컬 실행에 맞게 일부를 재구성했습니다. 예제 안의 안내에서 실제 라이브러리·서버·파일 모듈과 다른 부분을 확인하세요.</p>
+<section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>menus에 &quot;돈가스&quot;를 추가하고 버튼을 여러 번 눌러 보세요. 문자열 안의 export 코드도 실제 모듈로 실행됩니다.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
+<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;DAY21 연습&lt;/title&gt;
+  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;모듈로 메뉴 고르기&lt;/h1&gt;
+&lt;p class=&quot;note&quot;&gt;파일 더블클릭으로도 동작하도록 menu.js의 내용을 Blob 모듈로 연결했습니다. 실제 프로젝트에서는 별도 파일 경로를 import합니다.&lt;/p&gt;
+&lt;button id=&quot;pick&quot; disabled&gt;준비 중&lt;/button&gt;&lt;p id=&quot;result&quot;&gt;&lt;/p&gt;
+&lt;script type=&quot;module&quot;&gt;
+// 이 문자열 안의 코드를 별도 menu.js 파일이라고 생각하고 읽으세요.
+const moduleSource = `
+  export const menus = [&quot;김치찌개&quot;, &quot;비빔밥&quot;, &quot;칼국수&quot;];
+  export default function pickMenu(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
+`;
+const url = URL.createObjectURL(new Blob([moduleSource], { type: &quot;text/javascript&quot; }));
+const { menus, default: pickMenu } = await import(url);
+URL.revokeObjectURL(url);
+const button = document.querySelector(&quot;#pick&quot;);
+button.disabled = false; button.textContent = &quot;메뉴 고르기&quot;;
+button.addEventListener(&quot;click&quot;, () =&gt; {
+  document.querySelector(&quot;#result&quot;).textContent = `오늘은 ${pickMenu(menus)}!`;
+});
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
+<div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY21 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
+<section class="review"><h2>04. 복습문제</h2><p>기본 내보내기와 이름 내보내기는 import 중괄호가 어떻게 다를까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>기본 내보내기는 <code>import pickMenu from &quot;./menu.js&quot;</code>, 이름 내보내기는 <code>import { menus } from &quot;./menu.js&quot;</code>처럼 읽는다. 기본 import의 지역 이름은 바꿀 수 있다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<footer><p>출처: <a href="https://app.notion.com/p/41654c6415d780bd9078dd912d7608e8" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY20/학습.html">이전 학습</a><a href="../DAY27/학습.html">다음 학습</a></div></footer></main></div></body></html>

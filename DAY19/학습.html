@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY19 음료 자판기 만들기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<body data-day="19"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="active" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 19 / 읽기 · 수정 · 실행</div><h1>음료 자판기 만들기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<section class="read-grid"><article><h2>01. 핵심 개념</h2><p>스코프·클로저, 호출 방식과 <code>this</code>, 고차 함수, Date·reduce</p></article><article><h2>02. 실행 흐름</h2><p>버튼 → 동전을 더하거나 구매 함수 실행 → 잔액 확인·차감 → 판매 기록 → 화면</p></article></section>
+<section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
+<h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
+<p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
+<dl class="definition-list"><dt>스코프</dt><dd>변수 이름을 사용할 수 있는 범위입니다. let·const는 블록 범위의 영향을 받습니다.</dd><dt>렉시컬 스코프</dt><dd>함수가 어디에서 호출됐는지가 아니라 어디에서 만들어졌는지에 따라 바깥 변수 범위를 찾는 규칙입니다.</dd><dt>클로저</dt><dd>함수가 만들어진 환경의 변수에 계속 접근하는 성질입니다. 이 예제의 반환 함수는 name과 price를 기억합니다.</dd><dt>고차 함수</dt><dd>함수를 인수로 받거나 함수 자체를 반환하는 함수입니다.</dd><dt>this</dt><dd>함수의 호출 방식 등에 따라 정해지는 값입니다. 이 예제에서 machine.buy() 안의 this는 machine입니다.</dd><dt>메서드</dt><dd>객체의 속성으로 가진 함수입니다. machine.insert와 machine.buy 등이 해당합니다.</dd></dl>
+<div class="important-points"><h3>꼭 기억할 내용</h3><ul><li>makeBuyer를 호출하는 시점과 실제 구매 함수가 실행되는 시점은 다릅니다. 반환값이 함수라는 점까지 읽으세요.</li><li>machine.buy()를 객체 없이 떼어 호출하면 this가 달라질 수 있습니다. 이 예제는 콜백 안에서 machine.buy(...)로 호출합니다.</li><li>잔액이 부족하면 return으로 구매를 중단하고, 충분할 때만 차감합니다.</li></ul></div>
+<details class="reading-guide"><summary>이 예제의 코드를 읽는 순서</summary><ol><li>초기 machine.render가 잔액 0을 그립니다.</li><li>동전 버튼은 machine.insert(1000)을 호출합니다.</li><li>makeBuyer(&quot;물&quot;, 800)이 클릭 때 쓸 함수를 만들어 반환합니다.</li><li>클릭하면 반환 함수가 machine.buy를 호출하고, 잔액 검사 후 차감·화면 반영을 수행합니다.</li></ol></details>
+<div class="confusions"><h3>자주 헷갈리는 부분</h3><div class="confusion-item"><h4>괄호를 붙여 넘기면 항상 잘못일까요?</h4><p>makeBuyer(...)처럼 함수가 또 다른 함수를 반환하는 경우는 의도에 맞습니다. 호출 결과의 종류를 확인하세요.</p></div><div class="confusion-item"><h4>화살표 함수의 this도 항상 호출한 객체일까요?</h4><p>화살표 함수는 자체 this를 새로 만들지 않고 바깥의 this를 따릅니다.</p></div></div>
+</section>
+
+<section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>물 가격을 1000원으로 바꿀 때 버튼 글자와 makeBuyer의 800을 함께 바꾸세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
+<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;DAY19 연습&lt;/title&gt;
+  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;음료 자판기&lt;/h1&gt;
+&lt;button id=&quot;coin&quot;&gt;1000원 넣기&lt;/button&gt;&lt;button id=&quot;water&quot;&gt;물 800원&lt;/button&gt;&lt;p id=&quot;result&quot;&gt;&lt;/p&gt;
+&lt;script&gt;
+const machine = {
+  balance: 0,
+  insert(amount) { this.balance += amount; this.render(); },
+  buy(name, price) {
+    if (this.balance &lt; price) { alert(&quot;돈이 부족합니다.&quot;); return; }
+    this.balance -= price;
+    this.render();
+    console.log(`${name} 구매 완료`);
+  },
+  render() { document.querySelector(&quot;#result&quot;).textContent = `잔액 ${this.balance}원`; }
+};
+// 이름과 가격을 기억하는 함수를 반환합니다. 구매는 클릭할 때 일어납니다.
+function makeBuyer(name, price) { return () =&gt; machine.buy(name, price); }
+document.querySelector(&quot;#coin&quot;).addEventListener(&quot;click&quot;, () =&gt; machine.insert(1000));
+document.querySelector(&quot;#water&quot;).addEventListener(&quot;click&quot;, makeBuyer(&quot;물&quot;, 800));
+machine.render();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
+<div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY19 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
+<section class="review"><h2>04. 복습문제</h2><p><code>makeBuyer(&quot;물&quot;, 800)</code>이 연결 시 호출되는데 왜 바로 구매되지 않을까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>makeBuyer가 구매 동작을 수행할 **새 함수**를 반환하기 때문이다. 반환된 함수가 나중에 클릭 때 <code>machine.buy</code>를 실행한다. 함수 호출 뒤 무엇을 반환하는지까지 읽어야 한다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<footer><p>출처: <a href="https://app.notion.com/p/41654c6415d780239f41ee1b01936143" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY18/학습.html">이전 학습</a><a href="../DAY20/학습.html">다음 학습</a></div></footer></main></div></body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY08 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<style>
+/* 인터넷 없이 보기 위한 최소 클래스 모형입니다. 실제 Bootstrap 라이브러리가 아닙니다. */
+.row { display: flex; flex-wrap: wrap; }
+.col-12 { width: 100%; padding: 12px; box-sizing: border-box; }
+@media (min-width: 600px) { .col-lg-8 { width: 66.666%; } .col-lg-4 { width: 33.333%; } }
+.bg-light { background: #edf4f5; }
+</style>
+<h1>12칸 그리드 읽기</h1>
+<p class="note">Bootstrap의 클래스 구조를 이해하기 위한 로컬 모형입니다. 경계값도 연습용 600px입니다.</p>
+<div class="row">
+  <main class="col-12 col-lg-8 bg-light"><h2>본문 8칸</h2><p>좁은 화면에서는 12칸입니다.</p></main>
+  <aside class="col-12 col-lg-4"><h2>최근 글 4칸</h2><p>넓으면 옆으로 나뉩니다.</p></aside>
+</div>
+</body>
+</html>

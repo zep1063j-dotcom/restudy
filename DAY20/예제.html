@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY20 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>읽음 표시 저장</h1>
+<p class="note">이 예제 전용 키만 사용합니다. 브라우저가 저장을 허용하는 경우 새로고침 후에도 남습니다.</p>
+<button id="read">1번 글을 읽음으로</button><button id="reset">표시 지우기</button><p id="result"></p>
+<script>
+const KEY = "vibe-study-day20-read";
+let ids = [];
+try { ids = JSON.parse(localStorage.getItem(KEY) || "[]"); if (!Array.isArray(ids)) ids = []; }
+catch (error) { console.log("저장값을 복원할 수 없어 빈 목록으로 시작합니다."); }
+function render() { document.querySelector("#result").textContent = ids.includes(1) ? "1번 글: 읽음" : "1번 글: 읽지 않음"; }
+document.querySelector("#read").addEventListener("click", () => {
+  if (!ids.includes(1)) ids.push(1);
+  try { localStorage.setItem(KEY, JSON.stringify(ids)); }
+  catch (error) { console.log("이 브라우저에서는 저장이 제한됩니다. 예제 파일을 직접 열어 보세요."); }
+  render();
+});
+document.querySelector("#reset").addEventListener("click", () => {
+  try { localStorage.removeItem(KEY); } catch (error) { console.log(error.message); }
+  ids = []; render();
+});
+render();
+</script>
+</body>
+</html>

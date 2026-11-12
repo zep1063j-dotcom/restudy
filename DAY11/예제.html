@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY11 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>입장료 계산기</h1>
+<label for="age">나이</label><input id="age" type="number" min="0" value="12">
+<button id="calc">계산</button><p id="result"></p>
+<script>
+document.querySelector("#calc").addEventListener("click", () => {
+  const raw = document.querySelector("#age").value;
+  const age = Number(raw);
+  if (raw === "" || !Number.isFinite(age) || age < 0) return;
+  // 조건은 위에서부터 검사합니다. 13을 바꾸고 경계값을 시험해 보세요.
+  const price = age < 13 ? 5000 : 10000;
+  document.querySelector("#result").textContent = `${price}원`;
+});
+</script>
+</body>
+</html>

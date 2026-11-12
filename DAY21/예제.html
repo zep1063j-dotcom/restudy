@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY21 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>모듈로 메뉴 고르기</h1>
+<p class="note">파일 더블클릭으로도 동작하도록 menu.js의 내용을 Blob 모듈로 연결했습니다. 실제 프로젝트에서는 별도 파일 경로를 import합니다.</p>
+<button id="pick" disabled>준비 중</button><p id="result"></p>
+<script type="module">
+// 이 문자열 안의 코드를 별도 menu.js 파일이라고 생각하고 읽으세요.
+const moduleSource = `
+  export const menus = ["김치찌개", "비빔밥", "칼국수"];
+  export default function pickMenu(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
+`;
+const url = URL.createObjectURL(new Blob([moduleSource], { type: "text/javascript" }));
+const { menus, default: pickMenu } = await import(url);
+URL.revokeObjectURL(url);
+const button = document.querySelector("#pick");
+button.disabled = false; button.textContent = "메뉴 고르기";
+button.addEventListener("click", () => {
+  document.querySelector("#result").textContent = `오늘은 ${pickMenu(menus)}!`;
+});
+</script>
+</body>
+</html>

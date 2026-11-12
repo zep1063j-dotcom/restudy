@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY28 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<div id="root"></div>
+<script src="../공통/vendor/react-local.js"></script>
+<script src="../공통/vendor/babel.min.js"></script>
+<script src="../공통/vendor/babel-config.js"></script>
+<script type="text/babel" data-presets="studyReact">
+// 같은 컴포넌트를 여러 번 쓰고, props 값만 다르게 줍니다.
+function MenuCard({ name, price, desc = "오늘의 메뉴" }) {
+  return <article className="card"><h2>{name}</h2><p>{price}원</p><p>{desc}</p></article>;
+}
+function App() {
+  return <main>
+    <h1>오즈 카페 메뉴</h1>
+    <MenuCard name="아메리카노" price={4000} desc="깊고 고소한 커피" />
+    <MenuCard name="소금빵" price={3500} />
+  </main>;
+}
+ReactDOM.createRoot(document.querySelector("#root")).render(<App />);
+</script>
+</body>
+</html>

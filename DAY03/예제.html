@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY03 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<!-- 화면 영역의 의미를 읽습니다. 제목 크기는 태그 단계가 아닌 CSS로 조절합니다. -->
+<header><h1>나의 소개</h1></header>
+<nav><a href="#about">소개</a> / <a href="#work">학습 기록</a></nav>
+<main>
+  <section id="about">
+    <h2>소개</h2>
+    <p>AI가 만든 코드를 읽고 수정하는 방법을 배우고 있습니다.</p>
+  </section>
+  <article id="work">
+    <h2>오늘의 학습 기록</h2>
+    <p>div만 쓰는 대신 각 영역의 의미를 표현했습니다.</p>
+    <!-- button은 키보드 Tab으로 이동하고 Enter 또는 Space로 누를 수 있습니다. -->
+    <button onclick="this.textContent='확인했습니다'">키보드로도 눌러 보기</button>
+  </article>
+</main>
+<footer><small>학습용 페이지</small></footer>
+</body>
+</html>

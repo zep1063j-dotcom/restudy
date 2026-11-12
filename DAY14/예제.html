@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY14 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>목록 고르기와 합계</h1><pre id="result"></pre>
+<script>
+const menus = [
+  { name: "커피", price: 4000 },
+  { name: "라테", price: 4500 },
+  { name: "빵", price: 3500 }
+];
+// 4000을 바꾸면 아래 이름과 합계가 함께 바뀝니다.
+const selected = menus.filter(menu => menu.price <= 4000);
+const names = selected.map(menu => menu.name);
+const total = selected.reduce((sum, menu) => sum + menu.price, 0);
+console.log("선택한 메뉴:", names);
+document.querySelector("#result").textContent = `${names.join(", ")}\n합계 ${total}원`;
+</script>
+</body>
+</html>

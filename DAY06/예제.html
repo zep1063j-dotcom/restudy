@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY06 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<style>
+.cards { display: grid; gap: 12px; grid-template-columns: 1fr; }
+/* 미리보기 영역 폭이 600px 이상일 때 2열로 만듭니다. */
+@media (min-width: 600px) { .cards { grid-template-columns: 1fr 1fr; } }
+@media (prefers-color-scheme: dark) { body { background: #18334b; color: #fff; } }
+</style>
+<h1>화면 폭에 따라 달라지는 카드</h1>
+<div class="cards">
+  <article class="card">아메리카노</article>
+  <article class="card">카페라테</article>
+  <article class="card">소금빵</article>
+</div>
+<p>아래 ‘좁은 화면’과 ‘넓은 화면’을 비교하세요. 이 예제의 경계값은 600px입니다.</p>
+</body>
+</html>

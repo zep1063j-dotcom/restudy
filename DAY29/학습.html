@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY29 오즈 카페 — 담기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<body data-day="29"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="active" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 29 / 읽기 · 수정 · 실행</div><h1>오즈 카페 — 담기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<section class="read-grid"><article><h2>01. 핵심 개념</h2><p>state·set 함수·스냅샷, 불변성, Effect·의존성·정리 함수, 공통 부모</p></article><article><h2>02. 실행 흐름</h2><p>담기 → 자식이 전달받은 함수 호출 → App의 state 갱신 요청 → 새 값으로 렌더 → Header 갱신 → Effect로 탭 제목 동기화</p></article></section>
+<section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
+<h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
+<p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
+<dl class="definition-list"><dt>state</dt><dd>컴포넌트가 렌더 사이에 기억하는 값입니다. 이 예제의 count는 App에 있습니다.</dd><dt>set 함수와 렌더</dt><dd>setCount로 다음 값을 요청하면 React가 컴포넌트 결과를 다시 계산하고 필요한 화면 변경을 반영합니다.</dd><dt>업데이트 함수</dt><dd>setCount(c =&gt; c + 1)처럼 이전 값으로 다음 값을 계산하는 함수입니다. 같은 이벤트에서 여러 갱신을 연결할 때 중요합니다.</dd><dt>props와 콜백</dt><dd>App은 count를 Header에, handleAdd 함수를 onAdd라는 props로 MenuCard에 전달합니다. 자식은 받은 함수를 호출해 알립니다.</dd><dt>Effect와 의존성 배열</dt><dd>useEffect는 렌더가 반영된 뒤 외부와 맞추는 일을 합니다. [count]는 처음과 count가 달라진 커밋 뒤 동기화하게 합니다.</dd><dt>스냅샷과 불변성</dt><dd>한 렌더에서 읽는 state는 그 렌더의 값입니다. 객체 state를 바꿀 때는 직접 고치지 않고 새 객체를 만들어 전달합니다.</dd><dt>정리 함수</dt><dd>Effect가 시작한 타이머·구독 등을 해제하기 위해 반환하는 함수입니다. 관련 Effect 재실행 전과 제거 때 실행합니다. 이 제목 변경 예제에는 타이머가 없습니다.</dd></dl>
+<div class="important-points"><h3>꼭 기억할 내용</h3><ul><li>값 하나를 여러 컴포넌트가 함께 쓰므로 공통 부모 App이 기억합니다. 각 카드가 별도 총개수를 기억하도록 만들면 값이 어긋날 수 있습니다.</li><li>onClick={onAdd}는 함수를 전달하고 onClick={onAdd()}는 렌더 중 호출합니다. state 변경 함수가 즉시 실행되면 반복 렌더 오류가 날 수 있습니다.</li><li>화면에 계산해서 보여 줄 수 있는 값은 별도 state와 Effect로 복제하지 않는 편이 단순합니다.</li><li>이 예제는 총 담은 개수만 기억합니다. 메뉴별 수량이나 실제 주문·결제까지 구현한 것은 아닙니다.</li></ul></div>
+<details class="reading-guide"><summary>이 예제의 코드를 읽는 순서</summary><ol><li>처음 count는 0이며 Header가 0개를 표시합니다.</li><li>MenuCard 버튼을 누르면 props로 받은 onAdd를 호출합니다.</li><li>App의 handleAdd가 이전 값에 1을 더하는 갱신을 요청합니다.</li><li>새 count로 렌더한 결과가 Header에 반영됩니다.</li><li>[count] Effect가 문서 제목을 맞추며 미리보기 제목과 콘솔에서 확인할 수 있습니다.</li></ol></details>
+<div class="confusions"><h3>자주 헷갈리는 부분</h3><div class="confusion-item"><h4>setCount 바로 뒤의 count는 새 값일까요?</h4><p>같은 핸들러가 읽는 값은 해당 렌더의 스냅샷입니다. 다음 렌더에서 새 값을 읽습니다.</p></div><div class="confusion-item"><h4>[] Effect는 앱 전체 수명 동안 딱 한 번일까요?</h4><p>마운트 때 실행하며 제거 후 다시 마운트하면 다시 실행할 수 있습니다. StrictMode 개발 점검도 구분해야 합니다. 이 복습 예제는 StrictMode로 감싸지 않았습니다.</p></div><div class="confusion-item"><h4>자식이 부모의 state를 직접 바꾸는 것일까요?</h4><p>부모가 전달한 콜백을 자식이 호출하고, 부모의 코드가 갱신을 요청하는 흐름입니다.</p></div></div>
+</section>
+<p class="notice">실제 React와 JSX를 사용합니다. 로컬에 포함한 React와 변환 도구로 실행하며, 강의의 Vite 설치 절차를 재현한 것은 아닙니다. 화면 편집기에서 JSX도 바꿀 수 있습니다.</p>
+<section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>handleAdd에서 c + 1을 c + 2로 바꾸고, 담기와 초기화를 눌러 보세요. 미리보기 제목과 직접 연 예제의 브라우저 탭을 확인하세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
+<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;DAY29 연습&lt;/title&gt;
+  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;../공통/vendor/react-local.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../공통/vendor/babel.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../공통/vendor/babel-config.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/babel&quot; data-presets=&quot;studyReact&quot;&gt;
+const { useState, useEffect } = React;
+function Header({ count }) { return &lt;p&gt;담은 메뉴 {count}개&lt;/p&gt;; }
+function MenuCard({ name, onAdd }) {
+  return &lt;article className=&quot;card&quot;&gt;&lt;h2&gt;{name}&lt;/h2&gt;&lt;button onClick={onAdd}&gt;담기&lt;/button&gt;&lt;/article&gt;;
+}
+function App() {
+  // App이 값을 기억하고, 자식들에게 값과 함수를 내려줍니다.
+  const [count, setCount] = useState(0);
+  useEffect(() =&gt; {
+    document.title = `(${count}) 오즈 카페`;
+    console.log(&quot;탭 제목 동기화:&quot;, document.title);
+  }, [count]);
+  function handleAdd() { setCount(c =&gt; c + 1); }
+  return &lt;main&gt;
+    &lt;h1&gt;오즈 카페&lt;/h1&gt;&lt;Header count={count} /&gt;
+    &lt;MenuCard name=&quot;아메리카노&quot; onAdd={handleAdd} /&gt;
+    &lt;MenuCard name=&quot;소금빵&quot; onAdd={handleAdd} /&gt;
+    &lt;button onClick={() =&gt; setCount(0)}&gt;초기화&lt;/button&gt;
+  &lt;/main&gt;;
+}
+ReactDOM.createRoot(document.querySelector(&quot;#root&quot;)).render(&lt;App /&gt;);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
+<div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY29 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
+<section class="review"><h2>04. 복습문제</h2><p>같은 이벤트에서 <code>setCount(count + 1)</code>을 두 번 부르면 2가 늘까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>같은 클릭에서 같은 스냅샷을 읽으면 1 증가한다. 업데이트 함수를 두 번 쓰면 앞 결과를 이어받아 2 증가한다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<footer><p>출처: <a href="https://app.notion.com/p/41654c6415d7802da0e9fa17c8648985" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY28/학습.html">이전 학습</a><a href="../시작하기.html">전체 목차로</a></div></footer></main></div></body></html>

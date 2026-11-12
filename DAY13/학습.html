@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY13 카페 메뉴판 다루기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<body data-day="13"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="active" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 13 / 읽기 · 수정 · 실행</div><h1>카페 메뉴판 다루기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<section class="read-grid"><article><h2>01. 핵심 개념</h2><p>배열은 순서, 객체는 속성, 객체 배열, JSON 변환</p></article><article><h2>02. 실행 흐름</h2><p>JSON 문자열 → <code>JSON.parse</code> → 배열·객체 읽기 → 항목 변경·출력</p></article></section>
+<section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
+<h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
+<p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
+<dl class="definition-list"><dt>배열</dt><dd>여러 값을 순서대로 담는 자료구조입니다. []로 만들고 인덱스로 항목을 읽습니다.</dd><dt>인덱스와 length</dt><dd>인덱스는 0부터 세는 위치입니다. length는 항목 수이며 마지막 위치는 length - 1입니다.</dd><dt>객체</dt><dd>이름과 값의 묶음입니다. { name: &quot;커피&quot;, price: 4000 }처럼 항목의 정보를 표현합니다.</dd><dt>속성 접근</dt><dd>menu.name은 고정된 속성 이름을 읽고, menu[key]는 변수에 담긴 이름 등으로 속성을 읽을 수 있습니다.</dd><dt>JSON</dt><dd>데이터를 주고받거나 저장할 때 쓰는 문자열 형식입니다. JavaScript 객체 자체와는 다릅니다.</dd><dt>stringify / parse</dt><dd>JSON.stringify는 값을 JSON 문자열로, JSON.parse는 JSON 문자열을 JavaScript 값으로 바꿉니다.</dd></dl>
+<div class="important-points"><h3>꼭 기억할 내용</h3><ul><li>menus[1]은 두 번째 메뉴이고 menus[1].price는 그 메뉴의 가격입니다.</li><li>const 배열·객체도 내부 속성은 바뀔 수 있습니다. React state로 쓸 때는 별도로 불변성을 지켜야 합니다.</li><li>JSON은 속성 이름과 문자열에 큰따옴표를 사용합니다. 마지막 쉼표나 함수를 넣을 수 없습니다.</li></ul></div>
+<details class="reading-guide"><summary>이 예제의 코드를 읽는 순서</summary><ol><li>객체 두 개가 menus 배열에 들어 있습니다.</li><li>두 번째 객체의 price를 3800으로 바꿉니다.</li><li>배열을 JSON 문자열로 바꾼 뒤 다시 배열로 복원합니다.</li><li>복원한 값의 두 번째 이름과 전체 내용을 출력합니다.</li></ol></details>
+<div class="confusions"><h3>자주 헷갈리는 부분</h3><div class="confusion-item"><h4>JSON 문자열에서 바로 .price를 읽을 수 있을까요?</h4><p>문자열과 객체를 구분하세요. JSON.parse로 값으로 바꾼 뒤 구조에 맞게 접근합니다.</p></div><div class="confusion-item"><h4>slice와 splice는 같은 동작일까요?</h4><p>slice는 일부를 복사한 새 배열을 만들고, splice는 원래 배열에서 삭제·추가 등을 수행합니다.</p></div></div>
+</section>
+
+<section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>두 번째 메뉴 가격을 3800에서 4200으로 바꿔 보세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
+<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;DAY13 연습&lt;/title&gt;
+  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;객체 배열과 JSON&lt;/h1&gt;&lt;pre id=&quot;result&quot;&gt;&lt;/pre&gt;
+&lt;script&gt;
+const menus = [
+  { name: &quot;아메리카노&quot;, price: 4000 },
+  { name: &quot;소금빵&quot;, price: 3500 }
+];
+// 배열은 0부터 셉니다. 1은 두 번째 항목입니다.
+menus[1].price = 3800;
+const json = JSON.stringify(menus); // 값을 문자열로 바꿉니다.
+const restored = JSON.parse(json); // 문자열을 다시 값으로 바꿉니다.
+console.log(&quot;두 번째 이름:&quot;, restored[1].name);
+document.querySelector(&quot;#result&quot;).textContent = JSON.stringify(restored, null, 2);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
+<div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY13 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
+<section class="review"><h2>04. 복습문제</h2><p>두 번째 메뉴의 이름은 <code>menus[2].name</code>일까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>두 번째는 <code>menus[1].name</code>. 배열 인덱스는 0부터다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<footer><p>출처: <a href="https://app.notion.com/p/41654c6415d780adb91be7c202113e0a" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY12/학습.html">이전 학습</a><a href="../DAY14/학습.html">다음 학습</a></div></footer></main></div></body></html>

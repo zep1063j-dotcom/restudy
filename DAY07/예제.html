@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY07 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>Git으로 변경을 기록하는 순서</h1>
+<p>아래 내용은 읽기 연습입니다. 화면의 명령은 실행되지 않습니다.</p>
+<pre># 현재 변경을 먼저 확인합니다.
+git status
+git diff
+
+# 기록할 파일을 선택하고 로컬에 기록합니다.
+git add index.html
+git commit -m "소개 문구 변경"
+
+# 연결된 내 원격 저장소에 올립니다.
+git push</pre>
+<p>문구 한 줄을 바꾼 뒤 무엇이 달라졌는지 비교하는 습관을 익힙니다.</p>
+</body>
+</html>

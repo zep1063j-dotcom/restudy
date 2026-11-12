@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY18 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>응답 상태와 JSON 읽기</h1>
+<p class="note">실제 서버 대신 데이터 URL과 가상 응답을 사용합니다. fetch와 오류 처리 흐름은 실제 코드입니다.</p>
+<select id="mode"><option value="ok">정상 응답</option><option value="404">없는 글</option></select>
+<button id="load">불러오기</button><p id="result"></p>
+<script>
+document.querySelector("#load").addEventListener("click", async () => {
+  const result = document.querySelector("#result");
+  result.textContent = "불러오는 중…";
+  try {
+    const mode = document.querySelector("#mode").value;
+    const data = encodeURIComponent(JSON.stringify({ title: "첫 번째 글" }));
+    const response = mode === "404"
+      ? new Response("찾을 수 없음", { status: 404 })
+      : await fetch(`data:application/json,${data}`);
+    if (!response.ok) throw new Error(`응답 상태 ${response.status}`);
+    const post = await response.json();
+    result.textContent = post.title;
+  } catch (error) {
+    result.textContent = error.message;
+    console.log("실패 안내:", error.message);
+  }
+});
+</script>
+</body>
+</html>

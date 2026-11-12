@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY10 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>자료형과 계산</h1>
+<pre id="result"></pre>
+<script>
+// 따옴표로 감싼 값은 문자열입니다.
+const inputPrice = "4000";
+const wrong = inputPrice + 500;
+const correct = Number(inputPrice) + 500;
+console.log("입력값의 자료형:", typeof inputPrice);
+console.log("문자열에 더하면:", wrong);
+console.log("숫자로 바꿔 더하면:", correct);
+document.querySelector("#result").textContent = `그대로 더하기: ${wrong}\n숫자로 더하기: ${correct}`;
+</script>
+</body>
+</html>

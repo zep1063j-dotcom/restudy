@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY17 연습</title>
+  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+  <link rel="stylesheet" href="../공통/example.css">
+</head>
+<body>
+<h1>대출 확인을 기다리는 화면</h1>
+<button id="check">도서 확인</button><p id="result">아직 확인하지 않았습니다.</p>
+<script>
+function checkBook() {
+  return new Promise(resolve => {
+    setTimeout(() => resolve("대출 가능합니다."), 1000);
+  });
+}
+document.querySelector("#check").addEventListener("click", async (event) => {
+  event.target.disabled = true;
+  const result = document.querySelector("#result");
+  result.textContent = "확인 중…";
+  console.log("1. 확인 시작");
+  const message = await checkBook();
+  result.textContent = message;
+  event.target.disabled = false;
+  console.log("2. 확인 완료");
+});
+</script>
+</body>
+</html>

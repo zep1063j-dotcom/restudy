@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY01 웹의 동작 구조와 HTML 기초</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<body data-day="1"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="active" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 01 / 읽기 · 수정 · 실행</div><h1>웹의 동작 구조와 HTML 기초</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<section class="read-grid"><article><h2>01. 핵심 개념</h2><p><code>head</code>는 문서 정보, <code>body</code>는 본문. 태그에 속성으로 주소·설명을 붙인다.</p></article><article><h2>02. 실행 흐름</h2><p>서버에 요청 → HTML 응답 → 브라우저가 문서를 해석한다. 로컬 HTML은 서버 없이도 열 수 있다.</p></article></section>
+<section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
+<h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
+<p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
+<dl class="definition-list"><dt>HTML</dt><dd>웹페이지에 들어갈 내용과 그 의미를 표시하는 언어입니다. 제목, 문단, 목록, 링크 등을 태그로 구분합니다.</dd><dt>태그와 요소</dt><dd>&lt;p&gt;소개 문장&lt;/p&gt;에서 &lt;p&gt;와 &lt;/p&gt;는 태그이고, 두 태그와 그 안의 내용을 합쳐 요소라고 부릅니다. img처럼 닫는 태그가 없는 요소도 있습니다.</dd><dt>속성</dt><dd>태그에 추가하는 설정입니다. &lt;a href=&quot;#contact&quot;&gt;에서 href는 속성 이름이고 #contact는 그 값입니다.</dd><dt>head와 body</dt><dd>head는 문서 제목·문자 인코딩·스타일 연결 같은 정보를 담고, body는 본문 내용을 담습니다.</dd><dt>요청과 응답</dt><dd>브라우저가 서버에 필요한 것을 요청하면 서버가 파일이나 데이터를 응답합니다. 이 복습 예제는 내 컴퓨터의 파일을 읽으므로 서버 없이 열립니다.</dd><dt>제목과 문단</dt><dd>h1~h6은 제목의 중요도와 계층을 나타내고 p는 문단입니다. 큰 글씨가 필요하다는 이유만으로 제목 태그를 고르지는 않습니다.</dd></dl>
+<div class="important-points"><h3>꼭 기억할 내용</h3><ul><li>보이는 문구와 동작을 정하는 속성을 구분하세요. 링크 글자를 바꿔도 href가 같으면 목적지는 그대로입니다.</li><li>title은 브라우저 탭의 제목이고 h1은 본문 제목입니다. 이 페이지 안의 미리보기 제목은 실행 결과 위에서 확인합니다.</li><li>HTML의 중첩 관계를 읽으세요. ul 안의 li는 목록의 항목이며, 위치를 바꾸면 화면 순서도 달라집니다.</li></ul></div>
+<details class="reading-guide"><summary>이 예제의 코드를 읽는 순서</summary><ol><li>문서 위쪽의 title을 찾아 예제 이름을 확인합니다.</li><li>body 안의 h1과 p를 찾아 화면의 제목·소개 문장과 대응시킵니다.</li><li>ul 안의 li 두 개가 메뉴 두 줄을 만드는지 확인합니다.</li><li>href=&quot;#contact&quot;가 id=&quot;contact&quot;인 영역을 가리키는지 연결해서 읽습니다.</li></ol></details>
+<div class="confusions"><h3>자주 헷갈리는 부분</h3><div class="confusion-item"><h4>글자를 고치면 링크 목적지도 바뀔까요?</h4><p>아닙니다. 보이는 글자는 태그 사이에 있고 목적지는 href 값에 있습니다.</p></div><div class="confusion-item"><h4>HTML만 만들면 주문이 처리될까요?</h4><p>메뉴와 입력 화면은 만들 수 있지만, 실제 주문 저장이나 결제에는 별도 처리 코드가 필요합니다.</p></div></div>
+</section>
+
+<section class="exercise"><h2>코드를 읽는 순서</h2><ol><li><code>&lt;head&gt;</code> 안에는 문서 설정이 있습니다. <code>&lt;title&gt;</code>은 브라우저 탭 제목입니다.</li><li><code>&lt;body&gt;</code> 안이 화면의 본문입니다. <code>&lt;h1&gt;</code>은 가장 중요한 제목이고, <code>&lt;p&gt;</code>는 문단입니다.</li><li><code>&lt;ul&gt;</code>은 순서 없는 목록을 감싸고, 각 <code>&lt;li&gt;</code>가 메뉴 하나를 나타냅니다.</li><li><code>&lt;a href="#contact"&gt;연락처 보기&lt;/a&gt;</code>에서 글자와 목적지는 다릅니다. <code>#contact</code>는 같은 문서의 <code>id="contact"</code> 영역입니다.</li><li><code>&lt;!-- ... --&gt;</code>는 사람에게 설명하는 주석이며 화면에 나타나지 않습니다.</li><li>여는 태그와 닫는 태그가 무엇을 감싸는지 보고, 바꾸고 싶은 글자나 속성만 먼저 수정해 보세요.</li></ol></section><section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>h1의 ‘오즈 카페’를 내 가게 이름으로 바꾸세요. 메뉴 이름과 가격도 하나씩 바꿔 보세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
+<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;DAY01 연습&lt;/title&gt;
+  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!-- DAY01: 태그 사이의 글자와 속성의 값을 구분해 읽습니다. --&gt;
+&lt;!-- 1. title은 브라우저 탭 제목입니다. 이 미리보기에서는 바깥 탭 대신 예제 이름으로 확인하세요. --&gt;
+&lt;h1&gt;오즈 카페&lt;/h1&gt;
+&lt;p&gt;커피와 빵을 판매합니다.&lt;/p&gt;
+&lt;h2&gt;인기 메뉴&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;아메리카노 4000원&lt;/li&gt;
+  &lt;li&gt;소금빵 3500원&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- 2. href는 이동할 주소, 태그 사이의 글자는 화면에 보이는 이름입니다. --&gt;
+&lt;a href=&quot;#contact&quot;&gt;연락처 보기&lt;/a&gt;
+&lt;hr&gt;
+&lt;section id=&quot;contact&quot;&gt;
+  &lt;h2&gt;연락처&lt;/h2&gt;
+  &lt;p&gt;서울시 카페길 1 (연습용 주소)&lt;/p&gt;
+&lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
+<div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY01 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
+<section class="review"><h2>04. 복습문제</h2><p>탭 제목만 바꾸려면 어느 태그를 고칠까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p><code>&lt;title&gt;</code>을 고친다. <code>&lt;h1&gt;</code>은 본문의 제목이다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<footer><p>출처: <a href="https://app.notion.com/p/41654c6415d781689e05fd9e24223c90" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../시작하기.html">이전 학습</a><a href="../DAY02/학습.html">다음 학습</a></div></footer></main></div></body></html>
