@@ -23,6 +23,33 @@
   });
   editor.addEventListener('input', () => { saveStatus.textContent = write(prefix + 'draft', editor.value) ? '내 브라우저에 코드 자동 저장됨' : '저장 제한됨 · 파일로 받아 보관하세요'; });
   memo.addEventListener('input', () => { document.querySelector('#memo-status').textContent = write(prefix + 'memo', memo.value) ? '메모 자동 저장됨' : '브라우저 저장 제한됨'; });
+  document.querySelector('#format-code').addEventListener('click', async (event) => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    const before = editor.value;
+    try {
+      const plugins = Object.values(window.prettierPlugins || {});
+      if (!window.prettier || !plugins.length) throw new Error('정리 도구를 읽지 못했습니다. 페이지를 다시 열어 주세요.');
+      const formatted = await window.prettier.format(before, {
+        parser: 'html', plugins, tabWidth: 2, useTabs: false,
+        printWidth: 70, htmlWhitespaceSensitivity: 'css',
+        embeddedLanguageFormatting: 'auto', trailingComma: 'none', arrowParens: 'always'
+      });
+      if (editor.value !== before) {
+        saveStatus.textContent = '정리 중 코드가 바뀌어 적용하지 않았습니다. 다시 눌러 주세요.';
+        return;
+      }
+      editor.value = formatted;
+      saveStatus.textContent = write(prefix + 'draft', formatted)
+        ? '두 칸 들여쓰기와 줄바꿈 정리됨 · 실행을 눌러 확인하세요'
+        : '들여쓰기 정리됨 · 저장이 제한되어 파일로 보관해 주세요';
+    } catch (error) {
+      saveStatus.textContent = '정리하지 못했습니다. 태그나 괄호의 짝을 먼저 확인해 주세요.';
+      log('코드 정리 안내: ' + error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
   document.querySelector('#reset').addEventListener('click', () => {
     if (editor.value !== startCode && !confirm('편집 중인 코드를 시작 코드로 바꿀까요? 필요하면 먼저 ‘내 코드 파일로 받기’를 눌러 보관하세요.')) return;
     editor.value = startCode; write(prefix + 'draft', startCode); saveStatus.textContent = '시작 코드로 되돌림'; run();

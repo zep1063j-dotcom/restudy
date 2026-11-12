@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY29 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<div id="root"></div>
-<script src="../공통/vendor/react-local.js"></script>
-<script src="../공통/vendor/babel.min.js"></script>
-<script src="../공통/vendor/babel-config.js"></script>
-<script type="text/babel" data-presets="studyReact">
-const { useState, useEffect } = React;
-function Header({ count }) { return <p>담은 메뉴 {count}개</p>; }
-function MenuCard({ name, onAdd }) {
-  return <article className="card"><h2>{name}</h2><button onClick={onAdd}>담기</button></article>;
-}
-function App() {
-  // App이 값을 기억하고, 자식들에게 값과 함수를 내려줍니다.
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    document.title = `(${count}) 오즈 카페`;
-    console.log("탭 제목 동기화:", document.title);
-  }, [count]);
-  function handleAdd() { setCount(c => c + 1); }
-  return <main>
-    <h1>오즈 카페</h1><Header count={count} />
-    <MenuCard name="아메리카노" onAdd={handleAdd} />
-    <MenuCard name="소금빵" onAdd={handleAdd} />
-    <button onClick={() => setCount(0)}>초기화</button>
-  </main>;
-}
-ReactDOM.createRoot(document.querySelector("#root")).render(<App />);
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY29 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="../공통/vendor/react-local.js"></script>
+    <script src="../공통/vendor/babel.min.js"></script>
+    <script src="../공통/vendor/babel-config.js"></script>
+    <script type="text/babel" data-presets="studyReact">
+      const { useState, useEffect } = React;
+      function Header({ count }) {
+        return <p>담은 메뉴 {count}개</p>;
+      }
+      function MenuCard({ name, onAdd }) {
+        return (
+          <article className="card">
+            <h2>{name}</h2>
+            <button onClick={onAdd}>담기</button>
+          </article>
+        );
+      }
+      function App() {
+        // App이 값을 기억하고, 자식들에게 값과 함수를 내려줍니다.
+        const [count, setCount] = useState(0);
+        useEffect(() => {
+          document.title = `(${count}) 오즈 카페`;
+          console.log("탭 제목 동기화:", document.title);
+        }, [count]);
+        function handleAdd() {
+          setCount((c) => c + 1);
+        }
+        return (
+          <main>
+            <h1>오즈 카페</h1>
+            <Header count={count} />
+            <MenuCard name="아메리카노" onAdd={handleAdd} />
+            <MenuCard name="소금빵" onAdd={handleAdd} />
+            <button onClick={() => setCount(0)}>초기화</button>
+          </main>
+        );
+      }
+      ReactDOM.createRoot(document.querySelector("#root")).render(
+        <App />
+      );
+    </script>
+  </body>
 </html>

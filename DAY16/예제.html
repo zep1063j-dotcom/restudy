@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY16 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<h1>물 마시기 기록</h1>
-<button id="drink">한 잔 마시기</button><p id="result">0잔</p>
-<script>
-let cups = 0;
-const goal = 4;
-const result = document.querySelector("#result");
-document.querySelector("#drink").addEventListener("click", () => {
-  cups += 1; // 1을 2로 바꾸고 목표에 도달하는 때를 예상하세요.
-  result.textContent = `${cups}잔 / 목표 ${goal}잔`;
-  result.style.color = cups >= goal ? "green" : "#18334b";
-  console.log("현재 잔 수:", cups);
-});
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY16 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <h1>물 마시기 기록</h1>
+    <button id="drink">한 잔 마시기</button>
+    <p id="result">0잔</p>
+    <script>
+      let cups = 0;
+      const goal = 4;
+      const result = document.querySelector("#result");
+      document
+        .querySelector("#drink")
+        .addEventListener("click", () => {
+          cups += 1; // 1을 2로 바꾸고 목표에 도달하는 때를 예상하세요.
+          result.textContent = `${cups}잔 / 목표 ${goal}잔`;
+          result.style.color = cups >= goal ? "green" : "#18334b";
+          console.log("현재 잔 수:", cups);
+        });
+    </script>
+  </body>
 </html>

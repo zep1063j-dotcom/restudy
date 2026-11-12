@@ -2,3 +2,4 @@
 React 19.3.1 / react-dom 19.3.1 (이 Mac의 기존 설치에서 별도 번들 생성)
 Babel standalone 8.1.2 (JSX 변환, classic runtime)
 각 라이브러리의 LICENSE 파일을 함께 보관합니다. 원본 프로젝트는 수정하지 않았습니다.
+Prettier standalone 3.10.1 (두 칸 들여쓰기 정리)

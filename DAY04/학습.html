@@ -1,7 +1,21 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY04 선택자로 스타일 입히기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY04 선택자로 스타일 입히기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/vendor/prettier-standalone.js" defer></script><script src="../공통/vendor/prettier-html.js" defer></script><script src="../공통/vendor/prettier-babel.js" defer></script><script src="../공통/vendor/prettier-estree.js" defer></script><script src="../공통/vendor/prettier-postcss.js" defer></script><script src="../공통/study.js" defer></script></head>
 <body data-day="4"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="active" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
-<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 04 / 읽기 · 수정 · 실행</div><h1>선택자로 스타일 입히기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 04 / 읽기 · 수정 · 실행</div><h1>선택자로 스타일 입히기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="../00_처음_코드읽기.html">기초 용어·들여쓰기 안내</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header><nav class="lesson-toc" aria-label="이 페이지 안에서 이동"><a href="#foundations-title">기초 정의</a><a href="#definitions-title">핵심 정리</a><a href="#practice-lab">코드 수정·실행</a><a href="#review-question">복습문제</a></nav>
 <section class="read-grid"><article><h2>01. 핵심 개념</h2><p>외부 CSS 연결, <code>.class</code>·<code>#id</code>, 후손·자식 선택자, 우선순위</p></article><article><h2>02. 실행 흐름</h2><p>HTML의 대상 → 일치하는 CSS 규칙 → 겹치는 규칙을 판단 → 최종 모양</p></article></section>
+
+<section class="foundations" data-foundations="v1" aria-labelledby="foundations-title">
+<h2 id="foundations-title">기초부터 천천히 읽기</h2>
+<p class="foundation-intro">CSS를 읽을 때는 “누구에게 적용하는가”와 “무엇을 바꾸는가”를 나눕니다. 앞의 선택자가 대상을 정하고 중괄호 안의 선언이 색·크기·여백 같은 모양을 정합니다.</p>
+<h3>처음 보는 말의 정확한 뜻</h3><dl class="definition-list"><dt>선언</dt><dd>CSS에서 color: teal;처럼 속성과 값으로 적은 한 가지 설정입니다. 여러 선언을 한 규칙에 넣을 수 있습니다.</dd><dt>선택자와 속성의 차이</dt><dd>.menu는 대상을 고르는 선택자이고 color는 바꿀 속성입니다. 이름이 비슷해 보여도 역할이 다릅니다.</dd><dt>외부 스타일시트</dt><dd>별도 .css 파일을 link로 연결한 것입니다. 연결 경로가 틀리면 파일 안의 규칙을 적용할 수 없습니다.</dd><dt>후손과 자식 선택자</dt><dd>nav a는 nav 안쪽의 모든 단계에 있는 a를, nav &gt; a는 바로 아래 자식인 a를 고릅니다.</dd><dt>상속</dt><dd>글자색처럼 일부 CSS 속성은 부모의 값이 자식에게 이어질 수 있습니다. 모든 속성이 상속되는 것은 아닙니다.</dd><dt>가상 클래스와 가상 요소</dt><dd>:hover는 상태에 맞는 요소를 고르고, ::before는 내용 앞에 생성되는 가상 요소를 다룹니다. 실제 HTML 태그가 새로 생기는 것과 구분합니다.</dd></dl>
+<h3>기호와 문법을 읽는 법</h3><p class="muted">같은 기호도 문맥에 따라 역할이 달라집니다. 아래 설명은 이 페이지의 예제 기준입니다.</p>
+<div class="syntax-scroll"><table class="syntax-table"><caption class="sr-only">DAY04 기호와 예시</caption><thead><tr><th scope="col">표기</th><th scope="col">뜻</th><th scope="col">짧은 예</th></tr></thead><tbody><tr><th scope="row"><code>.</code></th><td>class 선택자를 시작합니다.</td><td><code>.menu</code></td></tr><tr><th scope="row"><code>#</code></th><td>id 선택자를 시작합니다.</td><td><code>#special</code></td></tr><tr><th scope="row"><code>{ }</code></th><td>이 대상에 적용할 선언을 묶습니다.</td><td><code>.menu { ... }</code></td></tr><tr><th scope="row"><code>:</code></th><td>속성과 값을 구분합니다.</td><td><code>color: teal</code></td></tr><tr><th scope="row"><code>;</code></th><td>선언의 끝을 구분합니다.</td><td><code>color: teal;</code></td></tr></tbody></table></div>
+<h3>짧은 코드 한 줄씩 읽기</h3><pre class="lesson-code"><code>.order-button {
+  background: teal;
+  color: white;
+}</code></pre><ol class="line-explanation"><li>1줄은 class에 order-button이 있는 요소를 고릅니다.</li><li>2줄은 배경을, 3줄은 글자색을 설정합니다. 같은 중괄호 안이라 같은 대상에 적용됩니다.</li><li>HTML의 class 이름을 다른 것으로 바꾸면 이 선택자도 여전히 일치하는지 확인해야 합니다.</li></ol>
+<div class="expected-result"><h4>예상 결과와 전제</h4><p>이 규칙이 적용되는 버튼의 배경은 청록색, 글자는 흰색이 됩니다. 더 우선하는 다른 규칙이 있다면 최종 값은 달라질 수 있습니다.</p></div>
+<p class="muted">아래 실행 편집기에는 실행 가능한 전체 예제가 있습니다. 위 짧은 코드는 개념 설명용 발췌이며, 필요한 주변 코드와 전제를 함께 읽어 주세요.</p>
+</section>
 <section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
 <h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
 <p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
@@ -12,30 +26,40 @@
 </section>
 
 <section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>첫 버튼의 배경색을 바꾸세요. 특별 주문 버튼까지 같은 색이 되는지 예상해 보세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
-<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+<p class="code-reading-help">코드는 안쪽 단계마다 두 칸씩 들여씁니다. 한 줄이 길면 가로로 움직여 읽을 수 있습니다. 수정한 코드도 ‘들여쓰기 정리’로 정돈할 수 있으며, 저장해 둔 초안은 자동으로 바꾸지 않습니다.</p><section class="lab" id="practice-lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="format-code" type="button" class="secondary">들여쓰기 정리</button><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;ko&quot;&gt;
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-  &lt;title&gt;DAY04 연습&lt;/title&gt;
-  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
-  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;style&gt;
-/* 점(.)은 class 선택자입니다. order-button이 붙은 버튼만 고릅니다. */
-.order-button { background: #087f8c; color: white; }
-/* id 선택자와 class가 같은 속성을 정하면, 이 예제에서는 id가 우선합니다. */
-#special { background: #a65325; }
-.order-button:hover { opacity: 0.75; }
-&lt;/style&gt;
-&lt;h1&gt;선택자로 원하는 부분만 수정&lt;/h1&gt;
-&lt;button class=&quot;order-button&quot;&gt;주문하기&lt;/button&gt;
-&lt;button class=&quot;order-button&quot; id=&quot;special&quot;&gt;특별 주문&lt;/button&gt;
-&lt;p&gt;첫 버튼 색만 바꾸려면 .order-button 규칙을 고쳐 보세요.&lt;/p&gt;
-&lt;/body&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta
+      name=&quot;viewport&quot;
+      content=&quot;width=device-width, initial-scale=1&quot;
+    /&gt;
+    &lt;title&gt;DAY04 연습&lt;/title&gt;
+    &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;style&gt;
+      /* 점(.)은 class 선택자입니다. order-button이 붙은 버튼만 고릅니다. */
+      .order-button {
+        background: #087f8c;
+        color: white;
+      }
+      /* id 선택자와 class가 같은 속성을 정하면, 이 예제에서는 id가 우선합니다. */
+      #special {
+        background: #a65325;
+      }
+      .order-button:hover {
+        opacity: 0.75;
+      }
+    &lt;/style&gt;
+    &lt;h1&gt;선택자로 원하는 부분만 수정&lt;/h1&gt;
+    &lt;button class=&quot;order-button&quot;&gt;주문하기&lt;/button&gt;
+    &lt;button class=&quot;order-button&quot; id=&quot;special&quot;&gt;특별 주문&lt;/button&gt;
+    &lt;p&gt;첫 버튼 색만 바꾸려면 .order-button 규칙을 고쳐 보세요.&lt;/p&gt;
+  &lt;/body&gt;
 &lt;/html&gt;
 </textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
 <div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY04 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
-<section class="review"><h2>04. 복습문제</h2><p>색을 고쳤는데 그대로라면 무엇부터 확인할까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>CSS 파일이 연결·저장됐는지, 선택자가 실제 요소와 맞는지, 개발자 도구 Styles에서 다른 규칙에 밀렸는지 확인한다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<section class="review" id="review-question"><h2>04. 복습문제</h2><p>색을 고쳤는데 그대로라면 무엇부터 확인할까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>CSS 파일이 연결·저장됐는지, 선택자가 실제 요소와 맞는지, 개발자 도구 Styles에서 다른 규칙에 밀렸는지 확인한다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
 <footer><p>출처: <a href="https://app.notion.com/p/41654c6415d780f89df2d879dee8c808" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY03/학습.html">이전 학습</a><a href="../DAY05/학습.html">다음 학습</a></div></footer></main></div></body></html>

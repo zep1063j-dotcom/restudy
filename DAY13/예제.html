@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY13 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<h1>객체 배열과 JSON</h1><pre id="result"></pre>
-<script>
-const menus = [
-  { name: "아메리카노", price: 4000 },
-  { name: "소금빵", price: 3500 }
-];
-// 배열은 0부터 셉니다. 1은 두 번째 항목입니다.
-menus[1].price = 3800;
-const json = JSON.stringify(menus); // 값을 문자열로 바꿉니다.
-const restored = JSON.parse(json); // 문자열을 다시 값으로 바꿉니다.
-console.log("두 번째 이름:", restored[1].name);
-document.querySelector("#result").textContent = JSON.stringify(restored, null, 2);
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY13 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <h1>객체 배열과 JSON</h1>
+    <pre id="result"></pre>
+    <script>
+      const menus = [
+        { name: "아메리카노", price: 4000 },
+        { name: "소금빵", price: 3500 }
+      ];
+      // 배열은 0부터 셉니다. 1은 두 번째 항목입니다.
+      menus[1].price = 3800;
+      const json = JSON.stringify(menus); // 값을 문자열로 바꿉니다.
+      const restored = JSON.parse(json); // 문자열을 다시 값으로 바꿉니다.
+      console.log("두 번째 이름:", restored[1].name);
+      document.querySelector("#result").textContent = JSON.stringify(
+        restored,
+        null,
+        2
+      );
+    </script>
+  </body>
 </html>

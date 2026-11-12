@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY02 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<h1>회원가입 폼</h1>
-<!-- for와 id는 같은 이름으로 연결합니다. name은 전송할 값의 이름입니다. -->
-<form id="signup">
-  <label for="email">이메일</label>
-  <input id="email" name="email" type="email" required>
-  <label for="pw">비밀번호</label>
-  <input id="pw" name="password" type="password" minlength="6" required>
-  <button type="submit">입력 확인</button>
-</form>
-<p id="result"></p>
-<script>
-// 화면 연습입니다. 서버에 가입하거나 비밀번호를 저장하지 않습니다.
-document.querySelector("#signup").addEventListener("submit", (event) => {
-  event.preventDefault(); // 기본 폼 전송을 멈춥니다.
-  const email = document.querySelector("#email").value;
-  document.querySelector("#result").textContent = `${email}의 입력 형식을 확인했습니다.`;
-});
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY02 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <h1>회원가입 폼</h1>
+    <!-- for와 id는 같은 이름으로 연결합니다. name은 전송할 값의 이름입니다. -->
+    <form id="signup">
+      <label for="email">이메일</label>
+      <input id="email" name="email" type="email" required />
+      <label for="pw">비밀번호</label>
+      <input
+        id="pw"
+        name="password"
+        type="password"
+        minlength="6"
+        required
+      />
+      <button type="submit">입력 확인</button>
+    </form>
+    <p id="result"></p>
+    <script>
+      // 화면 연습입니다. 서버에 가입하거나 비밀번호를 저장하지 않습니다.
+      document
+        .querySelector("#signup")
+        .addEventListener("submit", (event) => {
+          event.preventDefault(); // 기본 폼 전송을 멈춥니다.
+          const email = document.querySelector("#email").value;
+          document.querySelector("#result").textContent =
+            `${email}의 입력 형식을 확인했습니다.`;
+        });
+    </script>
+  </body>
 </html>

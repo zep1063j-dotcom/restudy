@@ -1,7 +1,21 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY10 콘솔에 책 정보 출력하기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY10 콘솔에 책 정보 출력하기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/vendor/prettier-standalone.js" defer></script><script src="../공통/vendor/prettier-html.js" defer></script><script src="../공통/vendor/prettier-babel.js" defer></script><script src="../공통/vendor/prettier-estree.js" defer></script><script src="../공통/vendor/prettier-postcss.js" defer></script><script src="../공통/study.js" defer></script></head>
 <body data-day="10"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="active" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
-<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 10 / 읽기 · 수정 · 실행</div><h1>콘솔에 책 정보 출력하기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 10 / 읽기 · 수정 · 실행</div><h1>콘솔에 책 정보 출력하기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="../00_처음_코드읽기.html">기초 용어·들여쓰기 안내</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header><nav class="lesson-toc" aria-label="이 페이지 안에서 이동"><a href="#foundations-title">기초 정의</a><a href="#definitions-title">핵심 정리</a><a href="#practice-lab">코드 수정·실행</a><a href="#review-question">복습문제</a></nav>
 <section class="read-grid"><article><h2>01. 핵심 개념</h2><p><code>const</code>·<code>let</code>, 자료형, <code>typeof</code>, 오류 종류</p></article><article><h2>02. 실행 흐름</h2><p>값 선언 → 계산·문자열 조합 → Console 출력</p></article></section>
+
+<section class="foundations" data-foundations="v1" aria-labelledby="foundations-title">
+<h2 id="foundations-title">기초부터 천천히 읽기</h2>
+<p class="foundation-intro">JavaScript는 값을 읽고 계산한 뒤 다음 작업에 전달합니다. 먼저 값의 종류, 이름을 붙이는 방법, 값을 출력하는 방법을 익히면 이후 조건문과 함수도 읽기 쉬워집니다.</p>
+<h3>처음 보는 말의 정확한 뜻</h3><dl class="definition-list"><dt>선언과 대입</dt><dd>const price = 4000은 이름을 선언하면서 처음 값을 넣는 코드입니다. price = 5000은 이미 있는 이름에 다시 대입하려는 코드입니다.</dd><dt>문자열</dt><dd>글자로 다루는 값입니다. &quot;4000&quot;도 따옴표로 감쌌으므로 숫자 계산값이 아닌 문자열입니다.</dd><dt>숫자와 불리언</dt><dd>4000은 숫자, true와 false는 불리언 값입니다. 불리언은 조건 판단 결과를 표현할 때 자주 만납니다.</dd><dt>undefined와 null</dt><dd>undefined는 값이 아직 없거나 제공되지 않은 경우에 자주 나타납니다. null은 의도적으로 비어 있음을 표시할 때 사용합니다. 구체적 의미는 코드의 약속을 확인합니다.</dd><dt>NaN</dt><dd>숫자 변환이나 계산이 숫자로 성립하지 않을 때 만나는 특수한 숫자 값입니다. Number(&quot;커피&quot;)의 결과가 예입니다.</dd><dt>템플릿 문자열</dt><dd>백틱으로 감싸고 ${표현식}으로 값을 끼워 넣는 문자열입니다. 일반 따옴표의 문자열과 구분합니다.</dd><dt>표현식</dt><dd>계산되어 하나의 값이 되는 코드입니다. 4000 + 500, price, getPrice() 등이 표현식으로 쓰일 수 있습니다.</dd></dl>
+<h3>기호와 문법을 읽는 법</h3><p class="muted">같은 기호도 문맥에 따라 역할이 달라집니다. 아래 설명은 이 페이지의 예제 기준입니다.</p>
+<div class="syntax-scroll"><table class="syntax-table"><caption class="sr-only">DAY10 기호와 예시</caption><thead><tr><th scope="col">표기</th><th scope="col">뜻</th><th scope="col">짧은 예</th></tr></thead><tbody><tr><th scope="row"><code>&quot; &quot; / &#x27; &#x27;</code></th><td>문자열을 감쌉니다.</td><td><code>&quot;커피&quot;</code></td></tr><tr><th scope="row"><code>=</code></th><td>오른쪽 값을 왼쪽 이름에 대입합니다.</td><td><code>let price = 4000</code></td></tr><tr><th scope="row"><code>+</code></th><td>숫자 덧셈 또는 문자열 연결에 쓰입니다.</td><td><code>price + 500</code></td></tr><tr><th scope="row"><code>` ${ } `</code></th><td>문자열 안에 계산값을 넣습니다.</td><td><code>`${price}원`</code></td></tr><tr><th scope="row"><code>;</code></th><td>문장을 끝내는 구분자로 자주 사용합니다.</td><td><code>console.log(price);</code></td></tr></tbody></table></div>
+<h3>짧은 코드 한 줄씩 읽기</h3><pre class="lesson-code"><code>const raw = &quot;4000&quot;;
+const price = Number(raw);
+const total = price + 500;
+console.log(`${total}원`);</code></pre><ol class="line-explanation"><li>1줄 raw는 문자열입니다. const는 이후 raw를 다른 값으로 재대입하지 않겠다는 선언입니다.</li><li>2줄 Number(raw)는 문자열을 숫자로 바꾸고 price라는 이름으로 읽게 합니다.</li><li>3줄은 숫자끼리 더하고 4줄은 그 결과를 문구에 넣어 콘솔에 출력합니다.</li></ol>
+<div class="expected-result"><h4>예상 결과와 전제</h4><p>콘솔에 4500원이 표시됩니다. 2줄의 Number 변환 없이 raw + 500을 계산하면 문자열 &quot;4000500&quot;이 됩니다.</p></div>
+<p class="muted">아래 실행 편집기에는 실행 가능한 전체 예제가 있습니다. 위 짧은 코드는 개념 설명용 발췌이며, 필요한 주변 코드와 전제를 함께 읽어 주세요.</p>
+</section>
 <section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
 <h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
 <p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
@@ -12,31 +26,35 @@
 </section>
 
 <section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>inputPrice를 &quot;5000&quot;으로 바꾸고 두 계산 결과를 예상하세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
-<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+<p class="code-reading-help">코드는 안쪽 단계마다 두 칸씩 들여씁니다. 한 줄이 길면 가로로 움직여 읽을 수 있습니다. 수정한 코드도 ‘들여쓰기 정리’로 정돈할 수 있으며, 저장해 둔 초안은 자동으로 바꾸지 않습니다.</p><section class="lab" id="practice-lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="format-code" type="button" class="secondary">들여쓰기 정리</button><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;ko&quot;&gt;
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-  &lt;title&gt;DAY10 연습&lt;/title&gt;
-  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
-  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;자료형과 계산&lt;/h1&gt;
-&lt;pre id=&quot;result&quot;&gt;&lt;/pre&gt;
-&lt;script&gt;
-// 따옴표로 감싼 값은 문자열입니다.
-const inputPrice = &quot;4000&quot;;
-const wrong = inputPrice + 500;
-const correct = Number(inputPrice) + 500;
-console.log(&quot;입력값의 자료형:&quot;, typeof inputPrice);
-console.log(&quot;문자열에 더하면:&quot;, wrong);
-console.log(&quot;숫자로 바꿔 더하면:&quot;, correct);
-document.querySelector(&quot;#result&quot;).textContent = `그대로 더하기: ${wrong}\n숫자로 더하기: ${correct}`;
-&lt;/script&gt;
-&lt;/body&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta
+      name=&quot;viewport&quot;
+      content=&quot;width=device-width, initial-scale=1&quot;
+    /&gt;
+    &lt;title&gt;DAY10 연습&lt;/title&gt;
+    &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;자료형과 계산&lt;/h1&gt;
+    &lt;pre id=&quot;result&quot;&gt;&lt;/pre&gt;
+    &lt;script&gt;
+      // 따옴표로 감싼 값은 문자열입니다.
+      const inputPrice = &quot;4000&quot;;
+      const wrong = inputPrice + 500;
+      const correct = Number(inputPrice) + 500;
+      console.log(&quot;입력값의 자료형:&quot;, typeof inputPrice);
+      console.log(&quot;문자열에 더하면:&quot;, wrong);
+      console.log(&quot;숫자로 바꿔 더하면:&quot;, correct);
+      document.querySelector(&quot;#result&quot;).textContent =
+        `그대로 더하기: ${wrong}\n숫자로 더하기: ${correct}`;
+    &lt;/script&gt;
+  &lt;/body&gt;
 &lt;/html&gt;
 </textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
 <div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY10 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
-<section class="review"><h2>04. 복습문제</h2><p><code>&quot;4000&quot; + 500</code>의 결과는?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>문자열 <code>&quot;4000500&quot;</code>. 숫자로 변환한 뒤 더하면 4500이다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<section class="review" id="review-question"><h2>04. 복습문제</h2><p><code>&quot;4000&quot; + 500</code>의 결과는?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>문자열 <code>&quot;4000500&quot;</code>. 숫자로 변환한 뒤 더하면 4500이다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
 <footer><p>출처: <a href="https://app.notion.com/p/41654c6415d78059998cd21d6a077bbc" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY08/학습.html">이전 학습</a><a href="../DAY11/학습.html">다음 학습</a></div></footer></main></div></body></html>

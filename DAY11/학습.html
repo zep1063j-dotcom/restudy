@@ -1,7 +1,25 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY11 놀이공원 입장료 계산기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/study.js" defer></script></head>
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DAY11 놀이공원 입장료 계산기</title><link rel="stylesheet" href="../공통/style.css"><script src="../공통/vendor/prettier-standalone.js" defer></script><script src="../공통/vendor/prettier-html.js" defer></script><script src="../공통/vendor/prettier-babel.js" defer></script><script src="../공통/vendor/prettier-estree.js" defer></script><script src="../공통/vendor/prettier-postcss.js" defer></script><script src="../공통/study.js" defer></script></head>
 <body data-day="11"><a class="skip" href="#main">본문으로 이동</a><div class="shell"><aside class="sidebar"><a class="brand" href="../시작하기.html">나의 코드 복습</a><p>AI 코드를 읽고 바꾸는 연습</p><nav aria-label="학습 일자"><a class="" href="../DAY01/학습.html">DAY01 <span>웹의 동작 구조와 HTML 기초</span></a><a class="" href="../DAY02/학습.html">DAY02 <span>회원가입 폼 만들기</span></a><a class="" href="../DAY03/학습.html">DAY03 <span>시맨틱 구조로 다시 쓰기</span></a><a class="" href="../DAY04/학습.html">DAY04 <span>선택자로 스타일 입히기</span></a><a class="" href="../DAY05/학습.html">DAY05 <span>소개 영역과 NEW 배지 만들기</span></a><a class="" href="../DAY06/학습.html">DAY06 <span>소개 영역 반응형과 다크 모드</span></a><a class="" href="../DAY07/학습.html">DAY07 <span>내 페이지를 GitHub에 공개하기</span></a><a class="" href="../DAY08/학습.html">DAY08 <span>Bootstrap으로 블로그 글 페이지 만들기</span></a><a class="" href="../DAY10/학습.html">DAY10 <span>콘솔에 책 정보 출력하기</span></a><a class="active" href="../DAY11/학습.html">DAY11 <span>놀이공원 입장료 계산기</span></a><a class="" href="../DAY12/학습.html">DAY12 <span>용돈 저금 계산기</span></a><a class="" href="../DAY13/학습.html">DAY13 <span>카페 메뉴판 다루기</span></a><a class="" href="../DAY14/학습.html">DAY14 <span>영화 관람 기록 정리하기</span></a><a class="" href="../DAY15/학습.html">DAY15 <span>여행 준비물 목록 만들기</span></a><a class="" href="../DAY16/학습.html">DAY16 <span>물 마시기 기록 버튼 만들기</span></a><a class="" href="../DAY17/학습.html">DAY17 <span>도서 대출 확인 만들기</span></a><a class="" href="../DAY18/학습.html">DAY18 <span>글 한 편 보기 만들기</span></a><a class="" href="../DAY19/학습.html">DAY19 <span>음료 자판기 만들기</span></a><a class="" href="../DAY20/학습.html">DAY20 <span>읽은 글 표시하기</span></a><a class="" href="../DAY21/학습.html">DAY21 <span>오늘의 메뉴 고르기</span></a><a class="" href="../DAY27/학습.html">DAY27 <span>오즈 카페 — 프로젝트 시작</span></a><a class="" href="../DAY28/학습.html">DAY28 <span>오즈 카페 — 메뉴 카드</span></a><a class="" href="../DAY29/학습.html">DAY29 <span>오즈 카페 — 담기</span></a></nav></aside>
-<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 11 / 읽기 · 수정 · 실행</div><h1>놀이공원 입장료 계산기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header>
+<main id="main"><header class="lesson-head"><div class="eyebrow">DAY 11 / 읽기 · 수정 · 실행</div><h1>놀이공원 입장료 계산기</h1><p>이 페이지의 코드는 강의 개념을 바탕으로 새로 구성한 연습 예제입니다.</p><div class="actions"><a class="link" href="../시작하기.html">전체 목차</a><a class="link" href="../00_처음_코드읽기.html">기초 용어·들여쓰기 안내</a><a class="link" href="예제.html" target="_blank" rel="noopener">예제만 새 탭에서 열기</a><button id="complete" type="button">복습 완료 표시</button></div></header><nav class="lesson-toc" aria-label="이 페이지 안에서 이동"><a href="#foundations-title">기초 정의</a><a href="#definitions-title">핵심 정리</a><a href="#practice-lab">코드 수정·실행</a><a href="#review-question">복습문제</a></nav>
 <section class="read-grid"><article><h2>01. 핵심 개념</h2><p><code>=</code>와 <code>===</code>, <code>&amp;&amp;</code>·<code>||</code>, <code>if</code>·<code>else if</code>, 삼항식</p></article><article><h2>02. 실행 흐름</h2><p>입력값 → 조건을 위에서부터 판정 → 맞는 분기 계산 → 결과</p></article></section>
+
+<section class="foundations" data-foundations="v1" aria-labelledby="foundations-title">
+<h2 id="foundations-title">기초부터 천천히 읽기</h2>
+<p class="foundation-intro">조건문은 값에 따라 다른 길을 고르는 코드입니다. 조건이 어디서 만들어지고 처음으로 참이 되는 분기가 어느 것인지 차례로 따라가면 결과를 예측할 수 있습니다.</p>
+<h3>처음 보는 말의 정확한 뜻</h3><dl class="definition-list"><dt>비교 연산자</dt><dd>&lt;, &lt;=, &gt;, &gt;=, ===처럼 값을 비교해 불리언을 만드는 연산자입니다. =와 ===를 구분합니다.</dd><dt>엄격한 비교</dt><dd>===는 자료형을 자동으로 같게 바꾸지 않고 비교합니다. 10과 &quot;10&quot;은 이 비교에서 다릅니다.</dd><dt>truthy와 falsy</dt><dd>조건식에서 참처럼 또는 거짓처럼 판단되는 값입니다. false, 0, &quot;&quot;, null, undefined, NaN 등은 대표적인 falsy 값입니다.</dd><dt>단락 평가</dt><dd>&amp;&amp;와 ||는 왼쪽 값을 보고 오른쪽을 평가할지 정합니다. 그래서 조건뿐 아니라 기본값 선택에도 쓰입니다.</dd><dt>분기와 블록</dt><dd>if의 조건에 따라 실행하는 경로를 분기라고 합니다. {}는 해당 경로에서 실행할 문장들을 묶습니다.</dd><dt>조건의 범위</dt><dd>age &lt; 13과 age &lt;= 13은 13세에서 다릅니다. 포함 여부를 정하는 기호까지 읽어야 합니다.</dd></dl>
+<h3>기호와 문법을 읽는 법</h3><p class="muted">같은 기호도 문맥에 따라 역할이 달라집니다. 아래 설명은 이 페이지의 예제 기준입니다.</p>
+<div class="syntax-scroll"><table class="syntax-table"><caption class="sr-only">DAY11 기호와 예시</caption><thead><tr><th scope="col">표기</th><th scope="col">뜻</th><th scope="col">짧은 예</th></tr></thead><tbody><tr><th scope="row"><code>===</code></th><td>값과 자료형을 비교합니다.</td><td><code>age === 13</code></td></tr><tr><th scope="row"><code>&lt; / &lt;=</code></th><td>작은지 또는 작거나 같은지 비교합니다.</td><td><code>age &lt; 13</code></td></tr><tr><th scope="row"><code>&amp;&amp; / ||</code></th><td>조건 결합과 단락 평가에 쓰입니다.</td><td><code>member &amp;&amp; weekday</code></td></tr><tr><th scope="row"><code>!</code></th><td>불리언으로 판단한 값을 뒤집습니다.</td><td><code>!isLoggedIn</code></td></tr><tr><th scope="row"><code>? :</code></th><td>조건에 따라 둘 중 한 값을 고릅니다.</td><td><code>age &lt; 13 ? 5000 : 10000</code></td></tr></tbody></table></div>
+<h3>짧은 코드 한 줄씩 읽기</h3><pre class="lesson-code"><code>const age = 13;
+let price;
+
+if (age &lt; 13) {
+  price = 5000;
+} else {
+  price = 10000;
+}</code></pre><ol class="line-explanation"><li>age는 숫자 13입니다. price는 뒤에서 재대입할 값이므로 let으로 선언했습니다.</li><li>age &lt; 13은 false이므로 첫 블록을 실행하지 않습니다.</li><li>else 블록의 price = 10000을 실행합니다. 들여쓰기로 각 분기의 내용이 드러납니다.</li></ol>
+<div class="expected-result"><h4>예상 결과와 전제</h4><p>price는 10000이 됩니다. 조건의 &lt;를 &lt;=로 바꾸면 같은 13세에서 5000이 됩니다.</p></div>
+<p class="muted">아래 실행 편집기에는 실행 가능한 전체 예제가 있습니다. 위 짧은 코드는 개념 설명용 발췌이며, 필요한 주변 코드와 전제를 함께 읽어 주세요.</p>
+</section>
 <section class="concept-guide" aria-labelledby="definitions-title" data-added-explanations="2026-11-12">
 <h2 id="definitions-title">먼저 알아둘 용어와 정의</h2>
 <p class="muted">코드 전체를 외우기보다, 각 이름이 무엇을 가리키는지 연결해서 읽어 보세요.</p>
@@ -12,32 +30,40 @@
 </section>
 
 <section class="exercise"><h2>03. 직접 바꿔 보기</h2><p>할인 기준 age &lt; 13의 13을 15로 바꾸고 14·15·16세를 시험하세요.</p><p class="muted">먼저 결과를 예상하고 한두 줄만 바꿔 보세요. 화면 편집 내용은 이 브라우저에 자동 저장됩니다. 브라우저가 저장을 제한하면 저장되지 않을 수 있습니다.</p></section>
-<section class="lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
+<p class="code-reading-help">코드는 안쪽 단계마다 두 칸씩 들여씁니다. 한 줄이 길면 가로로 움직여 읽을 수 있습니다. 수정한 코드도 ‘들여쓰기 정리’로 정돈할 수 있으며, 저장해 둔 초안은 자동으로 바꾸지 않습니다.</p><section class="lab" id="practice-lab" aria-label="코드 편집과 실행"><div class="editor"><div class="bar"><h2>읽고 수정할 코드</h2><button id="format-code" type="button" class="secondary">들여쓰기 정리</button><button id="reset" type="button" class="secondary">시작 코드로 되돌리기</button></div><label class="sr-only" for="code">수정할 HTML 코드</label><textarea id="code" spellcheck="false">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;ko&quot;&gt;
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-  &lt;title&gt;DAY11 연습&lt;/title&gt;
-  &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
-  &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot;&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;입장료 계산기&lt;/h1&gt;
-&lt;label for=&quot;age&quot;&gt;나이&lt;/label&gt;&lt;input id=&quot;age&quot; type=&quot;number&quot; min=&quot;0&quot; value=&quot;12&quot;&gt;
-&lt;button id=&quot;calc&quot;&gt;계산&lt;/button&gt;&lt;p id=&quot;result&quot;&gt;&lt;/p&gt;
-&lt;script&gt;
-document.querySelector(&quot;#calc&quot;).addEventListener(&quot;click&quot;, () =&gt; {
-  const raw = document.querySelector(&quot;#age&quot;).value;
-  const age = Number(raw);
-  if (raw === &quot;&quot; || !Number.isFinite(age) || age &lt; 0) return;
-  // 조건은 위에서부터 검사합니다. 13을 바꾸고 경계값을 시험해 보세요.
-  const price = age &lt; 13 ? 5000 : 10000;
-  document.querySelector(&quot;#result&quot;).textContent = `${price}원`;
-});
-&lt;/script&gt;
-&lt;/body&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta
+      name=&quot;viewport&quot;
+      content=&quot;width=device-width, initial-scale=1&quot;
+    /&gt;
+    &lt;title&gt;DAY11 연습&lt;/title&gt;
+    &lt;!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../공통/example.css&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;입장료 계산기&lt;/h1&gt;
+    &lt;label for=&quot;age&quot;&gt;나이&lt;/label
+    &gt;&lt;input id=&quot;age&quot; type=&quot;number&quot; min=&quot;0&quot; value=&quot;12&quot; /&gt;
+    &lt;button id=&quot;calc&quot;&gt;계산&lt;/button&gt;
+    &lt;p id=&quot;result&quot;&gt;&lt;/p&gt;
+    &lt;script&gt;
+      document
+        .querySelector(&quot;#calc&quot;)
+        .addEventListener(&quot;click&quot;, () =&gt; {
+          const raw = document.querySelector(&quot;#age&quot;).value;
+          const age = Number(raw);
+          if (raw === &quot;&quot; || !Number.isFinite(age) || age &lt; 0) return;
+          // 조건은 위에서부터 검사합니다. 13을 바꾸고 경계값을 시험해 보세요.
+          const price = age &lt; 13 ? 5000 : 10000;
+          document.querySelector(&quot;#result&quot;).textContent =
+            `${price}원`;
+        });
+    &lt;/script&gt;
+  &lt;/body&gt;
 &lt;/html&gt;
 </textarea><div class="bar"><span id="save-status" role="status">시작 코드</span><button id="download" class="secondary" type="button">내 코드 파일로 받기</button><button id="run" type="button">실행 / 새로 반영</button></div></div>
 <div class="preview"><div class="bar"><h2>실행 결과</h2><div class="width-controls"><button id="narrow" class="secondary" type="button">좁게 360</button><button id="wide" class="secondary" type="button">넓게 800</button></div></div><p id="frame-title" class="frame-title"></p><div class="preview-scroll"><iframe id="preview" title="DAY11 실행 결과" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe></div><h3>콘솔 / 오류</h3><pre id="console" aria-live="polite">실행 준비 중…</pre><p class="muted">오류가 생기면 마지막으로 바꾼 줄부터 확인하세요. 탭 제목은 이 영역과 ‘예제만 새 탭’에서 확인할 수 있습니다.</p></div></section>
-<section class="review"><h2>04. 복습문제</h2><p><code>age &gt;= 10</code> 다음 <code>else if (age &gt;= 20)</code>이면 25세는 어느 쪽으로 갈까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>첫 번째 <code>age &gt;= 10</code> 분기다. 더 좁은 조건을 앞에 둘지, 구간을 명시할지 의도에 맞춰 고친다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
+<section class="review" id="review-question"><h2>04. 복습문제</h2><p><code>age &gt;= 10</code> 다음 <code>else if (age &gt;= 20)</code>이면 25세는 어느 쪽으로 갈까?</p><details><summary>내가 답한 뒤 해설 보기</summary><p>첫 번째 <code>age &gt;= 10</code> 분기다. 더 좁은 조건을 앞에 둘지, 구간을 명시할지 의도에 맞춰 고친다.</p></details><label for="memo">내 말로 실행 흐름 적기</label><textarea id="memo" placeholder="무엇이 시작시키고, 어떤 값이 바뀌고, 어디에 보이나요?"></textarea><span id="memo-status" role="status"></span></section>
 <footer><p>출처: <a href="https://app.notion.com/p/41654c6415d780019eb0fb3d935fecc4" target="_blank" rel="noopener">해당 DAY의 Notion 과제</a> 및 로컬 수업 PDF. 본인의 제출 완료 여부를 평가한 자료는 아닙니다.</p><div class="pager"><a href="../DAY10/학습.html">이전 학습</a><a href="../DAY12/학습.html">다음 학습</a></div></footer></main></div></body></html>

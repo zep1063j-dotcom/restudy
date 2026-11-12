@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY04 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<style>
-/* 점(.)은 class 선택자입니다. order-button이 붙은 버튼만 고릅니다. */
-.order-button { background: #087f8c; color: white; }
-/* id 선택자와 class가 같은 속성을 정하면, 이 예제에서는 id가 우선합니다. */
-#special { background: #a65325; }
-.order-button:hover { opacity: 0.75; }
-</style>
-<h1>선택자로 원하는 부분만 수정</h1>
-<button class="order-button">주문하기</button>
-<button class="order-button" id="special">특별 주문</button>
-<p>첫 버튼 색만 바꾸려면 .order-button 규칙을 고쳐 보세요.</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY04 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <style>
+      /* 점(.)은 class 선택자입니다. order-button이 붙은 버튼만 고릅니다. */
+      .order-button {
+        background: #087f8c;
+        color: white;
+      }
+      /* id 선택자와 class가 같은 속성을 정하면, 이 예제에서는 id가 우선합니다. */
+      #special {
+        background: #a65325;
+      }
+      .order-button:hover {
+        opacity: 0.75;
+      }
+    </style>
+    <h1>선택자로 원하는 부분만 수정</h1>
+    <button class="order-button">주문하기</button>
+    <button class="order-button" id="special">특별 주문</button>
+    <p>첫 버튼 색만 바꾸려면 .order-button 규칙을 고쳐 보세요.</p>
+  </body>
 </html>

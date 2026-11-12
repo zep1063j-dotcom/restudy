@@ -1,32 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY19 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<h1>음료 자판기</h1>
-<button id="coin">1000원 넣기</button><button id="water">물 800원</button><p id="result"></p>
-<script>
-const machine = {
-  balance: 0,
-  insert(amount) { this.balance += amount; this.render(); },
-  buy(name, price) {
-    if (this.balance < price) { alert("돈이 부족합니다."); return; }
-    this.balance -= price;
-    this.render();
-    console.log(`${name} 구매 완료`);
-  },
-  render() { document.querySelector("#result").textContent = `잔액 ${this.balance}원`; }
-};
-// 이름과 가격을 기억하는 함수를 반환합니다. 구매는 클릭할 때 일어납니다.
-function makeBuyer(name, price) { return () => machine.buy(name, price); }
-document.querySelector("#coin").addEventListener("click", () => machine.insert(1000));
-document.querySelector("#water").addEventListener("click", makeBuyer("물", 800));
-machine.render();
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY19 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <h1>음료 자판기</h1>
+    <button id="coin">1000원 넣기</button
+    ><button id="water">물 800원</button>
+    <p id="result"></p>
+    <script>
+      const machine = {
+        balance: 0,
+        insert(amount) {
+          this.balance += amount;
+          this.render();
+        },
+        buy(name, price) {
+          if (this.balance < price) {
+            alert("돈이 부족합니다.");
+            return;
+          }
+          this.balance -= price;
+          this.render();
+          console.log(`${name} 구매 완료`);
+        },
+        render() {
+          document.querySelector("#result").textContent =
+            `잔액 ${this.balance}원`;
+        }
+      };
+      // 이름과 가격을 기억하는 함수를 반환합니다. 구매는 클릭할 때 일어납니다.
+      function makeBuyer(name, price) {
+        return () => machine.buy(name, price);
+      }
+      document
+        .querySelector("#coin")
+        .addEventListener("click", () => machine.insert(1000));
+      document
+        .querySelector("#water")
+        .addEventListener("click", makeBuyer("물", 800));
+      machine.render();
+    </script>
+  </body>
 </html>

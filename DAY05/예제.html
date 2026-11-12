@@ -1,25 +1,51 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAY05 연습</title>
-  <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
-  <link rel="stylesheet" href="../공통/example.css">
-</head>
-<body>
-<style>
-/* 박스 크기는 테두리를 포함해 계산합니다. */
-* { box-sizing: border-box; }
-.cards { display: flex; gap: 16px; flex-wrap: wrap; }
-.product { position: relative; width: 210px; padding: 24px; border: 2px solid #cadbe1; }
-.badge { position: absolute; top: 5px; right: 7px; color: #087f8c; }
-</style>
-<h1>카드 배치와 여백</h1>
-<div class="cards">
-  <article class="product"><span class="badge">NEW</span><h2>커피</h2><p>4000원</p></article>
-  <article class="product"><h2>소금빵</h2><p>3500원</p></article>
-</div>
-<p>padding은 카드 안쪽 여백, gap은 카드 사이 간격입니다.</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>DAY05 연습</title>
+    <!-- 아래 공통 CSS는 읽기 편한 기본 모양입니다. 오늘의 학습 코드는 body부터입니다. -->
+    <link rel="stylesheet" href="../공통/example.css" />
+  </head>
+  <body>
+    <style>
+      /* 박스 크기는 테두리를 포함해 계산합니다. */
+      * {
+        box-sizing: border-box;
+      }
+      .cards {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .product {
+        position: relative;
+        width: 210px;
+        padding: 24px;
+        border: 2px solid #cadbe1;
+      }
+      .badge {
+        position: absolute;
+        top: 5px;
+        right: 7px;
+        color: #087f8c;
+      }
+    </style>
+    <h1>카드 배치와 여백</h1>
+    <div class="cards">
+      <article class="product">
+        <span class="badge">NEW</span>
+        <h2>커피</h2>
+        <p>4000원</p>
+      </article>
+      <article class="product">
+        <h2>소금빵</h2>
+        <p>3500원</p>
+      </article>
+    </div>
+    <p>padding은 카드 안쪽 여백, gap은 카드 사이 간격입니다.</p>
+  </body>
 </html>
