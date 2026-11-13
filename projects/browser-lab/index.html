@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1"
+    />
+    <title>카페 주문 화면 연습</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <h1>나의 카페</h1>
+      <p>메뉴를 고르고 예상 금액을 계산합니다.</p>
+      <section class="cards" aria-label="메뉴">
+        <article>
+          <h2>커피</h2>
+          <p>4000원</p>
+        </article>
+        <article>
+          <h2>소금빵</h2>
+          <p>3500원</p>
+        </article>
+      </section>
+      <form id="order" novalidate>
+        <label for="menu">메뉴</label>
+        <select id="menu">
+          <option value="coffee">커피</option>
+          <option value="bread">소금빵</option>
+        </select>
+        <label for="qty">수량 (1~20)</label>
+        <input id="qty" type="number" value="1" min="1" max="20" />
+        <button type="submit">예상 금액 확인</button>
+      </form>
+      <p id="message" role="status"></p>
+      <p class="notice">
+        이 프로젝트는 브라우저 계산 연습입니다. 서버 주문·결제·영구
+        저장을 하지 않습니다.
+      </p>
+    </main>
+  </body>
+</html>
