@@ -127,6 +127,89 @@
       .join(" ")
       .toLowerCase();
   }
+  const focusedNotes = window.GLOSSARY_NOTES || {};
+  const aliases = {
+    state: ["useState", "스테이트", "상태"],
+    props: ["프롭스", "프롭"],
+    "effect와 의존성 배열": ["useEffect", "이펙트"],
+    "렌더와 커밋": ["렌더링", "render", "커밋과정"],
+    "배열 구조분해": ["배열구조분해", "array destructuring"],
+    객체: ["object"],
+    배열: ["array"],
+    함수: ["function"],
+    반복문: ["for", "loop"],
+    "캐스케이딩과 우선순위": ["specificity"],
+    "박스 모델": ["box model"],
+    이벤트: ["event"],
+    "단방향 데이터 흐름": ["one-way data flow", "단방향데이터흐름"]
+  };
+  aliases["커밋"] = ["commit", "git commit"];
+  aliases[".gitignore"] = ["gitignore"];
+  const normalized = (value) => value.toLowerCase().replace(/\s+/g, "");
+  let activeKeyword = "";
+  let visibleCount = 0;
+  function termRank(entry, keyword) {
+    const needle = normalized(keyword);
+    if (normalized(entry.term) === needle) return 0;
+    if (normalized(entry.term).includes(needle)) return 1;
+    if ((aliases[entry.key] || []).some((alias) => normalized(alias).includes(needle)))
+      return 2;
+    return 3;
+  }
+  function detailFor(entry) {
+    const custom = focusedNotes[entry.key];
+    const lesson = entry.references[0].lesson;
+    const tokens = entry.term
+      .toLowerCase()
+      .split(/[ /·와과]+/)
+      .filter((token) => token.length > 1);
+    const sections = lesson.sections
+      .map((section, index) => ({
+        ...section,
+        index,
+        score: tokens.filter((token) =>
+          (section.title + " " + section.body).toLowerCase().includes(token)
+        ).length
+      }))
+      .sort((a, b) => b.score - a.score || a.index - b.index);
+    return {
+      lesson,
+      code: custom?.code || lesson.example,
+      mode: custom?.mode || lesson.mode,
+      explain: custom?.explain || sections.slice(0, 2).map((section) => section.body),
+      flow: custom?.flow || lesson.trace.map(([title, body]) => `${title}: ${body}`),
+      result: custom?.result || lesson.checks.join(" "),
+      edit: custom?.edit || lesson.task,
+      warning:
+        custom?.warning ||
+        lesson.errors.map(([title, body]) => `${title}: ${body}`).join(" "),
+      focused: !!custom
+    };
+  }
+  function detailMarkup(entry) {
+    const detail = detailFor(entry);
+    const environments = {
+      html: "HTML · 브라우저에서 표시하는 예제",
+      console: "JavaScript · 콘솔 코드",
+      jsx: "React · 준비된 React 실행 환경의 컴포넌트",
+      node: "Node.js · 파일로 저장해 터미널에서 실행",
+      reference: "파일·명령 구문 · 실행 위치와 순서를 확인하세요"
+    };
+    const otherMeanings = [
+      ...new Map(
+        entry.references
+          .filter((ref) => ref.meaning !== entry.meaning)
+          .map((ref) => [ref.meaning, ref])
+      ).values()
+    ];
+    return `<div class="term-reading"><h5>${detail.focused ? "이 용어를 코드에서 읽는 방법" : "이 용어가 쓰이는 수업의 문맥"}</h5>${detail.explain.map((paragraph) => `<p>${rich(paragraph)}</p>`).join("")}${otherMeanings.length ? `<details class="term-context-variants"><summary>다른 사용 문맥도 확인하기</summary><ul>${otherMeanings.map((ref) => `<li><strong>${escape(ref.lesson.title)}</strong><p>${rich(ref.meaning)}</p></li>`).join("")}</ul></details>` : ""}</div>
+      <section class="term-example"><div class="term-example-heading"><h5>${detail.focused ? "용어에 집중한 예시 구문" : "함께 읽는 전체 예제"}</h5><button type="button" class="secondary term-copy" data-copy-term="${escape(entry.key)}" aria-label="${escape(entry.term)} 예제 코드 복사">코드 복사</button></div><p class="term-environment">${escape(environments[detail.mode] || environments.reference)}</p><pre class="term-code" tabindex="0"><code>${escape(detail.code)}</code></pre>${detail.focused ? "" : `<p class="subtle">${escape(detail.lesson.title)} 수업에서 가져온 문맥 예제입니다. 위 정의와 아래 흐름을 함께 읽으세요.</p>`}</section>
+      <section class="term-flow"><h5>어떤 순서로 실행되나요?</h5><ol>${detail.flow.map((step) => `<li>${rich(step)}</li>`).join("")}</ol></section>
+      <div class="term-result"><h5>예상 결과 · 확인할 동작</h5><p>${rich(detail.result)}</p></div>
+      <div class="term-edit"><h5>직접 바꿔 보세요</h5><p>${rich(detail.edit)}</p></div>
+      <div class="term-pitfall"><h5>헷갈리기 쉬운 부분</h5><p>${rich(detail.warning)}</p></div>
+      <p class="term-continue"><a href="lesson.html?id=${encodeURIComponent(detail.lesson.id)}">${["html", "console", "jsx"].includes(detail.lesson.mode) ? "수정하며 실행할 수 있는 관련 수업" : "파일과 실행 순서를 다루는 관련 수업"} · ${escape(detail.lesson.title)} ↗</a></p>`;
+  }
   const allEntries = [...entries.values()].sort((a, b) =>
     a.term.localeCompare(b.term, "ko")
   );
@@ -150,16 +233,36 @@
     return `<article class="glossary-entry">
       <h4 class="term-name">${escape(entry.term)}</h4>
       <p class="term-meaning">${rich(entry.meaning)}</p>
-      <p class="term-context"><span>연결되는 작업</span>${escape(first.lesson.lead)}</p>
-      <a class="term-lesson" href="lesson.html?id=${encodeURIComponent(first.lesson.id)}">실제 코드 보기 · ${escape(first.lesson.title)} <span aria-hidden="true">↗</span></a>
+      <details class="term-detail" data-term="${escape(entry.key)}" ${activeKeyword && (visibleCount <= 5 || termRank(entry, activeKeyword) === 0) ? "open" : ""}><summary>자세한 설명 · 예시 구문 · 수정 방법</summary><div class="term-detail-body">${activeKeyword && (visibleCount <= 5 || termRank(entry, activeKeyword) === 0) ? detailMarkup(entry) : ""}</div></details>
       ${otherLessons.length ? `<details class="term-related"><summary>관련 수업 ${otherLessons.length}개 더 보기</summary><ul>${otherLessons.map((ref) => `<li><a href="lesson.html?id=${encodeURIComponent(ref.lesson.id)}">${escape(tracks.find((track) => track.id === ref.lesson.track).name)} · ${escape(ref.lesson.title)}</a></li>`).join("")}</ul></details>` : ""}
     </article>`;
   }
 
   function render() {
     const keyword = input.value.trim().toLowerCase();
-    const matches = allEntries.filter((entry) => entry.search.includes(keyword));
+    activeKeyword = keyword;
+    const namedMatches = keyword
+      ? allEntries.filter((entry) => termRank(entry, keyword) < 3)
+      : [];
+    const matches = (
+      namedMatches.length
+        ? namedMatches
+        : allEntries.filter((entry) => {
+            const custom = focusedNotes[entry.key];
+            const haystack = [
+              entry.search,
+              ...(custom?.explain || []),
+              custom?.code || ""
+            ].join(" ");
+            return normalized(haystack).includes(normalized(keyword));
+          })
+    ).sort(
+      (a, b) =>
+        (keyword ? termRank(a, keyword) - termRank(b, keyword) : 0) ||
+        a.term.localeCompare(b.term, "ko")
+    );
     const visible = matches.filter((entry) => field === "all" || entry.field === field);
+    visibleCount = visible.length;
     const fieldName = field === "all" ? "전체 분야" : descriptions[field].title;
     count.textContent = `${fieldName} · ${visible.length}개 용어${keyword ? ` · “${input.value.trim()}” 검색 결과` : ""}`;
     categoryNav.innerHTML = [
@@ -211,7 +314,7 @@
       </details>`;
         })
         .join("") ||
-      `<div class="empty-state"><p>이 분야에서 일치하는 용어를 찾지 못했습니다.</p><p>검색어를 줄이거나 ‘전체 분야’에서 다시 찾아보세요.</p></div>`;
+      `<div class="empty-state"><p>이 분야에서 일치하는 용어를 찾지 못했습니다.</p><p>검색어를 줄이거나 ‘전체 분야’에서 다시 찾아보세요.</p><p><a href="curriculum.html?q=${encodeURIComponent(input.value.trim())}">이 검색어로 전체 수업에서도 찾아보기 →</a></p></div>`;
     const next = new URLSearchParams();
     if (field !== "all") next.set("track", field);
     if (input.value.trim()) next.set("q", input.value.trim());
@@ -221,6 +324,31 @@
       /* Local file browsing may restrict history changes. */
     }
   }
+  result.addEventListener(
+    "toggle",
+    (event) => {
+      const panel = event.target;
+      if (!panel.matches(".term-detail") || !panel.open) return;
+      const body = panel.querySelector(".term-detail-body");
+      if (!body.hasChildNodes())
+        body.innerHTML = detailMarkup(entries.get(panel.dataset.term));
+    },
+    true
+  );
+  result.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-copy-term]");
+    if (!button) return;
+    const code = detailFor(entries.get(button.dataset.copyTerm)).code;
+    try {
+      await navigator.clipboard.writeText(code);
+      button.textContent = "복사했습니다";
+    } catch {
+      button.textContent = "코드를 선택해 복사해 주세요";
+    }
+    setTimeout(() => {
+      button.textContent = "코드 복사";
+    }, 2000);
+  });
   categoryNav.addEventListener("click", (event) => {
     const button = event.target.closest("[data-field]");
     if (!button) return;

@@ -2460,3 +2460,138 @@ details > p {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Keyword explanations stay next to their syntax and expected result. */
+.term-detail {
+  margin: 18px 0 10px;
+}
+.term-detail > summary {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--accent);
+  font-weight: 650;
+  padding: 10px 0;
+}
+.term-detail[open] > summary {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.term-detail-body {
+  min-width: 0;
+}
+.term-detail-body h5 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.8;
+  margin: 0 0 12px;
+}
+.term-reading p,
+.term-flow li {
+  font-size: 16px;
+  line-height: 2;
+  margin-bottom: 17px;
+}
+.term-example {
+  margin: 28px 0;
+}
+.term-example-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+.term-example-heading h5 {
+  margin-bottom: 0;
+}
+.term-example-heading button {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+.glossary-entry .term-environment {
+  margin: 12px 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.term-code {
+  background: var(--code);
+  color: #e3eee7;
+  padding: 23px;
+  border-radius: 8px;
+  white-space: pre;
+  max-width: 100%;
+  overflow: auto;
+  font:
+    13px/2 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  tab-size: 2;
+  margin: 0 0 14px;
+}
+.term-code code {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+.term-flow {
+  margin: 24px 0;
+}
+.term-flow ol {
+  padding-left: 24px;
+}
+.term-flow li {
+  padding-left: 6px;
+  margin: 14px 0;
+}
+.term-result,
+.term-edit,
+.term-pitfall {
+  margin: 18px 0;
+  padding: 18px 21px;
+  border-radius: 7px;
+}
+.term-result {
+  background: #edf4e9;
+}
+.term-edit {
+  background: #f2f4ed;
+  border-left: 3px solid var(--accent);
+}
+.term-pitfall {
+  background: #f6f0e5;
+}
+.term-detail-body .term-result p,
+.term-detail-body .term-edit p,
+.term-detail-body .term-pitfall p {
+  font-size: 14px;
+  line-height: 1.95;
+  margin-bottom: 0;
+}
+.term-detail-body .term-continue {
+  margin: 25px 0 12px;
+}
+.term-continue a {
+  line-height: 1.9;
+}
+@media (max-width: 600px) {
+  .term-code {
+    font-size: 13px;
+    padding: 18px 15px;
+  }
+  .term-reading p,
+  .term-flow li {
+    font-size: 15px;
+  }
+  .term-result,
+  .term-edit,
+  .term-pitfall {
+    padding: 17px;
+  }
+}
