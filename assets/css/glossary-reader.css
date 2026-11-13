@@ -1,0 +1,372 @@
+/* Reading comes first: short definitions, clear steps and a comfortable measure. */
+.glossary-page {
+  max-width: 1240px;
+}
+.glossary-heading h1 {
+  font-size: 38px;
+  line-height: 1.5;
+  letter-spacing: -0.045em;
+}
+.glossary-heading .page-lead {
+  font-size: 17px;
+  max-width: 52ch;
+  line-height: 1.9;
+}
+.glossary-searching .glossary-heading h1 {
+  font-size: 30px;
+  margin-bottom: 14px;
+}
+.glossary-searching .glossary-heading h1 br {
+  display: none;
+}
+.glossary-searching .glossary-heading .eyebrow {
+  margin-bottom: 12px;
+}
+.glossary-searching .glossary-heading .page-lead {
+  max-width: none;
+  margin-bottom: 24px;
+}
+.glossary-searching .glossary-search-panel {
+  margin-bottom: 28px;
+}
+#glossary-filter-drawer > summary {
+  display: none;
+}
+.glossary-single-result .glossary-layout {
+  display: block;
+  max-width: 840px;
+  margin: 0 auto;
+}
+.glossary-single-result .glossary-sidebar {
+  position: static;
+  margin-bottom: 20px;
+}
+.glossary-single-result #glossary-filter-drawer > summary {
+  display: list-item;
+  font-size: 14px;
+  padding: 10px 0;
+  color: var(--accent);
+}
+.glossary-single-result #glossary-filter-drawer[open] {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+.glossary-single-result #glossary-categories {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.glossary-single-result #glossary-filter-drawer h2 {
+  margin: 12px 0;
+}
+.glossary-single-result .glossary-group > summary,
+.glossary-single-result .glossary-use,
+.glossary-single-result .glossary-topic-nav,
+.glossary-single-result .glossary-topic-title,
+.glossary-single-result .glossary-results-bar > div,
+.glossary-single-result .glossary-results > .subtle {
+  display: none;
+}
+.glossary-single-result .glossary-results-bar {
+  padding-bottom: 16px;
+}
+.glossary-single-result .glossary-group {
+  border-radius: 12px;
+}
+.glossary-single-result .glossary-group-body {
+  padding: 0 42px;
+}
+.glossary-single-result .glossary-entry {
+  padding: 32px 0;
+}
+.glossary-entry .term-field-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.glossary-entry .term-name {
+  color: var(--ink);
+  font-size: 25px;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+.term-definition-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+.glossary-entry .term-meaning {
+  margin: 0 0 22px;
+}
+.glossary-entry .term-meaning p {
+  font-size: 18px;
+  line-height: 1.95;
+  margin: 0 0 13px;
+  color: var(--ink);
+}
+.term-detail > summary {
+  font-size: 14px;
+  padding: 12px 0;
+}
+.term-detail[open] > summary {
+  margin-bottom: 26px;
+}
+.term-detail-body {
+  font-size: 17px;
+  line-height: 1.95;
+  color: #263e36;
+}
+.term-detail-body .term-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+.term-detail-body .term-reading p,
+.term-detail-body .term-flow li {
+  font-size: 17px;
+  line-height: 2;
+  margin: 0 0 18px;
+}
+.term-reading {
+  margin: 32px 0;
+}
+.term-detail-body .term-prerequisites {
+  margin: 0 0 32px;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f6f8f2;
+}
+.term-prerequisites > summary {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.9;
+}
+.term-prerequisites dl {
+  margin: 18px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+}
+.term-prerequisites dt {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+.term-prerequisites dd {
+  font-size: 15px;
+  line-height: 1.9;
+  margin: 0;
+}
+.term-example {
+  margin: 36px 0;
+}
+.term-example-heading .term-section-title {
+  margin-bottom: 0;
+}
+.term-example-heading .term-copy {
+  font-size: 12px;
+  padding: 8px 12px;
+}
+.glossary-entry .term-environment {
+  color: #50625b;
+  font-size: 13px;
+  line-height: 1.9;
+  margin: 14px 0;
+}
+.term-code {
+  padding: 26px;
+  font:
+    14px/1.95 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+}
+.term-line-reading {
+  margin: 36px 0;
+}
+.term-line-reading ol {
+  list-style: none;
+  counter-reset: code-step;
+  margin: 0;
+  padding: 0;
+}
+.term-line-reading li {
+  counter-increment: code-step;
+  border-top: 1px solid var(--line);
+  padding: 20px 0;
+}
+.term-line-reading li::before {
+  content: counter(code-step) ". ";
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.term-line-reading li > code {
+  font-size: 13px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.term-detail-body .term-line-reading p {
+  font-size: 16px;
+  line-height: 1.95;
+  margin: 12px 0 0;
+}
+.term-flow {
+  margin: 36px 0;
+}
+.term-flow ol {
+  padding-left: 25px;
+}
+.term-flow li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+.term-result,
+.term-pitfall {
+  background: transparent;
+  border-radius: 0;
+  padding: 28px 0;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.term-edit {
+  background: #f0f5eb;
+  border-left: 3px solid var(--accent);
+  padding: 25px;
+  margin: 10px 0 28px;
+}
+.term-detail-body .term-result p,
+.term-detail-body .term-edit p,
+.term-detail-body .term-pitfall p {
+  font-size: 17px;
+  line-height: 1.95;
+  margin: 0 0 14px;
+}
+.term-detail-body .term-result p:last-child,
+.term-detail-body .term-edit p:last-child,
+.term-detail-body .term-pitfall p:last-child {
+  margin-bottom: 0;
+}
+.term-precise {
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  margin: 8px 0 28px;
+}
+.term-precise > summary {
+  font-size: 14px;
+  color: var(--accent);
+}
+.term-detail-body .term-precise p {
+  font-size: 15px;
+  line-height: 2;
+  margin-top: 16px;
+}
+.term-context-variants {
+  padding-top: 16px;
+  font-size: 14px;
+}
+.term-related {
+  padding-top: 16px;
+}
+@media (max-width: 800px) {
+  .glossary-heading h1 {
+    font-size: 29px;
+  }
+  .glossary-searching .glossary-heading h1 {
+    font-size: 26px;
+  }
+  #glossary-filter-drawer > summary {
+    display: list-item;
+    color: var(--accent);
+    font-size: 14px;
+    padding: 10px 0;
+  }
+  #glossary-filter-drawer > h2 {
+    margin-top: 16px;
+  }
+  .glossary-single-result #glossary-categories {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .glossary-single-result .glossary-group-body {
+    padding: 0 23px;
+  }
+  .glossary-single-result .glossary-entry {
+    padding: 26px 0;
+  }
+  .term-prerequisites dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .term-code {
+    font-size: 13px;
+    padding: 22px 17px;
+  }
+  .term-detail-body .term-section-title {
+    font-size: 19px;
+  }
+  .term-edit {
+    padding: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glossary-page * {
+    scroll-behavior: auto !important;
+  }
+}
+
+.glossary-searching .glossary-heading .eyebrow,
+.glossary-searching .glossary-heading .page-lead {
+  display: none;
+}
+.glossary-searching .glossary-heading h1 {
+  margin-bottom: 24px;
+}
+.term-continue a {
+  font-size: 15px;
+}
+.term-concept-map {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 25px 0 30px;
+}
+.term-concept-map li {
+  position: relative;
+  padding: 14px 12px;
+  border: 1px solid var(--line);
+  background: #f5f8f1;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: center;
+}
+.term-concept-map li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -12px;
+  top: calc(50% - 12px);
+  color: var(--accent);
+  background: white;
+}
+@media (max-width: 650px) {
+  .term-concept-map {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+  }
+  .term-concept-map li:not(:last-child)::after {
+    content: "↓";
+    right: calc(50% - 7px);
+    top: auto;
+    bottom: -17px;
+  }
+}

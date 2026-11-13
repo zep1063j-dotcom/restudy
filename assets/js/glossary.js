@@ -3,6 +3,7 @@
   if (document.body.dataset.page !== "glossary" || !window.ACADEMY) return;
 
   const { lessons, tracks } = window.ACADEMY;
+  const plainDefinitions = window.PLAIN_DEFINITIONS || {};
   const escape = (value) =>
     String(value ?? "").replace(
       /[&<>"']/g,
@@ -121,6 +122,7 @@
     entry.meaning = entry.references[0].meaning;
     entry.search = [
       entry.term,
+      plainDefinitions[entry.key] || "",
       ...entry.references.flatMap((ref) => [ref.meaning, ref.lesson.title]),
       descriptions[entry.field].title
     ]
@@ -186,15 +188,101 @@
       focused: !!custom
     };
   }
+  function paragraphs(text) {
+    let parts = [text];
+    if (typeof Intl.Segmenter === "function")
+      parts = [...new Intl.Segmenter("ko", { granularity: "sentence" }).segment(text)]
+        .map((part) => part.segment.trim())
+        .filter(Boolean);
+    const blocks = [];
+    let current = "";
+    for (const part of parts) {
+      if (current && current.length + part.length > 135) {
+        blocks.push(current);
+        current = "";
+      }
+      current += (current ? " " : "") + part;
+    }
+    if (current) blocks.push(current);
+    return blocks.map((block) => `<p>${rich(block)}</p>`).join("");
+  }
+  const vocabulary = {
+    React: "화면을 작은 함수 조각으로 나누어 만들고 바꾸는 JavaScript 도구입니다.",
+    컴포넌트:
+      "화면의 한 부분을 만드는 함수입니다. 메뉴 카드 한 장을 만드는 함수를 예로 들 수 있습니다.",
+    props:
+      "컴포넌트가 바깥에서 건네받는 입력값입니다. 이름·숫자·함수도 받을 수 있습니다.",
+    state:
+      "React가 다음 화면을 만들 때도 기억하는 값입니다. 버튼을 눌렀을 때 바뀌는 수량이 예입니다.",
+    useState:
+      "기억할 값의 첫 상태를 정하고, 현재 값과 변경 요청 함수를 받는 React 기능입니다.",
+    렌더: "React가 함수를 실행해 다음 화면에 무엇을 보여 줄지 계산하는 일입니다.",
+    DOM: "브라우저가 HTML을 읽어 만든 문서 구조입니다. 글자와 버튼 같은 요소를 코드로 찾을 수 있습니다.",
+    브라우저: "Chrome처럼 웹페이지를 여는 프로그램입니다.",
+    함수: "필요할 때 실행할 수 있도록 작업을 묶고 이름을 붙인 코드입니다.",
+    변수: "값을 기억해 두고 이름으로 다시 읽을 수 있게 하는 자리입니다.",
+    배열: "값들이 순서대로 들어 있는 목록입니다. 첫 항목의 위치 번호는 0입니다.",
+    객체: "이름과 값을 짝지어 담은 묶음입니다. 메뉴의 이름과 가격을 한데 담을 수 있습니다.",
+    매개변수: "함수가 받을 값에 붙인 이름입니다. 실제로 건네는 값은 인수라고 부릅니다.",
+    콜백: "다른 함수에 건네주어 그 함수가 필요할 때 호출하도록 하는 함수입니다.",
+    Promise:
+      "아직 끝나지 않은 작업의 성공 값이나 실패 이유를 나중에 받을 수 있게 나타낸 객체입니다.",
+    서버: "요청을 받아 작업한 뒤 답을 돌려주는 프로그램입니다.",
+    요청: "브라우저 등이 서버에 작업이나 데이터를 부탁하는 메시지입니다.",
+    응답: "서버가 요청을 처리하고 돌려주는 결과 메시지입니다.",
+    요소: "HTML에서 시작 태그, 내용, 끝 태그 등을 한 단위로 읽는 것입니다. 버튼 하나도 요소입니다.",
+    속성: "대상의 정보를 이름과 값으로 붙인 항목입니다. HTML 속성과 CSS 속성은 쓰는 위치로 구분합니다.",
+    선택자:
+      "어떤 HTML 요소를 고를지 정하는 표기입니다. .card는 card라는 class가 붙은 요소를 고릅니다.",
+    커밋: "선택한 파일 변경을 설명과 함께 남긴 Git 기록입니다.",
+    브랜치: "기록에서 갈라져 따로 작업하는 흐름입니다.",
+    로컬: "지금 사용하는 내 컴퓨터 쪽을 뜻합니다.",
+    원격: "GitHub처럼 내 컴퓨터 밖의 연결된 저장소 쪽을 뜻합니다."
+  };
+  const vocabularyOrder = {
+    "단방향 데이터 흐름": ["컴포넌트", "props", "state", "함수"],
+    "렌더와 커밋": ["컴포넌트", "state", "DOM", "브라우저"],
+    "배열 구조분해": ["배열", "변수", "함수", "useState"],
+    state: ["React", "함수", "useState", "렌더"]
+  };
+  function helpfulWords(entry, detail) {
+    const text = [
+      plainDefinitions[entry.key] || "",
+      ...detail.explain,
+      ...detail.flow,
+      detail.warning
+    ]
+      .join(" ")
+      .toLowerCase();
+    const candidates =
+      vocabularyOrder[entry.key] ||
+      Object.keys(vocabulary).filter(
+        (word) =>
+          text.includes(word.toLowerCase()) && !entry.key.includes(word.toLowerCase())
+      );
+    return candidates
+      .slice(0, 4)
+      .map(
+        (word) =>
+          `<div><dt>${escape(word)}</dt><dd>${escape(vocabulary[word])}</dd></div>`
+      )
+      .join("");
+  }
   function detailMarkup(entry) {
     const detail = detailFor(entry);
+    const tag = visibleCount === 1 ? "h3" : "h5";
+    const heading = (text) =>
+      `<${tag} class="term-section-title">${escape(text)}</${tag}>`;
     const environments = {
-      html: "HTML · 브라우저에서 표시하는 예제",
-      console: "JavaScript · 콘솔 코드",
-      jsx: "React · 준비된 React 실행 환경의 컴포넌트",
-      node: "Node.js · 파일로 저장해 터미널에서 실행",
-      reference: "파일·명령 구문 · 실행 위치와 순서를 확인하세요"
+      html: "실행 장소: 브라우저에서 여는 HTML 파일",
+      console:
+        "실행 장소: 브라우저 개발자 도구의 Console 또는 JavaScript 수업의 실습 칸",
+      jsx: "실행 장소: React 프로젝트 또는 이 사이트의 React 실습 칸",
+      node: "실행 장소: Node.js가 설치된 컴퓨터의 터미널",
+      reference:
+        "읽는 방법: 파일 내용이나 터미널 명령의 예입니다. 실행할 위치와 순서를 먼저 확인하세요."
     };
+    const words = helpfulWords(entry, detail);
     const otherMeanings = [
       ...new Map(
         entry.references
@@ -202,13 +290,17 @@
           .map((ref) => [ref.meaning, ref])
       ).values()
     ];
-    return `<div class="term-reading"><h5>${detail.focused ? "이 용어를 코드에서 읽는 방법" : "이 용어가 쓰이는 수업의 문맥"}</h5>${detail.explain.map((paragraph) => `<p>${rich(paragraph)}</p>`).join("")}${otherMeanings.length ? `<details class="term-context-variants"><summary>다른 사용 문맥도 확인하기</summary><ul>${otherMeanings.map((ref) => `<li><strong>${escape(ref.lesson.title)}</strong><p>${rich(ref.meaning)}</p></li>`).join("")}</ul></details>` : ""}</div>
-      <section class="term-example"><div class="term-example-heading"><h5>${detail.focused ? "용어에 집중한 예시 구문" : "함께 읽는 전체 예제"}</h5><button type="button" class="secondary term-copy" data-copy-term="${escape(entry.key)}" aria-label="${escape(entry.term)} 예제 코드 복사">코드 복사</button></div><p class="term-environment">${escape(environments[detail.mode] || environments.reference)}</p><pre class="term-code" tabindex="0"><code>${escape(detail.code)}</code></pre>${detail.focused ? "" : `<p class="subtle">${escape(detail.lesson.title)} 수업에서 가져온 문맥 예제입니다. 위 정의와 아래 흐름을 함께 읽으세요.</p>`}</section>
-      <section class="term-flow"><h5>어떤 순서로 실행되나요?</h5><ol>${detail.flow.map((step) => `<li>${rich(step)}</li>`).join("")}</ol></section>
-      <div class="term-result"><h5>예상 결과 · 확인할 동작</h5><p>${rich(detail.result)}</p></div>
-      <div class="term-edit"><h5>직접 바꿔 보세요</h5><p>${rich(detail.edit)}</p></div>
-      <div class="term-pitfall"><h5>헷갈리기 쉬운 부분</h5><p>${rich(detail.warning)}</p></div>
-      <p class="term-continue"><a href="lesson.html?id=${encodeURIComponent(detail.lesson.id)}">${["html", "console", "jsx"].includes(detail.lesson.mode) ? "수정하며 실행할 수 있는 관련 수업" : "파일과 실행 순서를 다루는 관련 수업"} · ${escape(detail.lesson.title)} ↗</a></p>`;
+    const custom = focusedNotes[entry.key];
+    return `${words ? `<details class="term-prerequisites" open><summary>처음 나오는 말부터 알아보기</summary><dl>${words}</dl></details>` : ""}
+      <section class="term-reading">${heading("예를 들어 이해해 볼까요?")}${detail.explain.map(paragraphs).join("")}${custom?.overview ? `<ol class="term-concept-map" aria-label="수량 변경의 흐름 요약">${custom.overview.map((step) => `<li>${escape(step)}</li>`).join("")}</ol>` : ""}</section>
+      <section class="term-example"><div class="term-example-heading">${heading(detail.focused ? "코드를 함께 읽어 봅시다" : "실제 수업의 코드로 확인하기")}<button type="button" class="secondary term-copy" data-copy-term="${escape(entry.key)}" aria-label="${escape(entry.term)} 예제 코드 복사">코드 복사</button></div><p class="term-environment">${escape(environments[detail.mode] || environments.reference)}</p><pre class="term-code" tabindex="0"><code>${escape(detail.code)}</code></pre>${detail.focused ? "" : `<p class="subtle">‘${escape(detail.lesson.title)}’ 수업의 예제입니다. 이 용어가 다른 코드와 어떻게 이어지는지 함께 살펴보세요.</p>`}</section>
+      ${custom?.lines ? `<section class="term-line-reading">${heading("이 줄은 이런 뜻입니다")}<ol>${custom.lines.map(([code, meaning]) => `<li><code>${escape(code)}</code><p>${escape(meaning)}</p></li>`).join("")}</ol></section>` : ""}
+      <section class="term-flow">${heading("실행 순서를 따라가 보세요")}<ol>${detail.flow.map((step) => `<li>${rich(step)}</li>`).join("")}</ol></section>
+      <section class="term-result">${heading("실행하면 이렇게 됩니다")}${paragraphs(detail.result)}</section>
+      <section class="term-edit">${heading("한 곳만 바꿔 보세요")}${paragraphs(detail.edit)}</section>
+      <section class="term-pitfall">${heading("여기서 자주 헷갈립니다")}${paragraphs(detail.warning)}</section>
+      <details class="term-precise"><summary>조금 더 정확한 정의도 읽기</summary>${paragraphs(entry.meaning)}${otherMeanings.length ? `<div class="term-context-variants"><strong>다른 수업에서의 사용</strong>${otherMeanings.map((ref) => `<p><b>${escape(ref.lesson.title)}</b></p>${paragraphs(ref.meaning)}`).join("")}</div>` : ""}</details>
+      <p class="term-continue"><a href="lesson.html?id=${encodeURIComponent(detail.lesson.id)}">관련 수업에서 직접 실행하고 수정하기 ↗</a></p>`;
   }
   const allEntries = [...entries.values()].sort((a, b) =>
     a.term.localeCompare(b.term, "ko")
@@ -231,13 +323,21 @@
         refs.findIndex((item) => item.lesson.id === ref.lesson.id) === index
     );
     return `<article class="glossary-entry">
-      <h4 class="term-name">${escape(entry.term)}</h4>
-      <p class="term-meaning">${rich(entry.meaning)}</p>
-      <details class="term-detail" data-term="${escape(entry.key)}" ${activeKeyword && (visibleCount <= 5 || termRank(entry, activeKeyword) === 0) ? "open" : ""}><summary>자세한 설명 · 예시 구문 · 수정 방법</summary><div class="term-detail-body">${activeKeyword && (visibleCount <= 5 || termRank(entry, activeKeyword) === 0) ? detailMarkup(entry) : ""}</div></details>
+      <p class="term-field-label">${escape(descriptions[entry.field].title)}</p>
+      <${visibleCount === 1 ? "h2" : "h4"} class="term-name">${escape(entry.term)}</${visibleCount === 1 ? "h2" : "h4"}>
+      <div class="term-meaning"><span class="term-definition-label">쉽게 말하면</span>${paragraphs(plainDefinitions[entry.key] || entry.meaning)}</div>
+      <details class="term-detail" data-term="${escape(entry.key)}" ${activeKeyword && (visibleCount <= 5 || termRank(entry, activeKeyword) === 0) ? "open" : ""}><summary>예시와 코드까지 이어서 읽기</summary><div class="term-detail-body">${activeKeyword && (visibleCount <= 5 || termRank(entry, activeKeyword) === 0) ? detailMarkup(entry) : ""}</div></details>
       ${otherLessons.length ? `<details class="term-related"><summary>관련 수업 ${otherLessons.length}개 더 보기</summary><ul>${otherLessons.map((ref) => `<li><a href="lesson.html?id=${encodeURIComponent(ref.lesson.id)}">${escape(tracks.find((track) => track.id === ref.lesson.track).name)} · ${escape(ref.lesson.title)}</a></li>`).join("")}</ul></details>` : ""}
     </article>`;
   }
 
+  const filterDrawer = document.getElementById("glossary-filter-drawer");
+  const wideScreen = matchMedia("(min-width: 801px)");
+  function syncFilter() {
+    if (filterDrawer)
+      filterDrawer.open = (wideScreen.matches && visibleCount !== 1) || !activeKeyword;
+  }
+  wideScreen.addEventListener("change", syncFilter);
   function render() {
     const keyword = input.value.trim().toLowerCase();
     activeKeyword = keyword;
@@ -263,6 +363,9 @@
     );
     const visible = matches.filter((entry) => field === "all" || entry.field === field);
     visibleCount = visible.length;
+    document.body.classList.toggle("glossary-searching", !!keyword);
+    document.body.classList.toggle("glossary-single-result", visible.length === 1);
+    syncFilter();
     const fieldName = field === "all" ? "전체 분야" : descriptions[field].title;
     count.textContent = `${fieldName} · ${visible.length}개 용어${keyword ? ` · “${input.value.trim()}” 검색 결과` : ""}`;
     categoryNav.innerHTML = [

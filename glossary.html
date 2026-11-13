@@ -8,10 +8,12 @@
       content="HTML, CSS, JavaScript, Node.js, React, Git을 코드 해설과 실행 실습으로 배우는 바이브 코더의 학습 노트"
     />
     <link rel="stylesheet" href="assets/css/academy.css" />
+    <link rel="stylesheet" href="assets/css/glossary-reader.css" />
     <script src="assets/data/curriculum.js" defer></script>
     <script src="assets/data/solutions.js" defer></script>
     <script src="assets/js/academy.js" defer></script>
     <script src="assets/data/glossary-notes.js" defer></script>
+    <script src="assets/data/plain-definitions.js" defer></script>
     <script src="assets/js/glossary.js" defer></script>
     <title>용어 사전 | 바이브 코더의 개발 노트</title>
   </head>
@@ -49,10 +51,10 @@
     <main id="main" class="page-width interior glossary-page">
       <header class="glossary-heading">
         <p class="eyebrow">GLOSSARY / 사용 분야별 용어 사전</p>
-        <h1>지금 고치는 코드에서,<br />필요한 말부터 찾아보세요.</h1>
+        <h1>어려운 개발 용어, <br />뜻부터 코드까지 차근차근.</h1>
         <p class="page-lead">
-          화면의 구조, 디자인, 동작, 서버, React, 배포까지.<br />검색한 용어의 자세한
-          설명과 코드 예시를 이 화면에서 바로 읽으세요.
+          먼저 쉬운 뜻을 읽고, 예를 본 뒤 코드를 따라가세요. 처음 나오는 말도 바로
+          풀어서 설명합니다.
         </p>
       </header>
       <section class="glossary-search-panel" aria-label="용어 검색">
@@ -67,18 +69,20 @@
           /><button id="glossary-reset" type="button" class="secondary">초기화</button>
         </div>
         <p id="glossary-search-help" class="subtle">
-          용어 이름과 자주 쓰는 표기(useState·스테이트 등)를 먼저 찾습니다. 이름이
-          없으면 정의·설명에서도 검색합니다. 분야를 선택하면 해당 분야로 좁혀집니다.
+          useState·스테이트처럼 검색해 보세요. 뜻과 코드 예시를 함께 보여 줍니다.
         </p>
       </section>
       <div class="glossary-layout">
         <aside class="glossary-sidebar">
-          <h2>어디에 쓰는 용어인가요?</h2>
-          <nav id="glossary-categories" aria-label="용어의 사용 분야"></nav>
-          <p class="subtle">
-            여러 분야에서 쓰이는 용어는 주로 사용하는 분야에 모았습니다. 관련 수업으로
-            다른 사용 맥락도 확인할 수 있습니다.
-          </p>
+          <details id="glossary-filter-drawer" open>
+            <summary>사용 분야 고르기</summary>
+            <h2>어디에 쓰는 용어인가요?</h2>
+            <nav id="glossary-categories" aria-label="용어의 사용 분야"></nav>
+            <p class="subtle">
+              여러 분야에서 쓰이는 용어는 주로 사용하는 분야에 모았습니다. 관련 수업으로
+              다른 사용 맥락도 확인할 수 있습니다.
+            </p>
+          </details>
         </aside>
         <section class="glossary-results" aria-label="분야별 용어 목록">
           <div class="glossary-results-bar">

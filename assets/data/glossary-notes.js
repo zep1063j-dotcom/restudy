@@ -2,190 +2,249 @@ window.GLOSSARY_NOTES = {
   "단방향 데이터 흐름": {
     code: "function Quantity({ value, onIncrease }) {\n  return (\n    <button onClick={onIncrease}>\n      수량 {value}개 · 하나 추가\n    </button>\n  );\n}\n\nfunction App() {\n  const [quantity, setQuantity] = React.useState(1);\n\n  function increase() {\n    setQuantity((previous) => previous + 1);\n  }\n\n  return <Quantity value={quantity} onIncrease={increase} />;\n}\n",
     explain: [
-      "데이터의 원본은 부모 App의 quantity입니다. 부모는 현재 값과 변경을 요청할 함수를 props로 자식 Quantity에 전달합니다. 자식이 부모의 변수를 직접 덮어쓰는 구조는 아닙니다.",
-      "자식의 클릭은 전달받은 함수를 실행합니다. 함수는 부모에서 정의했으므로 부모의 setQuantity를 호출할 수 있습니다. 이때 이벤트의 요청은 자식에서 출발하지만, 다음 화면에 사용할 값은 다시 부모에서 자식으로 내려갑니다."
+      "카페의 주문 화면 App 안에 수량 버튼 Quantity가 있다고 생각해 보세요. 다른 화면 조각을 사용하는 App을 ‘부모’, 그 안에서 쓰이는 Quantity를 ‘자식’이라고 부릅니다.",
+      "수량의 원본은 부모가 기억합니다. 부모는 자식에게 현재 수량과 ‘수량을 늘리는 함수’를 건넵니다. 자식은 버튼이 눌리면 받은 함수를 실행합니다. 그러면 부모의 수량이 바뀌고, 새 수량이 다시 자식에게 전달됩니다."
     ],
     flow: [
-      "처음 렌더에서 부모의 quantity는 1입니다. 자식은 value=1과 onIncrease 함수를 받습니다.",
-      "자식 버튼을 누르면 onIncrease가 호출되고, 부모의 increase가 setQuantity로 다음 값을 요청합니다.",
-      "다음 렌더에서 부모는 quantity=2를 읽고 자식에게 value=2를 전달합니다."
+      "처음에는 부모가 수량 1을 기억합니다. 자식은 그 값을 받아 ‘수량 1개’라고 보여 줍니다.",
+      "자식 버튼을 누르면 부모가 건넨 increase 함수가 실행됩니다.",
+      "increase가 setQuantity를 호출해 수량을 1 늘려 달라고 React에게 요청합니다.",
+      "React가 새 수량 2로 화면을 다시 계산합니다. 부모가 자식에게 2를 건네므로 버튼에 ‘수량 2개’가 보입니다."
     ],
-    result: "처음에는 수량 1개, 한 번 누르면 2개, 두 번 누르면 3개로 보입니다.",
-    edit: "수량을 2개씩 늘리려면 자식의 value를 바꾸지 말고 부모의 previous + 1을 previous + 2로 바꾸세요.",
+    result:
+      "처음에는 ‘수량 1개’입니다. 한 번 누르면 ‘수량 2개’, 다시 누르면 ‘수량 3개’가 됩니다.",
+    edit: "한 번에 2개씩 늘려 보세요. 자식의 표시 코드는 그대로 두고, 부모 increase 함수 안의 previous + 1을 previous + 2로 바꿉니다.",
     warning:
-      "props.value를 직접 수정해도 부모의 상태 갱신을 요청하는 방법이 되지 않습니다. 값의 원본을 가진 컴포넌트의 set 함수를 통해 갱신하세요.",
-    mode: "jsx"
+      "‘값이 한 방향으로 흐른다’는 말은 자식이 부모에게 알릴 수 없다는 뜻이 아닙니다. 자식은 부모가 준 함수를 실행해 변경을 요청합니다. 바뀐 수량의 원본은 계속 부모가 관리합니다.",
+    mode: "jsx",
+    lines: [
+      [
+        "function Quantity({ value, onIncrease })",
+        "자식이 받을 두 값에 이름을 붙입니다. value는 수량이고, onIncrease는 클릭할 때 실행할 함수입니다."
+      ],
+      [
+        "<Quantity value={quantity} onIncrease={increase} />",
+        "부모가 현재 수량과 increase 함수를 자식에게 건넵니다. 왼쪽 이름은 자식이 받을 이름, 중괄호 안 이름은 부모가 가진 값입니다."
+      ],
+      [
+        "setQuantity((previous) => previous + 1)",
+        "previous는 변경 전 수량입니다. 그 값에 1을 더한 값을 다음 수량으로 요청합니다."
+      ]
+    ],
+    overview: [
+      "부모가 수량 1 기억",
+      "자식이 1을 받아 표시",
+      "클릭하면 부모 함수 실행",
+      "부모가 다음 수량 2 요청",
+      "새 수량으로 자식도 2 표시"
+    ]
   },
   "렌더와 커밋": {
     code: "function App() {\n  const [count, setCount] = React.useState(0);\n\n  return (\n    <section>\n      <h2>고정된 카페 제목</h2>\n      <p>주문 수: {count}</p>\n      <button onClick={() => setCount((n) => n + 1)}>\n        주문 추가\n      </button>\n    </section>\n  );\n}\n",
     explain: [
-      "렌더는 React가 컴포넌트 함수를 호출해 다음 화면의 결과를 계산하는 과정입니다. 커밋은 계산된 결과에 따라 필요한 변경을 실제 DOM에 반영하는 과정입니다. 렌더를 했다고 모든 DOM 요소를 새로 만드는 것은 아닙니다.",
-      "예제에서는 count가 바뀌면 App이 다시 실행됩니다. 제목은 같고 주문 수의 글자만 달라지므로, React는 커밋 과정에서 바뀐 결과를 반영합니다. 렌더 함수 안에서 직접 DOM을 고치거나 주문 요청을 보내는 식의 부수 효과를 넣지 않습니다."
+      "칠판의 숫자를 바꾸는 일을 떠올려 보세요. 먼저 ‘다음에 어떤 숫자를 쓸지’ 정하고, 그다음 칠판의 글자를 실제로 고칩니다. React도 화면 내용을 계산하는 일과 실제 요소를 바꾸는 일을 나누어 생각할 수 있습니다.",
+      "렌더에서는 React가 App 같은 컴포넌트 함수를 실행해 다음 화면의 내용을 계산합니다. 커밋에서는 그 계산 결과를 바탕으로 실제 HTML 요소에 필요한 변경을 적용합니다. 이후 브라우저가 바뀐 내용을 화면에 그립니다."
     ],
     flow: [
-      "버튼 클릭이 setCount를 호출해 상태 갱신과 새 렌더를 요청합니다.",
-      "React는 새 count로 App을 호출하고 JSX 결과를 계산합니다.",
-      "React는 필요한 DOM 변경을 커밋합니다. 브라우저는 그 결과를 화면에 그립니다."
+      "버튼을 누르면 setCount가 다음 수량을 요청합니다.",
+      "React가 App을 다시 실행합니다. 새 count로 ‘주문 수’에 보여 줄 글자를 계산합니다. 이것이 렌더입니다.",
+      "이전 결과와 달라진 주문 수를 실제 요소에 적용합니다. 이것이 커밋입니다."
     ],
     result:
       "주문 추가를 한 번 누르면 주문 수가 0에서 1로 바뀝니다. 제목 문구는 그대로입니다.",
-    edit: "count 대신 count * 2를 표시하면 실제 state 값과 화면에 계산해 보여 주는 값이 어떻게 다른지 설명해 보세요.",
+    edit: "<p> 안의 count를 count * 2로 바꿔 보세요. 기억하는 숫자는 1씩 늘지만, 화면에는 그 숫자의 두 배가 보입니다.",
     warning:
-      "렌더 횟수와 클릭 횟수가 항상 같다고 가정하지 마세요. 개발 모드의 StrictMode 등에서는 순수성 점검을 위해 컴포넌트를 추가로 호출할 수 있습니다.",
-    mode: "jsx"
+      "화면을 다시 계산했다고 모든 요소를 처음부터 만드는 것은 아닙니다. 예제의 제목은 그대로이고 주문 수만 달라집니다. 개발 중 StrictMode에서는 점검을 위해 함수를 추가로 실행할 수도 있습니다.",
+    mode: "jsx",
+    lines: [
+      [
+        "const [count, setCount] = React.useState(0)",
+        "처음 수량은 0입니다. count는 현재 수량, setCount는 다음 수량을 요청하는 함수입니다."
+      ],
+      [
+        "<p>주문 수: {count}</p>",
+        "이번 화면에 보여 줄 수량을 JSX의 중괄호 안에 넣습니다."
+      ],
+      [
+        "setCount((n) => n + 1)",
+        "현재 수량보다 1 큰 값을 요청합니다. 다음 화면 계산에서 새 값을 읽게 됩니다."
+      ]
+    ]
   },
   "배열 구조분해": {
     code: '// JavaScript: 배열의 위치대로 이름을 붙입니다.\nconst menu = ["커피", 4000];\nconst [name, price] = menu;\nconsole.log(name); // 커피\nconsole.log(price); // 4000\n\n// React 컴포넌트 안에서는 다음과 같이 사용합니다.\n// const [count, setCount] = React.useState(0);\n// 첫 번째 위치: 현재 렌더에서 읽는 상태 값\n// 두 번째 위치: 다음 상태를 요청하는 함수\n',
     explain: [
-      "배열 구조분해는 배열의 각 위치에 담긴 값을 변수로 꺼내 이름을 붙이는 JavaScript 문법입니다. [name, price]에서 name은 0번, price는 1번 위치를 받습니다. 대괄호가 있다고 반복문을 실행하는 것은 아닙니다.",
-      "useState는 현재 상태와 set 함수를 담은 두 항목을 반환합니다. const [count, setCount] = React.useState(0)은 그 두 위치를 각각의 이름으로 받는 코드입니다. 이름 자체는 바꿀 수 있지만 두 항목의 역할과 순서는 바뀌지 않습니다."
+      '배열은 값이 순서대로 놓인 목록입니다. ["커피", 4000]에서 첫 칸은 "커피", 둘째 칸은 4000입니다. 배열 구조분해는 이 두 값을 각각 name과 price라는 이름으로 꺼내는 문법입니다.',
+      "React.useState(0)도 값 두 개를 묶어서 줍니다. 첫째는 현재 상태 값, 둘째는 상태 변경을 요청하는 함수입니다. 그래서 [count, setCount]처럼 이름 두 개로 나누어 받을 수 있습니다. 이것은 React만의 특별한 대괄호가 아니라 JavaScript 문법입니다."
     ],
     flow: [
-      "오른쪽 menu 배열을 먼저 평가합니다.",
-      "배열의 0번 값을 name에, 1번 값을 price에 연결합니다.",
-      "새 변수 name과 price를 일반 변수처럼 읽습니다."
+      "오른쪽의 menu 배열을 읽습니다.",
+      '배열의 0번 값인 "커피"를 name으로 받습니다.',
+      "배열의 1번 값인 4000을 price로 받습니다.",
+      "이후에는 name과 price라는 이름으로 값을 사용할 수 있습니다."
     ],
     result: "콘솔에는 커피와 4000이 차례로 출력됩니다.",
-    edit: '배열에 세 번째 값 "따뜻하게"를 추가하고 const [name, price, option]으로 받아 출력해 보세요.',
+    edit: 'menu에 세 번째 값 "따뜻하게"를 추가하세요. const [name, price, option] = menu;로 받아 option을 출력해 보세요.',
     warning:
-      "const [setCount, count] = useState(0)처럼 순서를 뒤집으면 변수 이름과 실제 역할이 뒤바뀝니다. 객체 구조분해의 중괄호와도 구분하세요.",
-    mode: "console"
+      '배열은 이름이 아니라 순서로 꺼냅니다. [price, name]으로 적으면 첫 값 "커피"가 price에 들어갑니다. useState의 두 이름도 순서에 맞게 적어야 합니다.',
+    mode: "console",
+    lines: [
+      ['const menu = ["커피", 4000]', "배열에 이름과 가격을 순서대로 담습니다."],
+      [
+        "const [name, price] = menu",
+        "배열의 첫 값을 name, 둘째 값을 price로 꺼냅니다. 새 계산을 하거나 반복하는 코드는 아닙니다."
+      ],
+      [
+        "const [count, setCount] = React.useState(0)",
+        "React에서는 현재 상태 값과 변경 함수를 순서대로 받습니다. 이 줄은 컴포넌트 함수 안에서 사용합니다."
+      ]
+    ]
   },
   state: {
     code: 'function App() {\n  const [count, setCount] = React.useState(0);\n\n  function increase() {\n    setCount((previous) => previous + 1);\n    console.log("이 핸들러가 읽는 count:", count);\n  }\n\n  return <button onClick={increase}>주문 {count}개</button>;\n}\n',
     explain: [
-      "state는 렌더 사이에서 React가 보관하는 값입니다. set 함수는 현재 함수 안의 변수를 즉시 바꾸는 명령이 아니라 다음 상태 갱신을 요청하는 함수입니다.",
-      "이벤트 핸들러는 자신이 만들어진 렌더의 count를 읽습니다. setCount 다음 줄에서 count를 출력하면 다음 렌더의 값이 아니라 현재 핸들러가 기억하는 값이 보입니다."
+      "수량이 바뀌는 버튼을 만든다고 생각해 보세요. React는 다음 화면을 만들 때도 수량을 기억해야 합니다. 이렇게 React가 기억하는 값을 state라고 합니다. useState(0)은 첫 값을 0으로 정합니다.",
+      "count는 이번 화면에서 읽는 수량입니다. setCount는 다음 수량을 요청하는 함수입니다. setCount를 호출해도 이미 실행 중인 increase 함수의 count가 그 자리에서 새 값으로 바뀌지는 않습니다."
     ],
     flow: [
-      "처음 count는 0이고 버튼은 주문 0개입니다.",
-      "클릭하면 업데이트 함수가 다음 값을 계산하도록 전달됩니다. 이 핸들러의 count는 여전히 0입니다.",
-      "다음 렌더에서 count는 1이 되어 버튼 문구가 바뀝니다."
+      "처음 count는 0이므로 버튼에 ‘주문 0개’가 보입니다.",
+      "버튼을 누르면 increase가 실행되고 다음 수량을 1 늘려 달라고 요청합니다.",
+      "지금 increase가 읽는 count는 아직 0이어서 콘솔에는 0이 찍힙니다.",
+      "다음 화면 계산에서 count가 1이 되고 버튼에 ‘주문 1개’가 보입니다."
     ],
     result:
-      "첫 클릭 뒤 버튼은 1개가 되고, 그 클릭의 콘솔은 이전 스냅샷인 0을 출력합니다.",
-    edit: "증가 폭을 +2로 바꾸고 버튼 값과 핸들러의 콘솔 값을 비교하세요.",
+      "첫 클릭 때 콘솔에는 이전 수량 0이 찍히고, 버튼에는 새 수량 1이 보입니다. 둘은 서로 다른 시점의 값을 보여 줍니다.",
+    edit: "previous + 1을 previous + 2로 바꾸세요. 첫 클릭 뒤 콘솔과 버튼에 각각 어떤 값이 보일지 먼저 예상해 보세요.",
     warning:
-      "count++처럼 지역 값만 바꾸지 마세요. 이전 값이 필요한 갱신은 setCount(previous => previous + 1)처럼 작성합니다.",
+      "일반 변수에 숫자를 다시 넣는 것과 React에 다음 상태를 요청하는 것은 다릅니다. 화면을 바꿀 상태는 set 함수를 통해 갱신하세요.",
     mode: "jsx"
   },
   "set 함수와 렌더": {
     code: 'function App() {\n  const [count, setCount] = React.useState(0);\n\n  function increase() {\n    setCount((previous) => previous + 1);\n    console.log("이 핸들러가 읽는 count:", count);\n  }\n\n  return <button onClick={increase}>주문 {count}개</button>;\n}\n',
     explain: [
-      "state는 렌더 사이에서 React가 보관하는 값입니다. set 함수는 현재 함수 안의 변수를 즉시 바꾸는 명령이 아니라 다음 상태 갱신을 요청하는 함수입니다.",
-      "이벤트 핸들러는 자신이 만들어진 렌더의 count를 읽습니다. setCount 다음 줄에서 count를 출력하면 다음 렌더의 값이 아니라 현재 핸들러가 기억하는 값이 보입니다."
+      "수량이 바뀌는 버튼을 만든다고 생각해 보세요. React는 다음 화면을 만들 때도 수량을 기억해야 합니다. 이렇게 React가 기억하는 값을 state라고 합니다. useState(0)은 첫 값을 0으로 정합니다.",
+      "count는 이번 화면에서 읽는 수량입니다. setCount는 다음 수량을 요청하는 함수입니다. setCount를 호출해도 이미 실행 중인 increase 함수의 count가 그 자리에서 새 값으로 바뀌지는 않습니다."
     ],
     flow: [
-      "처음 count는 0이고 버튼은 주문 0개입니다.",
-      "클릭하면 업데이트 함수가 다음 값을 계산하도록 전달됩니다. 이 핸들러의 count는 여전히 0입니다.",
-      "다음 렌더에서 count는 1이 되어 버튼 문구가 바뀝니다."
+      "처음 count는 0이므로 버튼에 ‘주문 0개’가 보입니다.",
+      "버튼을 누르면 increase가 실행되고 다음 수량을 1 늘려 달라고 요청합니다.",
+      "지금 increase가 읽는 count는 아직 0이어서 콘솔에는 0이 찍힙니다.",
+      "다음 화면 계산에서 count가 1이 되고 버튼에 ‘주문 1개’가 보입니다."
     ],
     result:
-      "첫 클릭 뒤 버튼은 1개가 되고, 그 클릭의 콘솔은 이전 스냅샷인 0을 출력합니다.",
-    edit: "증가 폭을 +2로 바꾸고 버튼 값과 핸들러의 콘솔 값을 비교하세요.",
+      "첫 클릭 때 콘솔에는 이전 수량 0이 찍히고, 버튼에는 새 수량 1이 보입니다. 둘은 서로 다른 시점의 값을 보여 줍니다.",
+    edit: "previous + 1을 previous + 2로 바꾸세요. 첫 클릭 뒤 콘솔과 버튼에 각각 어떤 값이 보일지 먼저 예상해 보세요.",
     warning:
-      "count++처럼 지역 값만 바꾸지 마세요. 이전 값이 필요한 갱신은 setCount(previous => previous + 1)처럼 작성합니다.",
+      "일반 변수에 숫자를 다시 넣는 것과 React에 다음 상태를 요청하는 것은 다릅니다. 화면을 바꿀 상태는 set 함수를 통해 갱신하세요.",
     mode: "jsx"
   },
   스냅샷: {
     code: 'function App() {\n  const [count, setCount] = React.useState(0);\n\n  function increase() {\n    setCount((previous) => previous + 1);\n    console.log("이 핸들러가 읽는 count:", count);\n  }\n\n  return <button onClick={increase}>주문 {count}개</button>;\n}\n',
     explain: [
-      "state는 렌더 사이에서 React가 보관하는 값입니다. set 함수는 현재 함수 안의 변수를 즉시 바꾸는 명령이 아니라 다음 상태 갱신을 요청하는 함수입니다.",
-      "이벤트 핸들러는 자신이 만들어진 렌더의 count를 읽습니다. setCount 다음 줄에서 count를 출력하면 다음 렌더의 값이 아니라 현재 핸들러가 기억하는 값이 보입니다."
+      "수량이 바뀌는 버튼을 만든다고 생각해 보세요. React는 다음 화면을 만들 때도 수량을 기억해야 합니다. 이렇게 React가 기억하는 값을 state라고 합니다. useState(0)은 첫 값을 0으로 정합니다.",
+      "count는 이번 화면에서 읽는 수량입니다. setCount는 다음 수량을 요청하는 함수입니다. setCount를 호출해도 이미 실행 중인 increase 함수의 count가 그 자리에서 새 값으로 바뀌지는 않습니다."
     ],
     flow: [
-      "처음 count는 0이고 버튼은 주문 0개입니다.",
-      "클릭하면 업데이트 함수가 다음 값을 계산하도록 전달됩니다. 이 핸들러의 count는 여전히 0입니다.",
-      "다음 렌더에서 count는 1이 되어 버튼 문구가 바뀝니다."
+      "처음 count는 0이므로 버튼에 ‘주문 0개’가 보입니다.",
+      "버튼을 누르면 increase가 실행되고 다음 수량을 1 늘려 달라고 요청합니다.",
+      "지금 increase가 읽는 count는 아직 0이어서 콘솔에는 0이 찍힙니다.",
+      "다음 화면 계산에서 count가 1이 되고 버튼에 ‘주문 1개’가 보입니다."
     ],
     result:
-      "첫 클릭 뒤 버튼은 1개가 되고, 그 클릭의 콘솔은 이전 스냅샷인 0을 출력합니다.",
-    edit: "증가 폭을 +2로 바꾸고 버튼 값과 핸들러의 콘솔 값을 비교하세요.",
+      "첫 클릭 때 콘솔에는 이전 수량 0이 찍히고, 버튼에는 새 수량 1이 보입니다. 둘은 서로 다른 시점의 값을 보여 줍니다.",
+    edit: "previous + 1을 previous + 2로 바꾸세요. 첫 클릭 뒤 콘솔과 버튼에 각각 어떤 값이 보일지 먼저 예상해 보세요.",
     warning:
-      "count++처럼 지역 값만 바꾸지 마세요. 이전 값이 필요한 갱신은 setCount(previous => previous + 1)처럼 작성합니다.",
+      "일반 변수에 숫자를 다시 넣는 것과 React에 다음 상태를 요청하는 것은 다릅니다. 화면을 바꿀 상태는 set 함수를 통해 갱신하세요.",
     mode: "jsx"
   },
   "스냅샷과 불변성": {
     code: 'function App() {\n  const [order, setOrder] = React.useState({\n    name: "커피",\n    quantity: 1\n  });\n\n  function increase() {\n    setOrder((previous) => ({\n      ...previous,\n      quantity: previous.quantity + 1\n    }));\n  }\n\n  return (\n    <button onClick={increase}>\n      {order.name} {order.quantity}개\n    </button>\n  );\n}\n',
     explain: [
-      "객체나 배열 state를 갱신할 때 기존 객체를 직접 바꾸지 않고 새 객체를 만들어 set 함수로 전달합니다. 이전 렌더에서 사용한 값의 내용도 그대로 보존할 수 있습니다."
+      "주문 한 건에 메뉴 이름과 수량이 함께 들어 있다고 생각해 보세요. 수량만 바꿀 때도 기존 주문 객체를 직접 고치지 않고 바뀐 내용이 들어 있는 새 객체를 만듭니다.",
+      "...previous는 이전 객체의 속성을 새 객체로 펼칩니다. 그 뒤에 quantity를 다시 적으면 수량만 새 값이 됩니다. setOrder는 이 새 객체를 다음 상태로 요청합니다."
     ],
     flow: [
-      "...previous가 이전 객체의 최상위 속성을 새 객체에 복사합니다.",
-      "quantity 속성만 새 값으로 덮어씁니다.",
-      "새 객체를 다음 state로 요청합니다."
+      "이전 주문에서 이름과 수량을 읽습니다.",
+      "새 객체에 이전 내용을 복사합니다.",
+      "새 객체의 quantity만 1 더 큰 값으로 적습니다.",
+      "React가 새 객체를 다음 상태로 사용해 화면을 계산합니다."
     ],
     result: "이름은 커피로 유지되고 수량만 늘어납니다.",
     edit: "name 속성도 바꾸는 별도 버튼을 만들되 quantity가 사라지지 않게 하세요.",
     warning:
-      "전개 구문은 얕은 복사입니다. 중첩 객체를 수정한다면 바뀌는 깊이까지 새 객체를 만들어야 합니다.",
+      "...으로 복사해도 내부에 든 또 다른 객체까지 모두 새로 생기지는 않습니다. 중첩 객체를 바꾼다면 바뀌는 깊이까지 새 객체를 만들어야 합니다.",
     mode: "jsx"
   },
   "업데이트 함수": {
     code: "function App() {\n  const [count, setCount] = React.useState(0);\n\n  function addThree() {\n    setCount((n) => n + 1);\n    setCount((n) => n + 1);\n    setCount((n) => n + 1);\n  }\n\n  return (\n    <button onClick={addThree}>수량 {count}개 · +3</button>\n  );\n}\n",
     explain: [
-      "업데이트 함수는 React가 대기 중인 이전 상태를 인수로 받아 다음 상태를 계산하는 함수입니다. 한 이벤트에서 같은 상태를 여러 번 갱신할 때 이전 계산 결과를 이어받을 수 있습니다."
+      "이전 수량에서 계속 더해야 할 때는 ‘이전 값으로 다음 값을 계산하는 함수’를 set 함수에 건넵니다. (n) => n + 1은 n을 받아 1을 더해 돌려준다는 뜻입니다.",
+      "예제는 이 계산을 세 번 요청합니다. 두 번째 계산은 첫 계산의 결과를, 세 번째 계산은 두 번째 계산의 결과를 받아 이어서 더합니다."
     ],
     flow: [
-      "첫 업데이트는 0을 받아 1을 계산합니다.",
-      "두 번째는 앞서 계산한 1로 2를 계산합니다.",
-      "세 번째는 2로 3을 계산하고 화면에 반영됩니다."
+      "수량 0에서 첫 계산이 0 + 1 = 1을 만듭니다.",
+      "둘째 계산이 1 + 1 = 2를 만듭니다.",
+      "셋째 계산이 2 + 1 = 3을 만듭니다.",
+      "다음 화면에는 수량 3개가 보입니다."
     ],
     result: "한 번 누르면 0에서 3으로, 다시 누르면 6으로 바뀝니다.",
     edit: "세 번째 업데이트를 n => n + 2로 바꾸고 한 번 클릭했을 때 값을 예측하세요.",
     warning:
-      "setCount(count + 1)을 세 번 쓰는 것은 같은 스냅샷의 값으로 세 번 요청하는 코드입니다. 위의 세 업데이트 함수와 구분하세요.",
+      "setCount(count + 1)을 세 번 적으면 같은 화면의 count를 세 번 읽습니다. 이전 계산 결과를 이어받는 위 예제와 같은 뜻이 아닙니다.",
     mode: "jsx"
   },
   props: {
     code: 'function MenuCard({ name, price, onSelect }) {\n  return (\n    <button onClick={() => onSelect(name)}>\n      {name} · {price}원\n    </button>\n  );\n}\n\nfunction App() {\n  const [selected, setSelected] = React.useState("아직 없음");\n  return (\n    <section>\n      <MenuCard\n        name="커피"\n        price={4000}\n        onSelect={setSelected}\n      />\n      <p>선택한 메뉴: {selected}</p>\n    </section>\n  );\n}\n',
     explain: [
-      'props는 부모가 자식 컴포넌트에 전달하는 입력입니다. 문자열, 숫자, 배열, 객체, 함수를 전달할 수 있습니다. name="커피"는 문자열, price={4000}은 숫자, onSelect={setSelected}는 함수입니다.',
-      "자식은 props를 읽어 화면을 만들고, 전달받은 함수를 호출해 선택 사실을 알립니다. 부모가 가진 selected의 변경은 부모의 setSelected가 수행합니다."
+      "같은 모양의 메뉴 카드를 커피와 빵에 각각 쓰고 싶다고 생각해 보세요. 카드 안에 이름과 가격을 고정하지 않고 바깥에서 건네면 같은 함수를 다시 쓸 수 있습니다. 이렇게 건네는 입력값이 props입니다.",
+      "부모 App은 자식 MenuCard에 이름, 가격, 선택할 때 실행할 함수를 줍니다. 자식은 받은 이름과 가격으로 버튼을 만들고, 클릭되면 받은 함수를 실행해 부모에게 선택을 알립니다."
     ],
     flow: [
-      "부모가 세 props를 MenuCard에 전달합니다.",
-      "자식의 버튼 클릭이 onSelect(name)을 호출합니다.",
-      "부모 상태가 선택한 이름으로 갱신되어 문구가 바뀝니다."
+      "부모가 이름 ‘커피’, 가격 4000, 선택을 처리할 함수를 자식에게 건넵니다.",
+      "자식은 받은 값으로 커피 버튼을 보여 줍니다.",
+      "버튼을 누르면 자식이 onSelect(name)을 실행합니다.",
+      "부모가 선택한 이름을 기억하고 안내 문구를 바꿉니다."
     ],
     result: "커피 버튼을 누르면 선택한 메뉴가 아직 없음에서 커피로 바뀝니다.",
     edit: "name과 price를 빵, 3500으로 바꾸고 선택 결과를 확인하세요.",
     warning:
-      "onClick={onSelect(name)}처럼 렌더 중 호출하지 말고, 클릭할 때 실행할 함수를 전달하세요.",
+      "onClick에는 클릭할 때 실행할 함수를 넣습니다. onClick={onSelect(name)}처럼 쓰면 클릭을 기다리지 않고 화면을 계산하는 중에 호출합니다.",
     mode: "jsx"
   },
   "부모 컴포넌트와 자식 컴포넌트": {
     code: 'function MenuCard({ name, price, onSelect }) {\n  return (\n    <button onClick={() => onSelect(name)}>\n      {name} · {price}원\n    </button>\n  );\n}\n\nfunction App() {\n  const [selected, setSelected] = React.useState("아직 없음");\n  return (\n    <section>\n      <MenuCard\n        name="커피"\n        price={4000}\n        onSelect={setSelected}\n      />\n      <p>선택한 메뉴: {selected}</p>\n    </section>\n  );\n}\n',
     explain: [
-      'props는 부모가 자식 컴포넌트에 전달하는 입력입니다. 문자열, 숫자, 배열, 객체, 함수를 전달할 수 있습니다. name="커피"는 문자열, price={4000}은 숫자, onSelect={setSelected}는 함수입니다.',
-      "자식은 props를 읽어 화면을 만들고, 전달받은 함수를 호출해 선택 사실을 알립니다. 부모가 가진 selected의 변경은 부모의 setSelected가 수행합니다."
+      "같은 모양의 메뉴 카드를 커피와 빵에 각각 쓰고 싶다고 생각해 보세요. 카드 안에 이름과 가격을 고정하지 않고 바깥에서 건네면 같은 함수를 다시 쓸 수 있습니다. 이렇게 건네는 입력값이 props입니다.",
+      "부모 App은 자식 MenuCard에 이름, 가격, 선택할 때 실행할 함수를 줍니다. 자식은 받은 이름과 가격으로 버튼을 만들고, 클릭되면 받은 함수를 실행해 부모에게 선택을 알립니다."
     ],
     flow: [
-      "부모가 세 props를 MenuCard에 전달합니다.",
-      "자식의 버튼 클릭이 onSelect(name)을 호출합니다.",
-      "부모 상태가 선택한 이름으로 갱신되어 문구가 바뀝니다."
+      "부모가 이름 ‘커피’, 가격 4000, 선택을 처리할 함수를 자식에게 건넵니다.",
+      "자식은 받은 값으로 커피 버튼을 보여 줍니다.",
+      "버튼을 누르면 자식이 onSelect(name)을 실행합니다.",
+      "부모가 선택한 이름을 기억하고 안내 문구를 바꿉니다."
     ],
     result: "커피 버튼을 누르면 선택한 메뉴가 아직 없음에서 커피로 바뀝니다.",
     edit: "name과 price를 빵, 3500으로 바꾸고 선택 결과를 확인하세요.",
     warning:
-      "onClick={onSelect(name)}처럼 렌더 중 호출하지 말고, 클릭할 때 실행할 함수를 전달하세요.",
+      "onClick에는 클릭할 때 실행할 함수를 넣습니다. onClick={onSelect(name)}처럼 쓰면 클릭을 기다리지 않고 화면을 계산하는 중에 호출합니다.",
     mode: "jsx"
   },
   "콜백 props": {
     code: 'function MenuCard({ name, price, onSelect }) {\n  return (\n    <button onClick={() => onSelect(name)}>\n      {name} · {price}원\n    </button>\n  );\n}\n\nfunction App() {\n  const [selected, setSelected] = React.useState("아직 없음");\n  return (\n    <section>\n      <MenuCard\n        name="커피"\n        price={4000}\n        onSelect={setSelected}\n      />\n      <p>선택한 메뉴: {selected}</p>\n    </section>\n  );\n}\n',
     explain: [
-      'props는 부모가 자식 컴포넌트에 전달하는 입력입니다. 문자열, 숫자, 배열, 객체, 함수를 전달할 수 있습니다. name="커피"는 문자열, price={4000}은 숫자, onSelect={setSelected}는 함수입니다.',
-      "자식은 props를 읽어 화면을 만들고, 전달받은 함수를 호출해 선택 사실을 알립니다. 부모가 가진 selected의 변경은 부모의 setSelected가 수행합니다."
+      "같은 모양의 메뉴 카드를 커피와 빵에 각각 쓰고 싶다고 생각해 보세요. 카드 안에 이름과 가격을 고정하지 않고 바깥에서 건네면 같은 함수를 다시 쓸 수 있습니다. 이렇게 건네는 입력값이 props입니다.",
+      "부모 App은 자식 MenuCard에 이름, 가격, 선택할 때 실행할 함수를 줍니다. 자식은 받은 이름과 가격으로 버튼을 만들고, 클릭되면 받은 함수를 실행해 부모에게 선택을 알립니다."
     ],
     flow: [
-      "부모가 세 props를 MenuCard에 전달합니다.",
-      "자식의 버튼 클릭이 onSelect(name)을 호출합니다.",
-      "부모 상태가 선택한 이름으로 갱신되어 문구가 바뀝니다."
+      "부모가 이름 ‘커피’, 가격 4000, 선택을 처리할 함수를 자식에게 건넵니다.",
+      "자식은 받은 값으로 커피 버튼을 보여 줍니다.",
+      "버튼을 누르면 자식이 onSelect(name)을 실행합니다.",
+      "부모가 선택한 이름을 기억하고 안내 문구를 바꿉니다."
     ],
     result: "커피 버튼을 누르면 선택한 메뉴가 아직 없음에서 커피로 바뀝니다.",
     edit: "name과 price를 빵, 3500으로 바꾸고 선택 결과를 확인하세요.",
     warning:
-      "onClick={onSelect(name)}처럼 렌더 중 호출하지 말고, 클릭할 때 실행할 함수를 전달하세요.",
+      "onClick에는 클릭할 때 실행할 함수를 넣습니다. onClick={onSelect(name)}처럼 쓰면 클릭을 기다리지 않고 화면을 계산하는 중에 호출합니다.",
     mode: "jsx"
   },
   key: {
@@ -223,69 +282,73 @@ window.GLOSSARY_NOTES = {
   파생값: {
     code: "function App() {\n  const [quantity, setQuantity] = React.useState(1);\n  const price = 4000;\n  const total = price * quantity;\n\n  return (\n    <section>\n      <button onClick={() => setQuantity((n) => n + 1)}>\n        수량 {quantity}개\n      </button>\n      <p>예상 총액 {total}원</p>\n    </section>\n  );\n}\n",
     explain: [
-      "파생값은 이미 있는 값으로 계산할 수 있는 결과입니다. 수량과 단가로 구할 수 있는 total을 별도 state로 두면 수량만 바뀌고 총액 갱신을 빠뜨릴 수 있습니다.",
-      "여러 자식이 수량을 공유한다면 공통 부모가 수량의 원본을 가지고 내려보냅니다. 한 원본에서 계산하면 화면 간 값이 어긋날 가능성을 줄일 수 있습니다."
+      "커피 한 잔이 4000원이고 수량이 2개라면 예상 총액은 곱셈으로 알 수 있습니다. 이렇게 이미 가진 값으로 구할 수 있는 결과를 파생값이라고 합니다.",
+      "수량과 총액을 따로 기억하면 수량만 고치고 총액을 고치는 일을 빠뜨릴 수 있습니다. 수량을 기준 값으로 기억하고 화면을 만들 때 총액을 계산하면 두 값이 맞게 이어집니다. 여러 자식이 수량을 쓴다면 공통 부모가 수량을 관리합니다."
     ],
     flow: [
-      "React가 현재 quantity를 읽습니다.",
-      "렌더에서 price * quantity로 total을 계산합니다.",
-      "수량 변경 후 다음 렌더가 새 total을 계산합니다."
+      "React가 지금 기억하는 수량을 읽습니다.",
+      "4000에 수량을 곱해 예상 총액을 계산합니다.",
+      "버튼을 누르면 수량을 늘려 달라고 요청합니다.",
+      "다음 화면 계산에서 새 수량으로 총액도 다시 계산합니다."
     ],
     result: "처음 4000원, 한 번 클릭하면 8000원입니다.",
     edit: "price를 4500으로 바꾸고 별도의 total 갱신 코드 없이도 총액이 달라지는지 확인하세요.",
     warning:
-      "실제 주문 확정 금액은 서버 기준으로 계산해야 합니다. 이 값은 브라우저가 보여 주는 예상 총액입니다.",
+      "브라우저의 총액은 사용자에게 보여 주는 예상값입니다. 실제 주문을 받는 서버는 자기 가격표와 검사한 수량으로 확정 금액을 다시 계산해야 합니다.",
     mode: "jsx"
   },
   "파생 총액": {
     code: "function App() {\n  const [quantity, setQuantity] = React.useState(1);\n  const price = 4000;\n  const total = price * quantity;\n\n  return (\n    <section>\n      <button onClick={() => setQuantity((n) => n + 1)}>\n        수량 {quantity}개\n      </button>\n      <p>예상 총액 {total}원</p>\n    </section>\n  );\n}\n",
     explain: [
-      "파생값은 이미 있는 값으로 계산할 수 있는 결과입니다. 수량과 단가로 구할 수 있는 total을 별도 state로 두면 수량만 바뀌고 총액 갱신을 빠뜨릴 수 있습니다.",
-      "여러 자식이 수량을 공유한다면 공통 부모가 수량의 원본을 가지고 내려보냅니다. 한 원본에서 계산하면 화면 간 값이 어긋날 가능성을 줄일 수 있습니다."
+      "커피 한 잔이 4000원이고 수량이 2개라면 예상 총액은 곱셈으로 알 수 있습니다. 이렇게 이미 가진 값으로 구할 수 있는 결과를 파생값이라고 합니다.",
+      "수량과 총액을 따로 기억하면 수량만 고치고 총액을 고치는 일을 빠뜨릴 수 있습니다. 수량을 기준 값으로 기억하고 화면을 만들 때 총액을 계산하면 두 값이 맞게 이어집니다. 여러 자식이 수량을 쓴다면 공통 부모가 수량을 관리합니다."
     ],
     flow: [
-      "React가 현재 quantity를 읽습니다.",
-      "렌더에서 price * quantity로 total을 계산합니다.",
-      "수량 변경 후 다음 렌더가 새 total을 계산합니다."
+      "React가 지금 기억하는 수량을 읽습니다.",
+      "4000에 수량을 곱해 예상 총액을 계산합니다.",
+      "버튼을 누르면 수량을 늘려 달라고 요청합니다.",
+      "다음 화면 계산에서 새 수량으로 총액도 다시 계산합니다."
     ],
     result: "처음 4000원, 한 번 클릭하면 8000원입니다.",
     edit: "price를 4500으로 바꾸고 별도의 total 갱신 코드 없이도 총액이 달라지는지 확인하세요.",
     warning:
-      "실제 주문 확정 금액은 서버 기준으로 계산해야 합니다. 이 값은 브라우저가 보여 주는 예상 총액입니다.",
+      "브라우저의 총액은 사용자에게 보여 주는 예상값입니다. 실제 주문을 받는 서버는 자기 가격표와 검사한 수량으로 확정 금액을 다시 계산해야 합니다.",
     mode: "jsx"
   },
   "상태 끌어올리기": {
     code: "function App() {\n  const [quantity, setQuantity] = React.useState(1);\n  const price = 4000;\n  const total = price * quantity;\n\n  return (\n    <section>\n      <button onClick={() => setQuantity((n) => n + 1)}>\n        수량 {quantity}개\n      </button>\n      <p>예상 총액 {total}원</p>\n    </section>\n  );\n}\n",
     explain: [
-      "파생값은 이미 있는 값으로 계산할 수 있는 결과입니다. 수량과 단가로 구할 수 있는 total을 별도 state로 두면 수량만 바뀌고 총액 갱신을 빠뜨릴 수 있습니다.",
-      "여러 자식이 수량을 공유한다면 공통 부모가 수량의 원본을 가지고 내려보냅니다. 한 원본에서 계산하면 화면 간 값이 어긋날 가능성을 줄일 수 있습니다."
+      "커피 한 잔이 4000원이고 수량이 2개라면 예상 총액은 곱셈으로 알 수 있습니다. 이렇게 이미 가진 값으로 구할 수 있는 결과를 파생값이라고 합니다.",
+      "수량과 총액을 따로 기억하면 수량만 고치고 총액을 고치는 일을 빠뜨릴 수 있습니다. 수량을 기준 값으로 기억하고 화면을 만들 때 총액을 계산하면 두 값이 맞게 이어집니다. 여러 자식이 수량을 쓴다면 공통 부모가 수량을 관리합니다."
     ],
     flow: [
-      "React가 현재 quantity를 읽습니다.",
-      "렌더에서 price * quantity로 total을 계산합니다.",
-      "수량 변경 후 다음 렌더가 새 total을 계산합니다."
+      "React가 지금 기억하는 수량을 읽습니다.",
+      "4000에 수량을 곱해 예상 총액을 계산합니다.",
+      "버튼을 누르면 수량을 늘려 달라고 요청합니다.",
+      "다음 화면 계산에서 새 수량으로 총액도 다시 계산합니다."
     ],
     result: "처음 4000원, 한 번 클릭하면 8000원입니다.",
     edit: "price를 4500으로 바꾸고 별도의 total 갱신 코드 없이도 총액이 달라지는지 확인하세요.",
     warning:
-      "실제 주문 확정 금액은 서버 기준으로 계산해야 합니다. 이 값은 브라우저가 보여 주는 예상 총액입니다.",
+      "브라우저의 총액은 사용자에게 보여 주는 예상값입니다. 실제 주문을 받는 서버는 자기 가격표와 검사한 수량으로 확정 금액을 다시 계산해야 합니다.",
     mode: "jsx"
   },
   "단일 진실 공급원": {
     code: "function App() {\n  const [quantity, setQuantity] = React.useState(1);\n  const price = 4000;\n  const total = price * quantity;\n\n  return (\n    <section>\n      <button onClick={() => setQuantity((n) => n + 1)}>\n        수량 {quantity}개\n      </button>\n      <p>예상 총액 {total}원</p>\n    </section>\n  );\n}\n",
     explain: [
-      "파생값은 이미 있는 값으로 계산할 수 있는 결과입니다. 수량과 단가로 구할 수 있는 total을 별도 state로 두면 수량만 바뀌고 총액 갱신을 빠뜨릴 수 있습니다.",
-      "여러 자식이 수량을 공유한다면 공통 부모가 수량의 원본을 가지고 내려보냅니다. 한 원본에서 계산하면 화면 간 값이 어긋날 가능성을 줄일 수 있습니다."
+      "커피 한 잔이 4000원이고 수량이 2개라면 예상 총액은 곱셈으로 알 수 있습니다. 이렇게 이미 가진 값으로 구할 수 있는 결과를 파생값이라고 합니다.",
+      "수량과 총액을 따로 기억하면 수량만 고치고 총액을 고치는 일을 빠뜨릴 수 있습니다. 수량을 기준 값으로 기억하고 화면을 만들 때 총액을 계산하면 두 값이 맞게 이어집니다. 여러 자식이 수량을 쓴다면 공통 부모가 수량을 관리합니다."
     ],
     flow: [
-      "React가 현재 quantity를 읽습니다.",
-      "렌더에서 price * quantity로 total을 계산합니다.",
-      "수량 변경 후 다음 렌더가 새 total을 계산합니다."
+      "React가 지금 기억하는 수량을 읽습니다.",
+      "4000에 수량을 곱해 예상 총액을 계산합니다.",
+      "버튼을 누르면 수량을 늘려 달라고 요청합니다.",
+      "다음 화면 계산에서 새 수량으로 총액도 다시 계산합니다."
     ],
     result: "처음 4000원, 한 번 클릭하면 8000원입니다.",
     edit: "price를 4500으로 바꾸고 별도의 total 갱신 코드 없이도 총액이 달라지는지 확인하세요.",
     warning:
-      "실제 주문 확정 금액은 서버 기준으로 계산해야 합니다. 이 값은 브라우저가 보여 주는 예상 총액입니다.",
+      "브라우저의 총액은 사용자에게 보여 주는 예상값입니다. 실제 주문을 받는 서버는 자기 가격표와 검사한 수량으로 확정 금액을 다시 계산해야 합니다.",
     mode: "jsx"
   },
   "조건부 렌더링": {
@@ -305,1245 +368,1295 @@ window.GLOSSARY_NOTES = {
     mode: "jsx"
   },
   trim: {
-    code: 'function App() {\n  const [text, setText] = React.useState("");\n  const isEmpty = text.trim() === "";\n  return (\n    <section>\n      <input\n        value={text}\n        onChange={(e) => setText(e.target.value)}\n      />\n      {isEmpty ? (\n        <p>검색어를 입력하세요.</p>\n      ) : (\n        <p>검색어: {text}</p>\n      )}\n    </section>\n  );\n}\n',
+    code: 'const input = "  커피  ";\nconst cleaned = input.trim();\nconsole.log(`[${input}]`);\nconsole.log(`[${cleaned}]`);\n',
+    mode: "console",
     explain: [
-      "조건부 렌더링은 값에 따라 다른 JSX를 반환하는 방식입니다. trim()은 문자열 양끝의 공백을 제거한 새 문자열을 반환하므로 공백만 입력한 경우를 검사할 수 있습니다."
+      "입력한 글자 앞뒤에 실수로 공백이 붙을 수 있습니다. trim()은 문자열 양끝의 공백을 뺀 새 문자열을 돌려줍니다.",
+      "원래 input을 저절로 고치는 것은 아닙니다. 예제는 돌려받은 새 문자열을 cleaned라는 이름에 넣습니다."
     ],
     flow: [
-      "입력 값을 state로 읽습니다.",
-      "공백을 제거한 문자열이 빈 문자열인지 검사합니다.",
-      "조건에 따라 안내 또는 검색어를 보여 줍니다."
+      "앞뒤 공백이 있는 문자열을 만듭니다.",
+      "trim()으로 공백을 뺀 새 문자열을 받습니다.",
+      "원래 값과 새 값을 대괄호로 감싸 차이를 확인합니다."
     ],
-    result: "빈 값과 공백만 입력한 값은 안내 문구가 보입니다.",
-    edit: "공백만 입력한 경우와 글자 앞뒤에 공백이 있는 경우를 비교하세요.",
-    warning:
-      "trim()을 호출했다고 원래 text가 자동으로 바뀌지는 않습니다. 반환한 값을 검사하거나 저장해야 합니다.",
-    mode: "jsx"
+    result: "첫 출력은 [  커피  ], 둘째 출력은 [커피]입니다.",
+    edit: "글자 중간에도 공백을 넣어 보세요. 앞뒤 공백과 달리 중간 공백은 그대로 남습니다.",
+    warning: "trim()은 문자열 내부의 모든 공백을 없애는 함수가 아닙니다."
   },
   불변성: {
     code: 'function App() {\n  const [order, setOrder] = React.useState({\n    name: "커피",\n    quantity: 1\n  });\n\n  function increase() {\n    setOrder((previous) => ({\n      ...previous,\n      quantity: previous.quantity + 1\n    }));\n  }\n\n  return (\n    <button onClick={increase}>\n      {order.name} {order.quantity}개\n    </button>\n  );\n}\n',
     explain: [
-      "객체나 배열 state를 갱신할 때 기존 객체를 직접 바꾸지 않고 새 객체를 만들어 set 함수로 전달합니다. 이전 렌더에서 사용한 값의 내용도 그대로 보존할 수 있습니다."
+      "주문 한 건에 메뉴 이름과 수량이 함께 들어 있다고 생각해 보세요. 수량만 바꿀 때도 기존 주문 객체를 직접 고치지 않고 바뀐 내용이 들어 있는 새 객체를 만듭니다.",
+      "...previous는 이전 객체의 속성을 새 객체로 펼칩니다. 그 뒤에 quantity를 다시 적으면 수량만 새 값이 됩니다. setOrder는 이 새 객체를 다음 상태로 요청합니다."
     ],
     flow: [
-      "...previous가 이전 객체의 최상위 속성을 새 객체에 복사합니다.",
-      "quantity 속성만 새 값으로 덮어씁니다.",
-      "새 객체를 다음 state로 요청합니다."
+      "이전 주문에서 이름과 수량을 읽습니다.",
+      "새 객체에 이전 내용을 복사합니다.",
+      "새 객체의 quantity만 1 더 큰 값으로 적습니다.",
+      "React가 새 객체를 다음 상태로 사용해 화면을 계산합니다."
     ],
     result: "이름은 커피로 유지되고 수량만 늘어납니다.",
     edit: "name 속성도 바꾸는 별도 버튼을 만들되 quantity가 사라지지 않게 하세요.",
     warning:
-      "전개 구문은 얕은 복사입니다. 중첩 객체를 수정한다면 바뀌는 깊이까지 새 객체를 만들어야 합니다.",
+      "...으로 복사해도 내부에 든 또 다른 객체까지 모두 새로 생기지는 않습니다. 중첩 객체를 바꾼다면 바뀌는 깊이까지 새 객체를 만들어야 합니다.",
     mode: "jsx"
   },
   "객체 state와 새 객체": {
     code: 'function App() {\n  const [order, setOrder] = React.useState({\n    name: "커피",\n    quantity: 1\n  });\n\n  function increase() {\n    setOrder((previous) => ({\n      ...previous,\n      quantity: previous.quantity + 1\n    }));\n  }\n\n  return (\n    <button onClick={increase}>\n      {order.name} {order.quantity}개\n    </button>\n  );\n}\n',
     explain: [
-      "객체나 배열 state를 갱신할 때 기존 객체를 직접 바꾸지 않고 새 객체를 만들어 set 함수로 전달합니다. 이전 렌더에서 사용한 값의 내용도 그대로 보존할 수 있습니다."
+      "주문 한 건에 메뉴 이름과 수량이 함께 들어 있다고 생각해 보세요. 수량만 바꿀 때도 기존 주문 객체를 직접 고치지 않고 바뀐 내용이 들어 있는 새 객체를 만듭니다.",
+      "...previous는 이전 객체의 속성을 새 객체로 펼칩니다. 그 뒤에 quantity를 다시 적으면 수량만 새 값이 됩니다. setOrder는 이 새 객체를 다음 상태로 요청합니다."
     ],
     flow: [
-      "...previous가 이전 객체의 최상위 속성을 새 객체에 복사합니다.",
-      "quantity 속성만 새 값으로 덮어씁니다.",
-      "새 객체를 다음 state로 요청합니다."
+      "이전 주문에서 이름과 수량을 읽습니다.",
+      "새 객체에 이전 내용을 복사합니다.",
+      "새 객체의 quantity만 1 더 큰 값으로 적습니다.",
+      "React가 새 객체를 다음 상태로 사용해 화면을 계산합니다."
     ],
     result: "이름은 커피로 유지되고 수량만 늘어납니다.",
     edit: "name 속성도 바꾸는 별도 버튼을 만들되 quantity가 사라지지 않게 하세요.",
     warning:
-      "전개 구문은 얕은 복사입니다. 중첩 객체를 수정한다면 바뀌는 깊이까지 새 객체를 만들어야 합니다.",
+      "...으로 복사해도 내부에 든 또 다른 객체까지 모두 새로 생기지는 않습니다. 중첩 객체를 바꾼다면 바뀌는 깊이까지 새 객체를 만들어야 합니다.",
     mode: "jsx"
   },
   구조분해: {
     code: 'const menu = { name: "커피", price: 4000 };\nconst { name, price, option = "기본" } = menu;\n\nfunction label({ name, price = 0 }) {\n  return `${name}: ${price}원`;\n}\n\nconsole.log(name, option);\nconsole.log(label(menu));\n',
     explain: [
-      "객체 구조분해는 속성 이름을 기준으로 값을 꺼냅니다. 함수의 매개변수 자리에서 구조분해하면 전달받은 객체의 필요한 속성을 바로 이름으로 사용할 수 있습니다.",
-      "기본값은 해당 값이 undefined일 때 사용합니다. null이나 0을 모두 기본값으로 바꾸는 규칙은 아닙니다."
+      "메뉴 객체에는 name과 price처럼 이름표가 붙은 값이 들어 있습니다. const { name, price } = menu;는 그 이름표를 찾아 값을 각각의 변수로 꺼내는 문법입니다.",
+      'option = "기본"은 option 값이 없거나 undefined일 때 대신 쓸 값입니다. 함수의 괄호 안에서도 이렇게 객체를 꺼내 받을 수 있습니다.'
     ],
     flow: [
-      "menu에서 name과 price를 꺼냅니다.",
-      "option은 없으므로 기본 문자열을 사용합니다.",
-      "label은 전달받은 객체를 매개변수 자리에서 구조분해합니다."
+      "menu 객체에서 name과 price라는 속성을 찾습니다.",
+      "option은 없으므로 ‘기본’이라는 문자열을 사용합니다.",
+      "label(menu)를 호출하면 함수가 필요한 속성을 받아 안내 글자를 만듭니다."
     ],
     result: "콘솔에 커피 기본, 커피: 4000원이 출력됩니다.",
     edit: 'menu에 option: "따뜻하게"를 추가하고 기본값 대신 어떤 값이 쓰이는지 확인하세요.',
-    warning: "배열 구조분해는 위치, 객체 구조분해는 속성 이름이 기준입니다.",
+    warning:
+      "배열은 위치로 꺼내고 객체는 속성 이름으로 꺼냅니다. 기본값은 null, 0, 빈 문자열을 모두 바꾸는 규칙이 아닙니다.",
     mode: "console"
   },
   "매개변수 구조분해": {
     code: 'const menu = { name: "커피", price: 4000 };\nconst { name, price, option = "기본" } = menu;\n\nfunction label({ name, price = 0 }) {\n  return `${name}: ${price}원`;\n}\n\nconsole.log(name, option);\nconsole.log(label(menu));\n',
     explain: [
-      "객체 구조분해는 속성 이름을 기준으로 값을 꺼냅니다. 함수의 매개변수 자리에서 구조분해하면 전달받은 객체의 필요한 속성을 바로 이름으로 사용할 수 있습니다.",
-      "기본값은 해당 값이 undefined일 때 사용합니다. null이나 0을 모두 기본값으로 바꾸는 규칙은 아닙니다."
+      "메뉴 객체에는 name과 price처럼 이름표가 붙은 값이 들어 있습니다. const { name, price } = menu;는 그 이름표를 찾아 값을 각각의 변수로 꺼내는 문법입니다.",
+      'option = "기본"은 option 값이 없거나 undefined일 때 대신 쓸 값입니다. 함수의 괄호 안에서도 이렇게 객체를 꺼내 받을 수 있습니다.'
     ],
     flow: [
-      "menu에서 name과 price를 꺼냅니다.",
-      "option은 없으므로 기본 문자열을 사용합니다.",
-      "label은 전달받은 객체를 매개변수 자리에서 구조분해합니다."
+      "menu 객체에서 name과 price라는 속성을 찾습니다.",
+      "option은 없으므로 ‘기본’이라는 문자열을 사용합니다.",
+      "label(menu)를 호출하면 함수가 필요한 속성을 받아 안내 글자를 만듭니다."
     ],
     result: "콘솔에 커피 기본, 커피: 4000원이 출력됩니다.",
     edit: 'menu에 option: "따뜻하게"를 추가하고 기본값 대신 어떤 값이 쓰이는지 확인하세요.',
-    warning: "배열 구조분해는 위치, 객체 구조분해는 속성 이름이 기준입니다.",
+    warning:
+      "배열은 위치로 꺼내고 객체는 속성 이름으로 꺼냅니다. 기본값은 null, 0, 빈 문자열을 모두 바꾸는 규칙이 아닙니다.",
     mode: "console"
   },
   기본값: {
     code: 'const menu = { name: "커피", price: 4000 };\nconst { name, price, option = "기본" } = menu;\n\nfunction label({ name, price = 0 }) {\n  return `${name}: ${price}원`;\n}\n\nconsole.log(name, option);\nconsole.log(label(menu));\n',
     explain: [
-      "객체 구조분해는 속성 이름을 기준으로 값을 꺼냅니다. 함수의 매개변수 자리에서 구조분해하면 전달받은 객체의 필요한 속성을 바로 이름으로 사용할 수 있습니다.",
-      "기본값은 해당 값이 undefined일 때 사용합니다. null이나 0을 모두 기본값으로 바꾸는 규칙은 아닙니다."
+      "메뉴 객체에는 name과 price처럼 이름표가 붙은 값이 들어 있습니다. const { name, price } = menu;는 그 이름표를 찾아 값을 각각의 변수로 꺼내는 문법입니다.",
+      'option = "기본"은 option 값이 없거나 undefined일 때 대신 쓸 값입니다. 함수의 괄호 안에서도 이렇게 객체를 꺼내 받을 수 있습니다.'
     ],
     flow: [
-      "menu에서 name과 price를 꺼냅니다.",
-      "option은 없으므로 기본 문자열을 사용합니다.",
-      "label은 전달받은 객체를 매개변수 자리에서 구조분해합니다."
+      "menu 객체에서 name과 price라는 속성을 찾습니다.",
+      "option은 없으므로 ‘기본’이라는 문자열을 사용합니다.",
+      "label(menu)를 호출하면 함수가 필요한 속성을 받아 안내 글자를 만듭니다."
     ],
     result: "콘솔에 커피 기본, 커피: 4000원이 출력됩니다.",
     edit: 'menu에 option: "따뜻하게"를 추가하고 기본값 대신 어떤 값이 쓰이는지 확인하세요.',
-    warning: "배열 구조분해는 위치, 객체 구조분해는 속성 이름이 기준입니다.",
+    warning:
+      "배열은 위치로 꺼내고 객체는 속성 이름으로 꺼냅니다. 기본값은 null, 0, 빈 문자열을 모두 바꾸는 규칙이 아닙니다.",
     mode: "console"
   },
   "전개 구문": {
     code: 'const original = { name: "커피", quantity: 1 };\nconst same = original;\nconst copied = { ...original, quantity: 2 };\n\nconsole.log(same === original); // true\nconsole.log(copied === original); // false\nconsole.log(original.quantity); // 1\nconsole.log(copied.quantity); // 2\n',
     explain: [
-      "변수에 객체를 대입하면 같은 객체를 가리키는 참조가 전달됩니다. 전개 구문으로 만든 새 객체는 원래 객체와 다른 객체입니다.",
-      "위 예제는 최상위 속성만 있는 객체입니다. 내부에 객체나 배열이 들어 있다면 전개 구문만으로 그 내부까지 새 객체가 되는 것은 아닙니다."
+      "객체를 변수에 넣었다고 할 때, 그 변수가 객체를 가리킨다고 생각하면 쉽습니다. same = original은 별도의 사본을 만들지 않고 같은 객체를 가리키게 합니다.",
+      "{ ...original, quantity: 2 }는 바깥 객체를 새로 만듭니다. 원래 속성을 가져온 뒤 수량만 2로 적으므로 원본의 수량 1은 그대로입니다."
     ],
     flow: [
-      "same과 original은 같은 객체를 가리킵니다.",
-      "copied는 원래 속성을 펼친 뒤 quantity를 바꾼 새 객체입니다.",
-      "원본 수량은 바뀌지 않았는지 비교합니다."
+      "same과 original이 같은 객체를 가리키는지 비교합니다.",
+      "copied는 새 객체이므로 original과 같은 객체가 아닙니다.",
+      "원본 수량 1과 새 객체 수량 2를 각각 출력합니다."
     ],
     result: "true, false, 1, 2가 순서대로 출력됩니다.",
     edit: "copied의 name도 바꾸고 original.name이 유지되는지 확인하세요.",
-    warning: "같은 참조를 가진 변수의 속성을 바꾸면 원본에서도 바뀐 값이 보입니다.",
+    warning:
+      "배열이나 객체 안에 또 객체가 있으면 그 내부 객체는 함께 가리킬 수 있습니다. 바깥을 복사한 것과 모든 깊이를 복사한 것은 다릅니다.",
     mode: "console"
   },
   "얕은 복사": {
     code: 'const original = { name: "커피", quantity: 1 };\nconst same = original;\nconst copied = { ...original, quantity: 2 };\n\nconsole.log(same === original); // true\nconsole.log(copied === original); // false\nconsole.log(original.quantity); // 1\nconsole.log(copied.quantity); // 2\n',
     explain: [
-      "변수에 객체를 대입하면 같은 객체를 가리키는 참조가 전달됩니다. 전개 구문으로 만든 새 객체는 원래 객체와 다른 객체입니다.",
-      "위 예제는 최상위 속성만 있는 객체입니다. 내부에 객체나 배열이 들어 있다면 전개 구문만으로 그 내부까지 새 객체가 되는 것은 아닙니다."
+      "객체를 변수에 넣었다고 할 때, 그 변수가 객체를 가리킨다고 생각하면 쉽습니다. same = original은 별도의 사본을 만들지 않고 같은 객체를 가리키게 합니다.",
+      "{ ...original, quantity: 2 }는 바깥 객체를 새로 만듭니다. 원래 속성을 가져온 뒤 수량만 2로 적으므로 원본의 수량 1은 그대로입니다."
     ],
     flow: [
-      "same과 original은 같은 객체를 가리킵니다.",
-      "copied는 원래 속성을 펼친 뒤 quantity를 바꾼 새 객체입니다.",
-      "원본 수량은 바뀌지 않았는지 비교합니다."
+      "same과 original이 같은 객체를 가리키는지 비교합니다.",
+      "copied는 새 객체이므로 original과 같은 객체가 아닙니다.",
+      "원본 수량 1과 새 객체 수량 2를 각각 출력합니다."
     ],
     result: "true, false, 1, 2가 순서대로 출력됩니다.",
     edit: "copied의 name도 바꾸고 original.name이 유지되는지 확인하세요.",
-    warning: "같은 참조를 가진 변수의 속성을 바꾸면 원본에서도 바뀐 값이 보입니다.",
+    warning:
+      "배열이나 객체 안에 또 객체가 있으면 그 내부 객체는 함께 가리킬 수 있습니다. 바깥을 복사한 것과 모든 깊이를 복사한 것은 다릅니다.",
     mode: "console"
   },
   "불변성과 참조": {
     code: 'const original = { name: "커피", quantity: 1 };\nconst same = original;\nconst copied = { ...original, quantity: 2 };\n\nconsole.log(same === original); // true\nconsole.log(copied === original); // false\nconsole.log(original.quantity); // 1\nconsole.log(copied.quantity); // 2\n',
     explain: [
-      "변수에 객체를 대입하면 같은 객체를 가리키는 참조가 전달됩니다. 전개 구문으로 만든 새 객체는 원래 객체와 다른 객체입니다.",
-      "위 예제는 최상위 속성만 있는 객체입니다. 내부에 객체나 배열이 들어 있다면 전개 구문만으로 그 내부까지 새 객체가 되는 것은 아닙니다."
+      "객체를 변수에 넣었다고 할 때, 그 변수가 객체를 가리킨다고 생각하면 쉽습니다. same = original은 별도의 사본을 만들지 않고 같은 객체를 가리키게 합니다.",
+      "{ ...original, quantity: 2 }는 바깥 객체를 새로 만듭니다. 원래 속성을 가져온 뒤 수량만 2로 적으므로 원본의 수량 1은 그대로입니다."
     ],
     flow: [
-      "same과 original은 같은 객체를 가리킵니다.",
-      "copied는 원래 속성을 펼친 뒤 quantity를 바꾼 새 객체입니다.",
-      "원본 수량은 바뀌지 않았는지 비교합니다."
+      "same과 original이 같은 객체를 가리키는지 비교합니다.",
+      "copied는 새 객체이므로 original과 같은 객체가 아닙니다.",
+      "원본 수량 1과 새 객체 수량 2를 각각 출력합니다."
     ],
     result: "true, false, 1, 2가 순서대로 출력됩니다.",
     edit: "copied의 name도 바꾸고 original.name이 유지되는지 확인하세요.",
-    warning: "같은 참조를 가진 변수의 속성을 바꾸면 원본에서도 바뀐 값이 보입니다.",
+    warning:
+      "배열이나 객체 안에 또 객체가 있으면 그 내부 객체는 함께 가리킬 수 있습니다. 바깥을 복사한 것과 모든 깊이를 복사한 것은 다릅니다.",
     mode: "console"
   },
   참조: {
     code: 'const original = { name: "커피", quantity: 1 };\nconst same = original;\nconst copied = { ...original, quantity: 2 };\n\nconsole.log(same === original); // true\nconsole.log(copied === original); // false\nconsole.log(original.quantity); // 1\nconsole.log(copied.quantity); // 2\n',
     explain: [
-      "변수에 객체를 대입하면 같은 객체를 가리키는 참조가 전달됩니다. 전개 구문으로 만든 새 객체는 원래 객체와 다른 객체입니다.",
-      "위 예제는 최상위 속성만 있는 객체입니다. 내부에 객체나 배열이 들어 있다면 전개 구문만으로 그 내부까지 새 객체가 되는 것은 아닙니다."
+      "객체를 변수에 넣었다고 할 때, 그 변수가 객체를 가리킨다고 생각하면 쉽습니다. same = original은 별도의 사본을 만들지 않고 같은 객체를 가리키게 합니다.",
+      "{ ...original, quantity: 2 }는 바깥 객체를 새로 만듭니다. 원래 속성을 가져온 뒤 수량만 2로 적으므로 원본의 수량 1은 그대로입니다."
     ],
     flow: [
-      "same과 original은 같은 객체를 가리킵니다.",
-      "copied는 원래 속성을 펼친 뒤 quantity를 바꾼 새 객체입니다.",
-      "원본 수량은 바뀌지 않았는지 비교합니다."
+      "same과 original이 같은 객체를 가리키는지 비교합니다.",
+      "copied는 새 객체이므로 original과 같은 객체가 아닙니다.",
+      "원본 수량 1과 새 객체 수량 2를 각각 출력합니다."
     ],
     result: "true, false, 1, 2가 순서대로 출력됩니다.",
     edit: "copied의 name도 바꾸고 original.name이 유지되는지 확인하세요.",
-    warning: "같은 참조를 가진 변수의 속성을 바꾸면 원본에서도 바뀐 값이 보입니다.",
+    warning:
+      "배열이나 객체 안에 또 객체가 있으면 그 내부 객체는 함께 가리킬 수 있습니다. 바깥을 복사한 것과 모든 깊이를 복사한 것은 다릅니다.",
     mode: "console"
   },
   map: {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconst labels = menus.map(\n  (menu, index) => `${index + 1}. ${menu.name}`\n);\nconsole.log(labels);\n',
     explain: [
-      "map은 배열의 각 항목에 콜백 함수를 적용하고 반환값들로 새 배열을 만듭니다. 콜백의 첫 인수는 현재 항목, 두 번째는 인덱스입니다.",
-      "콜백은 우리가 지금 호출한 결과가 아니라 다른 함수가 필요할 때 호출하도록 전달한 함수입니다. 여기서는 map이 각 항목마다 호출합니다."
+      "메뉴 목록에서 이름표 목록을 새로 만든다고 생각해 보세요. map은 원래 목록의 항목을 하나씩 함수에 넣고, 함수가 돌려준 결과로 새 목록을 만듭니다.",
+      "map에 건네는 함수를 콜백 함수라고 합니다. menu는 이번에 읽는 메뉴, index는 이번 위치 번호이며 첫 번호는 0입니다."
     ],
     flow: [
-      "첫 항목이 menu에, 0이 index에 들어옵니다.",
-      "콜백이 만든 문자열을 새 배열의 첫 항목에 넣습니다.",
-      "남은 항목에도 같은 작업을 수행합니다."
+      "첫 메뉴와 번호 0이 함수에 들어옵니다.",
+      "함수는 ‘1. 커피’라는 문자열을 만듭니다.",
+      "둘째 메뉴도 같은 방식으로 ‘2. 빵’이라는 문자열이 됩니다.",
+      "두 문자열을 담은 새 배열이 labels에 들어갑니다."
     ],
     result: '새 배열은 ["1. 커피", "2. 빵"]입니다.',
     edit: "이름 대신 `${menu.name}: ${menu.price}원`을 반환하도록 바꾸세요.",
     warning:
-      "중괄호 본문을 쓴 화살표 함수에서는 return을 빠뜨리면 undefined가 반환됩니다.",
+      "화살표 함수의 본문을 중괄호로 묶었다면 결과를 돌려주는 return을 적었는지 확인하세요. 결과를 돌려주지 않으면 undefined가 들어갑니다.",
     mode: "console"
   },
   "콜백 함수": {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconst labels = menus.map(\n  (menu, index) => `${index + 1}. ${menu.name}`\n);\nconsole.log(labels);\n',
     explain: [
-      "map은 배열의 각 항목에 콜백 함수를 적용하고 반환값들로 새 배열을 만듭니다. 콜백의 첫 인수는 현재 항목, 두 번째는 인덱스입니다.",
-      "콜백은 우리가 지금 호출한 결과가 아니라 다른 함수가 필요할 때 호출하도록 전달한 함수입니다. 여기서는 map이 각 항목마다 호출합니다."
+      "메뉴 목록에서 이름표 목록을 새로 만든다고 생각해 보세요. map은 원래 목록의 항목을 하나씩 함수에 넣고, 함수가 돌려준 결과로 새 목록을 만듭니다.",
+      "map에 건네는 함수를 콜백 함수라고 합니다. menu는 이번에 읽는 메뉴, index는 이번 위치 번호이며 첫 번호는 0입니다."
     ],
     flow: [
-      "첫 항목이 menu에, 0이 index에 들어옵니다.",
-      "콜백이 만든 문자열을 새 배열의 첫 항목에 넣습니다.",
-      "남은 항목에도 같은 작업을 수행합니다."
+      "첫 메뉴와 번호 0이 함수에 들어옵니다.",
+      "함수는 ‘1. 커피’라는 문자열을 만듭니다.",
+      "둘째 메뉴도 같은 방식으로 ‘2. 빵’이라는 문자열이 됩니다.",
+      "두 문자열을 담은 새 배열이 labels에 들어갑니다."
     ],
     result: '새 배열은 ["1. 커피", "2. 빵"]입니다.',
     edit: "이름 대신 `${menu.name}: ${menu.price}원`을 반환하도록 바꾸세요.",
     warning:
-      "중괄호 본문을 쓴 화살표 함수에서는 return을 빠뜨리면 undefined가 반환됩니다.",
+      "화살표 함수의 본문을 중괄호로 묶었다면 결과를 돌려주는 return을 적었는지 확인하세요. 결과를 돌려주지 않으면 undefined가 들어갑니다.",
     mode: "console"
   },
   "콜백의 매개변수": {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconst labels = menus.map(\n  (menu, index) => `${index + 1}. ${menu.name}`\n);\nconsole.log(labels);\n',
     explain: [
-      "map은 배열의 각 항목에 콜백 함수를 적용하고 반환값들로 새 배열을 만듭니다. 콜백의 첫 인수는 현재 항목, 두 번째는 인덱스입니다.",
-      "콜백은 우리가 지금 호출한 결과가 아니라 다른 함수가 필요할 때 호출하도록 전달한 함수입니다. 여기서는 map이 각 항목마다 호출합니다."
+      "메뉴 목록에서 이름표 목록을 새로 만든다고 생각해 보세요. map은 원래 목록의 항목을 하나씩 함수에 넣고, 함수가 돌려준 결과로 새 목록을 만듭니다.",
+      "map에 건네는 함수를 콜백 함수라고 합니다. menu는 이번에 읽는 메뉴, index는 이번 위치 번호이며 첫 번호는 0입니다."
     ],
     flow: [
-      "첫 항목이 menu에, 0이 index에 들어옵니다.",
-      "콜백이 만든 문자열을 새 배열의 첫 항목에 넣습니다.",
-      "남은 항목에도 같은 작업을 수행합니다."
+      "첫 메뉴와 번호 0이 함수에 들어옵니다.",
+      "함수는 ‘1. 커피’라는 문자열을 만듭니다.",
+      "둘째 메뉴도 같은 방식으로 ‘2. 빵’이라는 문자열이 됩니다.",
+      "두 문자열을 담은 새 배열이 labels에 들어갑니다."
     ],
     result: '새 배열은 ["1. 커피", "2. 빵"]입니다.',
     edit: "이름 대신 `${menu.name}: ${menu.price}원`을 반환하도록 바꾸세요.",
     warning:
-      "중괄호 본문을 쓴 화살표 함수에서는 return을 빠뜨리면 undefined가 반환됩니다.",
+      "화살표 함수의 본문을 중괄호로 묶었다면 결과를 돌려주는 return을 적었는지 확인하세요. 결과를 돌려주지 않으면 undefined가 들어갑니다.",
     mode: "console"
   },
   filter: {
     code: "const prices = [3000, 4000, 5000];\nconst affordable = prices.filter((price) => price <= 4000);\nconsole.log(affordable);\nconsole.log(prices);\n",
     explain: [
-      "filter는 조건을 만족하는 항목만 담은 새 배열을 만듭니다. 조건에 맞는지 판단할 콜백이 truthy인 값을 반환한 항목이 남습니다."
+      "가격 목록에서 4000원 이하인 것만 고르는 상황입니다. filter는 항목마다 조건을 검사하고 조건을 만족한 항목만 새 배열에 담습니다.",
+      "원래 prices에서 항목을 지우는 방식은 아닙니다. 골라 낸 목록이 affordable에 새로 들어갑니다."
     ],
     flow: [
-      "3000과 4000은 조건을 만족합니다.",
-      "5000은 조건을 만족하지 않아 제외됩니다.",
-      "원본 배열 자체는 그대로입니다."
+      "3000은 4000 이하이므로 남깁니다.",
+      "4000도 조건에 맞으므로 남깁니다.",
+      "5000은 조건에 맞지 않아 새 배열에 넣지 않습니다."
     ],
     result: "결과는 [3000, 4000], 원본은 [3000, 4000, 5000]입니다.",
     edit: "<=를 <로 바꾸고 4000이 남는지 확인하세요.",
     warning:
-      "filter는 조건에 맞는 첫 항목 하나가 아니라 배열을 반환합니다. 한 항목이 필요하면 find와 비교하세요.",
+      "결과가 하나여도 filter의 반환값은 배열입니다. 항목 하나를 바로 찾고 싶다면 find와 비교해 보세요.",
     mode: "console"
   },
   reduce: {
     code: "const quantities = [1, 2, 3];\nconst total = quantities.reduce((sum, quantity) => {\n  return sum + quantity;\n}, 0);\nconsole.log(total);\n",
     explain: [
-      "reduce는 각 항목을 순서대로 처리하면서 누적값을 다음 호출로 넘깁니다. 마지막의 0은 처음 누적값입니다. 빈 배열도 다룰 수 있도록 초기값을 명시했습니다."
+      "수량 1, 2, 3을 차례로 더하는 예제입니다. reduce는 지금까지 계산한 합계와 다음 항목을 함수에 넣고 새 합계를 받아 이어서 계산합니다.",
+      "마지막에 적은 0은 계산을 시작할 첫 합계입니다. sum은 지금까지의 합계, quantity는 지금 더할 항목입니다."
     ],
     flow: [
-      "첫 호출은 0 + 1로 1을 반환합니다.",
-      "다음 호출은 1 + 2로 3을 반환합니다.",
-      "마지막 호출은 3 + 3으로 6을 반환합니다."
+      "첫 합계 0에 1을 더해 1이 됩니다.",
+      "합계 1에 2를 더해 3이 됩니다.",
+      "합계 3에 3을 더해 최종 6이 됩니다."
     ],
     result: "총합 6이 출력됩니다.",
     edit: "배열을 빈 배열로 바꾸고 초기값이 어떤 결과를 만드는지 확인하세요.",
     warning:
-      "콜백에서 다음 누적값을 반드시 반환하세요. 초기값 없이 빈 배열을 reduce하면 오류가 발생합니다.",
+      "함수는 다음 차례에 쓸 합계를 return해야 합니다. 빈 배열도 다룰 수 있도록 시작 값 0을 명시한 예제입니다.",
     mode: "console"
   },
   "누적값과 초기값": {
     code: "const quantities = [1, 2, 3];\nconst total = quantities.reduce((sum, quantity) => {\n  return sum + quantity;\n}, 0);\nconsole.log(total);\n",
     explain: [
-      "reduce는 각 항목을 순서대로 처리하면서 누적값을 다음 호출로 넘깁니다. 마지막의 0은 처음 누적값입니다. 빈 배열도 다룰 수 있도록 초기값을 명시했습니다."
+      "수량 1, 2, 3을 차례로 더하는 예제입니다. reduce는 지금까지 계산한 합계와 다음 항목을 함수에 넣고 새 합계를 받아 이어서 계산합니다.",
+      "마지막에 적은 0은 계산을 시작할 첫 합계입니다. sum은 지금까지의 합계, quantity는 지금 더할 항목입니다."
     ],
     flow: [
-      "첫 호출은 0 + 1로 1을 반환합니다.",
-      "다음 호출은 1 + 2로 3을 반환합니다.",
-      "마지막 호출은 3 + 3으로 6을 반환합니다."
+      "첫 합계 0에 1을 더해 1이 됩니다.",
+      "합계 1에 2를 더해 3이 됩니다.",
+      "합계 3에 3을 더해 최종 6이 됩니다."
     ],
     result: "총합 6이 출력됩니다.",
     edit: "배열을 빈 배열로 바꾸고 초기값이 어떤 결과를 만드는지 확인하세요.",
     warning:
-      "콜백에서 다음 누적값을 반드시 반환하세요. 초기값 없이 빈 배열을 reduce하면 오류가 발생합니다.",
+      "함수는 다음 차례에 쓸 합계를 return해야 합니다. 빈 배열도 다룰 수 있도록 시작 값 0을 명시한 예제입니다.",
     mode: "console"
   },
   누적값: {
     code: "const quantities = [1, 2, 3];\nconst total = quantities.reduce((sum, quantity) => {\n  return sum + quantity;\n}, 0);\nconsole.log(total);\n",
     explain: [
-      "reduce는 각 항목을 순서대로 처리하면서 누적값을 다음 호출로 넘깁니다. 마지막의 0은 처음 누적값입니다. 빈 배열도 다룰 수 있도록 초기값을 명시했습니다."
+      "수량 1, 2, 3을 차례로 더하는 예제입니다. reduce는 지금까지 계산한 합계와 다음 항목을 함수에 넣고 새 합계를 받아 이어서 계산합니다.",
+      "마지막에 적은 0은 계산을 시작할 첫 합계입니다. sum은 지금까지의 합계, quantity는 지금 더할 항목입니다."
     ],
     flow: [
-      "첫 호출은 0 + 1로 1을 반환합니다.",
-      "다음 호출은 1 + 2로 3을 반환합니다.",
-      "마지막 호출은 3 + 3으로 6을 반환합니다."
+      "첫 합계 0에 1을 더해 1이 됩니다.",
+      "합계 1에 2를 더해 3이 됩니다.",
+      "합계 3에 3을 더해 최종 6이 됩니다."
     ],
     result: "총합 6이 출력됩니다.",
     edit: "배열을 빈 배열로 바꾸고 초기값이 어떤 결과를 만드는지 확인하세요.",
     warning:
-      "콜백에서 다음 누적값을 반드시 반환하세요. 초기값 없이 빈 배열을 reduce하면 오류가 발생합니다.",
+      "함수는 다음 차례에 쓸 합계를 return해야 합니다. 빈 배열도 다룰 수 있도록 시작 값 0을 명시한 예제입니다.",
     mode: "console"
   },
   함수: {
     code: "function calculateTotal(price, quantity) {\n  const total = price * quantity;\n  return total;\n}\n\nconst result = calculateTotal(4000, 2);\nconsole.log(result);\n",
     explain: [
-      "함수 선언은 재사용할 동작을 정의하는 코드이고, 호출은 그 동작을 실제로 실행하는 코드입니다. price와 quantity는 매개변수, 4000과 2는 호출할 때 전달한 인수입니다.",
-      "return은 계산한 결과를 호출한 곳에 돌려주고 현재 함수 실행을 끝냅니다. 함수 안의 total은 그 함수 내부에서 사용하는 지역 변수입니다."
+      "계산기에 가격과 수량을 넣으면 금액이 나오는 작은 기능을 만든다고 생각해 보세요. calculateTotal은 이 작업에 붙인 함수 이름입니다.",
+      "price와 quantity는 받을 값에 붙인 이름입니다. 호출할 때 4000과 2를 건네면 그 값으로 곱셈을 하고, return이 계산 결과를 호출한 곳으로 돌려줍니다."
     ],
     flow: [
-      "calculateTotal(4000, 2)가 두 인수를 전달합니다.",
-      "함수 안에서 곱셈을 수행합니다.",
-      "return으로 받은 8000을 result에 저장합니다."
+      "calculateTotal(4000, 2)로 함수를 실행합니다.",
+      "함수 안에서는 price가 4000, quantity가 2가 됩니다.",
+      "곱한 값 8000을 return으로 돌려줍니다.",
+      "돌려받은 값을 result에 담아 출력합니다."
     ],
     result: "콘솔에는 8000이 출력됩니다.",
     edit: "수량을 3으로 바꾼 뒤 함수를 고치지 않고 결과가 바뀌는지 확인하세요.",
-    warning: "console.log로 출력하는 것과 return으로 결과를 돌려주는 것은 다릅니다.",
+    warning:
+      "console.log는 확인할 값을 출력합니다. return은 다른 코드가 사용할 결과를 돌려줍니다. 두 역할을 구분하세요.",
     mode: "console"
   },
   "함수 선언과 호출": {
     code: "function calculateTotal(price, quantity) {\n  const total = price * quantity;\n  return total;\n}\n\nconst result = calculateTotal(4000, 2);\nconsole.log(result);\n",
     explain: [
-      "함수 선언은 재사용할 동작을 정의하는 코드이고, 호출은 그 동작을 실제로 실행하는 코드입니다. price와 quantity는 매개변수, 4000과 2는 호출할 때 전달한 인수입니다.",
-      "return은 계산한 결과를 호출한 곳에 돌려주고 현재 함수 실행을 끝냅니다. 함수 안의 total은 그 함수 내부에서 사용하는 지역 변수입니다."
+      "계산기에 가격과 수량을 넣으면 금액이 나오는 작은 기능을 만든다고 생각해 보세요. calculateTotal은 이 작업에 붙인 함수 이름입니다.",
+      "price와 quantity는 받을 값에 붙인 이름입니다. 호출할 때 4000과 2를 건네면 그 값으로 곱셈을 하고, return이 계산 결과를 호출한 곳으로 돌려줍니다."
     ],
     flow: [
-      "calculateTotal(4000, 2)가 두 인수를 전달합니다.",
-      "함수 안에서 곱셈을 수행합니다.",
-      "return으로 받은 8000을 result에 저장합니다."
+      "calculateTotal(4000, 2)로 함수를 실행합니다.",
+      "함수 안에서는 price가 4000, quantity가 2가 됩니다.",
+      "곱한 값 8000을 return으로 돌려줍니다.",
+      "돌려받은 값을 result에 담아 출력합니다."
     ],
     result: "콘솔에는 8000이 출력됩니다.",
     edit: "수량을 3으로 바꾼 뒤 함수를 고치지 않고 결과가 바뀌는지 확인하세요.",
-    warning: "console.log로 출력하는 것과 return으로 결과를 돌려주는 것은 다릅니다.",
+    warning:
+      "console.log는 확인할 값을 출력합니다. return은 다른 코드가 사용할 결과를 돌려줍니다. 두 역할을 구분하세요.",
     mode: "console"
   },
   "매개변수와 인수": {
     code: "function calculateTotal(price, quantity) {\n  const total = price * quantity;\n  return total;\n}\n\nconst result = calculateTotal(4000, 2);\nconsole.log(result);\n",
     explain: [
-      "함수 선언은 재사용할 동작을 정의하는 코드이고, 호출은 그 동작을 실제로 실행하는 코드입니다. price와 quantity는 매개변수, 4000과 2는 호출할 때 전달한 인수입니다.",
-      "return은 계산한 결과를 호출한 곳에 돌려주고 현재 함수 실행을 끝냅니다. 함수 안의 total은 그 함수 내부에서 사용하는 지역 변수입니다."
+      "계산기에 가격과 수량을 넣으면 금액이 나오는 작은 기능을 만든다고 생각해 보세요. calculateTotal은 이 작업에 붙인 함수 이름입니다.",
+      "price와 quantity는 받을 값에 붙인 이름입니다. 호출할 때 4000과 2를 건네면 그 값으로 곱셈을 하고, return이 계산 결과를 호출한 곳으로 돌려줍니다."
     ],
     flow: [
-      "calculateTotal(4000, 2)가 두 인수를 전달합니다.",
-      "함수 안에서 곱셈을 수행합니다.",
-      "return으로 받은 8000을 result에 저장합니다."
+      "calculateTotal(4000, 2)로 함수를 실행합니다.",
+      "함수 안에서는 price가 4000, quantity가 2가 됩니다.",
+      "곱한 값 8000을 return으로 돌려줍니다.",
+      "돌려받은 값을 result에 담아 출력합니다."
     ],
     result: "콘솔에는 8000이 출력됩니다.",
     edit: "수량을 3으로 바꾼 뒤 함수를 고치지 않고 결과가 바뀌는지 확인하세요.",
-    warning: "console.log로 출력하는 것과 return으로 결과를 돌려주는 것은 다릅니다.",
+    warning:
+      "console.log는 확인할 값을 출력합니다. return은 다른 코드가 사용할 결과를 돌려줍니다. 두 역할을 구분하세요.",
     mode: "console"
   },
   return: {
     code: "function calculateTotal(price, quantity) {\n  const total = price * quantity;\n  return total;\n}\n\nconst result = calculateTotal(4000, 2);\nconsole.log(result);\n",
     explain: [
-      "함수 선언은 재사용할 동작을 정의하는 코드이고, 호출은 그 동작을 실제로 실행하는 코드입니다. price와 quantity는 매개변수, 4000과 2는 호출할 때 전달한 인수입니다.",
-      "return은 계산한 결과를 호출한 곳에 돌려주고 현재 함수 실행을 끝냅니다. 함수 안의 total은 그 함수 내부에서 사용하는 지역 변수입니다."
+      "계산기에 가격과 수량을 넣으면 금액이 나오는 작은 기능을 만든다고 생각해 보세요. calculateTotal은 이 작업에 붙인 함수 이름입니다.",
+      "price와 quantity는 받을 값에 붙인 이름입니다. 호출할 때 4000과 2를 건네면 그 값으로 곱셈을 하고, return이 계산 결과를 호출한 곳으로 돌려줍니다."
     ],
     flow: [
-      "calculateTotal(4000, 2)가 두 인수를 전달합니다.",
-      "함수 안에서 곱셈을 수행합니다.",
-      "return으로 받은 8000을 result에 저장합니다."
+      "calculateTotal(4000, 2)로 함수를 실행합니다.",
+      "함수 안에서는 price가 4000, quantity가 2가 됩니다.",
+      "곱한 값 8000을 return으로 돌려줍니다.",
+      "돌려받은 값을 result에 담아 출력합니다."
     ],
     result: "콘솔에는 8000이 출력됩니다.",
     edit: "수량을 3으로 바꾼 뒤 함수를 고치지 않고 결과가 바뀌는지 확인하세요.",
-    warning: "console.log로 출력하는 것과 return으로 결과를 돌려주는 것은 다릅니다.",
+    warning:
+      "console.log는 확인할 값을 출력합니다. return은 다른 코드가 사용할 결과를 돌려줍니다. 두 역할을 구분하세요.",
     mode: "console"
   },
   "지역 변수": {
     code: "function calculateTotal(price, quantity) {\n  const total = price * quantity;\n  return total;\n}\n\nconst result = calculateTotal(4000, 2);\nconsole.log(result);\n",
     explain: [
-      "함수 선언은 재사용할 동작을 정의하는 코드이고, 호출은 그 동작을 실제로 실행하는 코드입니다. price와 quantity는 매개변수, 4000과 2는 호출할 때 전달한 인수입니다.",
-      "return은 계산한 결과를 호출한 곳에 돌려주고 현재 함수 실행을 끝냅니다. 함수 안의 total은 그 함수 내부에서 사용하는 지역 변수입니다."
+      "계산기에 가격과 수량을 넣으면 금액이 나오는 작은 기능을 만든다고 생각해 보세요. calculateTotal은 이 작업에 붙인 함수 이름입니다.",
+      "price와 quantity는 받을 값에 붙인 이름입니다. 호출할 때 4000과 2를 건네면 그 값으로 곱셈을 하고, return이 계산 결과를 호출한 곳으로 돌려줍니다."
     ],
     flow: [
-      "calculateTotal(4000, 2)가 두 인수를 전달합니다.",
-      "함수 안에서 곱셈을 수행합니다.",
-      "return으로 받은 8000을 result에 저장합니다."
+      "calculateTotal(4000, 2)로 함수를 실행합니다.",
+      "함수 안에서는 price가 4000, quantity가 2가 됩니다.",
+      "곱한 값 8000을 return으로 돌려줍니다.",
+      "돌려받은 값을 result에 담아 출력합니다."
     ],
     result: "콘솔에는 8000이 출력됩니다.",
     edit: "수량을 3으로 바꾼 뒤 함수를 고치지 않고 결과가 바뀌는지 확인하세요.",
-    warning: "console.log로 출력하는 것과 return으로 결과를 돌려주는 것은 다릅니다.",
+    warning:
+      "console.log는 확인할 값을 출력합니다. return은 다른 코드가 사용할 결과를 돌려줍니다. 두 역할을 구분하세요.",
     mode: "console"
   },
   변수: {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   "const / let": {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   "선언과 대입": {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   자료형: {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   typeof: {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   "number()": {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   문자열: {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   "숫자와 불리언": {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   nan: {
     code: 'const input = "2";\nconst quantity = Number(input);\nlet total = 4000 * quantity;\nconsole.log(typeof input, typeof quantity);\nconsole.log(total);\ntotal = total + 1000;\nconsole.log(total);\n',
     explain: [
-      "입력칸에서 읽은 값은 보통 문자열입니다. Number로 숫자로 바꾼 뒤 계산하면 문자열 이어 붙이기와 숫자 연산을 구분하기 쉽습니다.",
-      "const는 변수에 다른 값을 재대입하지 않을 때, let은 재대입할 때 사용합니다. const로 선언한 객체의 내부까지 자동으로 변경 금지되는 것은 아닙니다."
+      '입력칸에서 읽은 "2"는 보통 글자입니다. 곱셈에 쓸 숫자 2로 바꾸려면 Number를 사용할 수 있습니다. 겉으로 같아 보여도 글자와 숫자는 다른 종류의 값입니다.',
+      "const는 그 변수에 다른 값을 다시 넣지 않을 때 쓰고, let은 다시 넣어야 할 때 씁니다. 예제에서는 total에 1000을 더한 값을 다시 넣으므로 let을 사용합니다."
     ],
     flow: [
-      '문자열 "2"를 숫자 2로 바꿉니다.',
-      "단가와 수량을 곱해 8000을 계산합니다.",
-      "let으로 선언한 total에 새 계산 결과를 대입합니다."
+      '입력 문자열 "2"를 quantity라는 숫자 2로 바꿉니다.',
+      "4000과 2를 곱해 8000을 total에 넣습니다.",
+      "total에 1000을 더한 9000을 다시 넣습니다."
     ],
     result: "string number, 8000, 9000이 순서대로 출력됩니다.",
     edit: 'input을 "abc"와 ""로 바꾸고 Number 결과를 비교하세요. 빈 값 검사는 변환 전에 따로 필요합니다.',
     warning:
-      'NaN 여부는 Number.isNaN(value)로 확인합니다. Number("")는 0이므로 숫자 변환 성공만으로 올바른 입력이라고 판단하지 않습니다.',
+      "빈 문자열을 Number로 바꾸면 0이 됩니다. 숫자로 바꿀 수 있다는 것과 주문에 쓸 올바른 수량이라는 것은 다릅니다. 빈 값과 범위도 따로 검사하세요.",
     mode: "console"
   },
   배열: {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconsole.log(menus.length);\nconsole.log(menus[0].name);\nconsole.log(menus[1]["price"]);\n',
     explain: [
-      "배열은 순서가 있는 값의 목록이고, 객체는 속성 이름과 값의 묶음입니다. 메뉴 배열 안의 각 객체가 한 메뉴를 나타냅니다.",
-      "배열은 0번부터 시작하는 인덱스로 항목을 찾고, 객체는 name처럼 속성 이름으로 값을 찾습니다. localStorage의 키·값은 문자열 저장 공간이라는 다른 문맥이므로 연결된 저장소 수업도 함께 확인하세요."
+      "메뉴 두 개를 순서대로 모은 것이 menus 배열입니다. 배열 안의 각 객체는 메뉴 하나의 id, 이름, 가격을 이름표와 값으로 묶어 담고 있습니다.",
+      "menus[0]은 첫 메뉴 객체입니다. 그 뒤에 .name을 붙이면 첫 메뉴의 이름을 읽습니다. 배열의 위치는 0부터 시작합니다."
     ],
     flow: [
-      "menus.length는 항목 수를 읽습니다.",
-      "menus[0]으로 첫 객체를 찾고 .name으로 이름을 읽습니다.",
-      "둘째 객체의 price는 대괄호 표기로도 읽을 수 있습니다."
+      "menus.length로 메뉴가 몇 개 있는지 읽습니다.",
+      "menus[0]으로 첫 메뉴를 찾고 name을 읽습니다.",
+      "menus[1]로 둘째 메뉴를 찾고 price를 읽습니다."
     ],
     result: "2, 커피, 3500이 출력됩니다.",
     edit: "세 번째 메뉴 객체를 추가한 뒤 length와 menus[2].name을 출력하세요.",
     warning:
-      "menus[menus.length]는 마지막 항목이 아니라 범위를 벗어난 위치입니다. 마지막 인덱스는 length - 1입니다.",
+      "항목이 2개면 위치 번호는 0과 1입니다. menus[2]는 세 번째 위치이므로 이 예제에서는 값이 없습니다. 저장소의 키·값은 아래 다른 문맥도 확인하세요.",
     mode: "console"
   },
   객체: {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconsole.log(menus.length);\nconsole.log(menus[0].name);\nconsole.log(menus[1]["price"]);\n',
     explain: [
-      "배열은 순서가 있는 값의 목록이고, 객체는 속성 이름과 값의 묶음입니다. 메뉴 배열 안의 각 객체가 한 메뉴를 나타냅니다.",
-      "배열은 0번부터 시작하는 인덱스로 항목을 찾고, 객체는 name처럼 속성 이름으로 값을 찾습니다. localStorage의 키·값은 문자열 저장 공간이라는 다른 문맥이므로 연결된 저장소 수업도 함께 확인하세요."
+      "메뉴 두 개를 순서대로 모은 것이 menus 배열입니다. 배열 안의 각 객체는 메뉴 하나의 id, 이름, 가격을 이름표와 값으로 묶어 담고 있습니다.",
+      "menus[0]은 첫 메뉴 객체입니다. 그 뒤에 .name을 붙이면 첫 메뉴의 이름을 읽습니다. 배열의 위치는 0부터 시작합니다."
     ],
     flow: [
-      "menus.length는 항목 수를 읽습니다.",
-      "menus[0]으로 첫 객체를 찾고 .name으로 이름을 읽습니다.",
-      "둘째 객체의 price는 대괄호 표기로도 읽을 수 있습니다."
+      "menus.length로 메뉴가 몇 개 있는지 읽습니다.",
+      "menus[0]으로 첫 메뉴를 찾고 name을 읽습니다.",
+      "menus[1]로 둘째 메뉴를 찾고 price를 읽습니다."
     ],
     result: "2, 커피, 3500이 출력됩니다.",
     edit: "세 번째 메뉴 객체를 추가한 뒤 length와 menus[2].name을 출력하세요.",
     warning:
-      "menus[menus.length]는 마지막 항목이 아니라 범위를 벗어난 위치입니다. 마지막 인덱스는 length - 1입니다.",
+      "항목이 2개면 위치 번호는 0과 1입니다. menus[2]는 세 번째 위치이므로 이 예제에서는 값이 없습니다. 저장소의 키·값은 아래 다른 문맥도 확인하세요.",
     mode: "console"
   },
   "객체 배열": {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconsole.log(menus.length);\nconsole.log(menus[0].name);\nconsole.log(menus[1]["price"]);\n',
     explain: [
-      "배열은 순서가 있는 값의 목록이고, 객체는 속성 이름과 값의 묶음입니다. 메뉴 배열 안의 각 객체가 한 메뉴를 나타냅니다.",
-      "배열은 0번부터 시작하는 인덱스로 항목을 찾고, 객체는 name처럼 속성 이름으로 값을 찾습니다. localStorage의 키·값은 문자열 저장 공간이라는 다른 문맥이므로 연결된 저장소 수업도 함께 확인하세요."
+      "메뉴 두 개를 순서대로 모은 것이 menus 배열입니다. 배열 안의 각 객체는 메뉴 하나의 id, 이름, 가격을 이름표와 값으로 묶어 담고 있습니다.",
+      "menus[0]은 첫 메뉴 객체입니다. 그 뒤에 .name을 붙이면 첫 메뉴의 이름을 읽습니다. 배열의 위치는 0부터 시작합니다."
     ],
     flow: [
-      "menus.length는 항목 수를 읽습니다.",
-      "menus[0]으로 첫 객체를 찾고 .name으로 이름을 읽습니다.",
-      "둘째 객체의 price는 대괄호 표기로도 읽을 수 있습니다."
+      "menus.length로 메뉴가 몇 개 있는지 읽습니다.",
+      "menus[0]으로 첫 메뉴를 찾고 name을 읽습니다.",
+      "menus[1]로 둘째 메뉴를 찾고 price를 읽습니다."
     ],
     result: "2, 커피, 3500이 출력됩니다.",
     edit: "세 번째 메뉴 객체를 추가한 뒤 length와 menus[2].name을 출력하세요.",
     warning:
-      "menus[menus.length]는 마지막 항목이 아니라 범위를 벗어난 위치입니다. 마지막 인덱스는 length - 1입니다.",
+      "항목이 2개면 위치 번호는 0과 1입니다. menus[2]는 세 번째 위치이므로 이 예제에서는 값이 없습니다. 저장소의 키·값은 아래 다른 문맥도 확인하세요.",
     mode: "console"
   },
   "인덱스와 length": {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconsole.log(menus.length);\nconsole.log(menus[0].name);\nconsole.log(menus[1]["price"]);\n',
     explain: [
-      "배열은 순서가 있는 값의 목록이고, 객체는 속성 이름과 값의 묶음입니다. 메뉴 배열 안의 각 객체가 한 메뉴를 나타냅니다.",
-      "배열은 0번부터 시작하는 인덱스로 항목을 찾고, 객체는 name처럼 속성 이름으로 값을 찾습니다. localStorage의 키·값은 문자열 저장 공간이라는 다른 문맥이므로 연결된 저장소 수업도 함께 확인하세요."
+      "메뉴 두 개를 순서대로 모은 것이 menus 배열입니다. 배열 안의 각 객체는 메뉴 하나의 id, 이름, 가격을 이름표와 값으로 묶어 담고 있습니다.",
+      "menus[0]은 첫 메뉴 객체입니다. 그 뒤에 .name을 붙이면 첫 메뉴의 이름을 읽습니다. 배열의 위치는 0부터 시작합니다."
     ],
     flow: [
-      "menus.length는 항목 수를 읽습니다.",
-      "menus[0]으로 첫 객체를 찾고 .name으로 이름을 읽습니다.",
-      "둘째 객체의 price는 대괄호 표기로도 읽을 수 있습니다."
+      "menus.length로 메뉴가 몇 개 있는지 읽습니다.",
+      "menus[0]으로 첫 메뉴를 찾고 name을 읽습니다.",
+      "menus[1]로 둘째 메뉴를 찾고 price를 읽습니다."
     ],
     result: "2, 커피, 3500이 출력됩니다.",
     edit: "세 번째 메뉴 객체를 추가한 뒤 length와 menus[2].name을 출력하세요.",
     warning:
-      "menus[menus.length]는 마지막 항목이 아니라 범위를 벗어난 위치입니다. 마지막 인덱스는 length - 1입니다.",
+      "항목이 2개면 위치 번호는 0과 1입니다. menus[2]는 세 번째 위치이므로 이 예제에서는 값이 없습니다. 저장소의 키·값은 아래 다른 문맥도 확인하세요.",
     mode: "console"
   },
   "속성 접근": {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconsole.log(menus.length);\nconsole.log(menus[0].name);\nconsole.log(menus[1]["price"]);\n',
     explain: [
-      "배열은 순서가 있는 값의 목록이고, 객체는 속성 이름과 값의 묶음입니다. 메뉴 배열 안의 각 객체가 한 메뉴를 나타냅니다.",
-      "배열은 0번부터 시작하는 인덱스로 항목을 찾고, 객체는 name처럼 속성 이름으로 값을 찾습니다. localStorage의 키·값은 문자열 저장 공간이라는 다른 문맥이므로 연결된 저장소 수업도 함께 확인하세요."
+      "메뉴 두 개를 순서대로 모은 것이 menus 배열입니다. 배열 안의 각 객체는 메뉴 하나의 id, 이름, 가격을 이름표와 값으로 묶어 담고 있습니다.",
+      "menus[0]은 첫 메뉴 객체입니다. 그 뒤에 .name을 붙이면 첫 메뉴의 이름을 읽습니다. 배열의 위치는 0부터 시작합니다."
     ],
     flow: [
-      "menus.length는 항목 수를 읽습니다.",
-      "menus[0]으로 첫 객체를 찾고 .name으로 이름을 읽습니다.",
-      "둘째 객체의 price는 대괄호 표기로도 읽을 수 있습니다."
+      "menus.length로 메뉴가 몇 개 있는지 읽습니다.",
+      "menus[0]으로 첫 메뉴를 찾고 name을 읽습니다.",
+      "menus[1]로 둘째 메뉴를 찾고 price를 읽습니다."
     ],
     result: "2, 커피, 3500이 출력됩니다.",
     edit: "세 번째 메뉴 객체를 추가한 뒤 length와 menus[2].name을 출력하세요.",
     warning:
-      "menus[menus.length]는 마지막 항목이 아니라 범위를 벗어난 위치입니다. 마지막 인덱스는 length - 1입니다.",
+      "항목이 2개면 위치 번호는 0과 1입니다. menus[2]는 세 번째 위치이므로 이 예제에서는 값이 없습니다. 저장소의 키·값은 아래 다른 문맥도 확인하세요.",
     mode: "console"
   },
   "키와 값": {
     code: 'const menus = [\n  { id: "coffee", name: "커피", price: 4000 },\n  { id: "bread", name: "빵", price: 3500 }\n];\nconsole.log(menus.length);\nconsole.log(menus[0].name);\nconsole.log(menus[1]["price"]);\n',
     explain: [
-      "배열은 순서가 있는 값의 목록이고, 객체는 속성 이름과 값의 묶음입니다. 메뉴 배열 안의 각 객체가 한 메뉴를 나타냅니다.",
-      "배열은 0번부터 시작하는 인덱스로 항목을 찾고, 객체는 name처럼 속성 이름으로 값을 찾습니다. localStorage의 키·값은 문자열 저장 공간이라는 다른 문맥이므로 연결된 저장소 수업도 함께 확인하세요."
+      "메뉴 두 개를 순서대로 모은 것이 menus 배열입니다. 배열 안의 각 객체는 메뉴 하나의 id, 이름, 가격을 이름표와 값으로 묶어 담고 있습니다.",
+      "menus[0]은 첫 메뉴 객체입니다. 그 뒤에 .name을 붙이면 첫 메뉴의 이름을 읽습니다. 배열의 위치는 0부터 시작합니다."
     ],
     flow: [
-      "menus.length는 항목 수를 읽습니다.",
-      "menus[0]으로 첫 객체를 찾고 .name으로 이름을 읽습니다.",
-      "둘째 객체의 price는 대괄호 표기로도 읽을 수 있습니다."
+      "menus.length로 메뉴가 몇 개 있는지 읽습니다.",
+      "menus[0]으로 첫 메뉴를 찾고 name을 읽습니다.",
+      "menus[1]로 둘째 메뉴를 찾고 price를 읽습니다."
     ],
     result: "2, 커피, 3500이 출력됩니다.",
     edit: "세 번째 메뉴 객체를 추가한 뒤 length와 menus[2].name을 출력하세요.",
     warning:
-      "menus[menus.length]는 마지막 항목이 아니라 범위를 벗어난 위치입니다. 마지막 인덱스는 length - 1입니다.",
+      "항목이 2개면 위치 번호는 0과 1입니다. menus[2]는 세 번째 위치이므로 이 예제에서는 값이 없습니다. 저장소의 키·값은 아래 다른 문맥도 확인하세요.",
     mode: "console"
   },
   json: {
     code: 'const order = { menuId: "coffee", quantity: 2 };\nconst text = JSON.stringify(order);\nconst restored = JSON.parse(text);\nconsole.log(text);\nconsole.log(restored.quantity);\n',
     explain: [
-      "JSON은 데이터를 문자로 표현하는 형식입니다. JavaScript 객체 자체와 JSON 문자열은 구분해야 합니다. stringify는 객체를 문자열로, parse는 JSON 문자열을 JavaScript 값으로 바꿉니다."
+      "메뉴 id와 수량을 프로그램 밖으로 보내거나 저장하려면 정해진 형식의 글자로 바꿀 수 있습니다. JSON은 이런 데이터 표현 형식 중 하나입니다.",
+      "JSON.stringify(order)는 객체를 JSON 문자열로 바꿉니다. JSON.parse(text)는 그 문자열을 다시 JavaScript 값으로 읽습니다. 객체 자체와 객체를 적어 놓은 글자는 다릅니다."
     ],
     flow: [
-      "객체를 JSON.stringify에 전달합니다.",
-      "문자열을 저장하거나 전송할 수 있습니다.",
-      "JSON.parse로 다시 값으로 바꿔 속성을 읽습니다."
+      "주문 객체를 만듭니다.",
+      "stringify로 JSON 문자열을 만듭니다.",
+      "parse로 다시 값을 읽습니다.",
+      "읽어 온 객체의 quantity를 출력합니다."
     ],
     result: "JSON 문자열과 수량 2가 출력됩니다.",
     edit: "JSON 문자열의 따옴표나 쉼표를 일부러 틀리게 만든 뒤 parse가 실패하는지 확인하세요.",
     warning:
-      "JSON.parse가 성공해도 원하는 데이터 구조라는 보장은 없습니다. quantity가 숫자인지 등 구조와 값도 검사해야 합니다.",
+      "문자열을 읽는 데 성공해도 올바른 주문이라는 뜻은 아닙니다. 수량이 숫자인지, 허용 범위 안인지도 확인해야 합니다.",
     mode: "console"
   },
   "stringify / parse": {
     code: 'const order = { menuId: "coffee", quantity: 2 };\nconst text = JSON.stringify(order);\nconst restored = JSON.parse(text);\nconsole.log(text);\nconsole.log(restored.quantity);\n',
     explain: [
-      "JSON은 데이터를 문자로 표현하는 형식입니다. JavaScript 객체 자체와 JSON 문자열은 구분해야 합니다. stringify는 객체를 문자열로, parse는 JSON 문자열을 JavaScript 값으로 바꿉니다."
+      "메뉴 id와 수량을 프로그램 밖으로 보내거나 저장하려면 정해진 형식의 글자로 바꿀 수 있습니다. JSON은 이런 데이터 표현 형식 중 하나입니다.",
+      "JSON.stringify(order)는 객체를 JSON 문자열로 바꿉니다. JSON.parse(text)는 그 문자열을 다시 JavaScript 값으로 읽습니다. 객체 자체와 객체를 적어 놓은 글자는 다릅니다."
     ],
     flow: [
-      "객체를 JSON.stringify에 전달합니다.",
-      "문자열을 저장하거나 전송할 수 있습니다.",
-      "JSON.parse로 다시 값으로 바꿔 속성을 읽습니다."
+      "주문 객체를 만듭니다.",
+      "stringify로 JSON 문자열을 만듭니다.",
+      "parse로 다시 값을 읽습니다.",
+      "읽어 온 객체의 quantity를 출력합니다."
     ],
     result: "JSON 문자열과 수량 2가 출력됩니다.",
     edit: "JSON 문자열의 따옴표나 쉼표를 일부러 틀리게 만든 뒤 parse가 실패하는지 확인하세요.",
     warning:
-      "JSON.parse가 성공해도 원하는 데이터 구조라는 보장은 없습니다. quantity가 숫자인지 등 구조와 값도 검사해야 합니다.",
+      "문자열을 읽는 데 성공해도 올바른 주문이라는 뜻은 아닙니다. 수량이 숫자인지, 허용 범위 안인지도 확인해야 합니다.",
     mode: "console"
   },
   "직렬화와 역직렬화": {
     code: 'const order = { menuId: "coffee", quantity: 2 };\nconst text = JSON.stringify(order);\nconst restored = JSON.parse(text);\nconsole.log(text);\nconsole.log(restored.quantity);\n',
     explain: [
-      "JSON은 데이터를 문자로 표현하는 형식입니다. JavaScript 객체 자체와 JSON 문자열은 구분해야 합니다. stringify는 객체를 문자열로, parse는 JSON 문자열을 JavaScript 값으로 바꿉니다."
+      "메뉴 id와 수량을 프로그램 밖으로 보내거나 저장하려면 정해진 형식의 글자로 바꿀 수 있습니다. JSON은 이런 데이터 표현 형식 중 하나입니다.",
+      "JSON.stringify(order)는 객체를 JSON 문자열로 바꿉니다. JSON.parse(text)는 그 문자열을 다시 JavaScript 값으로 읽습니다. 객체 자체와 객체를 적어 놓은 글자는 다릅니다."
     ],
     flow: [
-      "객체를 JSON.stringify에 전달합니다.",
-      "문자열을 저장하거나 전송할 수 있습니다.",
-      "JSON.parse로 다시 값으로 바꿔 속성을 읽습니다."
+      "주문 객체를 만듭니다.",
+      "stringify로 JSON 문자열을 만듭니다.",
+      "parse로 다시 값을 읽습니다.",
+      "읽어 온 객체의 quantity를 출력합니다."
     ],
     result: "JSON 문자열과 수량 2가 출력됩니다.",
     edit: "JSON 문자열의 따옴표나 쉼표를 일부러 틀리게 만든 뒤 parse가 실패하는지 확인하세요.",
     warning:
-      "JSON.parse가 성공해도 원하는 데이터 구조라는 보장은 없습니다. quantity가 숫자인지 등 구조와 값도 검사해야 합니다.",
+      "문자열을 읽는 데 성공해도 올바른 주문이라는 뜻은 아닙니다. 수량이 숫자인지, 허용 범위 안인지도 확인해야 합니다.",
     mode: "console"
   },
   조건식: {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   "if / else if / else": {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   "비교 연산자": {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   "엄격한 비교": {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   경계값: {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   "number.isinteger": {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   "대입과 비교": {
     code: 'const quantity = 20;\nif (\n  Number.isInteger(quantity) &&\n  quantity >= 1 &&\n  quantity <= 20\n) {\n  console.log("주문 가능");\n} else {\n  console.log("1~20의 정수를 입력하세요.");\n}\nconsole.log(quantity === "20");\n',
     explain: [
-      "조건식은 참·거짓으로 판단할 표현식입니다. 예제는 정수인지, 최솟값 이상인지, 최댓값 이하인지 모두 만족해야 통과합니다.",
-      '=는 값을 대입하고, ===는 타입을 강제로 바꾸지 않고 비교합니다. 숫자 20과 문자열 "20"은 엄격한 비교에서 같지 않습니다.'
+      "주문 수량을 1부터 20까지의 정수로만 받는 상황입니다. 숫자 종류인지, 소수는 아닌지, 범위 안인지를 모두 확인해야 합니다.",
+      '조건을 &&로 연결하면 여기서는 세 조건이 모두 맞아야 주문을 허용합니다. ===는 종류를 강제로 바꾸지 않고 비교하므로 숫자 20과 글자 "20"은 같지 않습니다.'
     ],
     flow: [
-      "Number.isInteger로 정수인지 검사합니다.",
-      "&&로 연결한 범위 조건을 확인합니다.",
-      "조건이 참이면 첫 블록, 거짓이면 else 블록을 실행합니다."
+      "값이 정수인지 확인합니다.",
+      "1 이상이고 20 이하인지 확인합니다.",
+      "모두 맞으면 주문 가능, 하나라도 틀리면 안내를 출력합니다."
     ],
     result: "주문 가능과 false가 출력됩니다.",
     edit: 'quantity를 0, 1, 20, 21, 1.5, "2"로 차례로 바꿔 보세요.',
     warning:
-      "클라이언트에서 이 검사를 하더라도 서버는 받은 입력을 다시 검사해야 합니다.",
+      "=는 값을 넣는 기호이고 ===는 같은지 묻는 기호입니다. 브라우저에서 검사한 값도 서버에서 다시 검사해야 합니다.",
     mode: "console"
   },
   dom: {
     code: '<h2 id="total">계산 전</h2>\n<script>\n  const output = document.querySelector("#total");\n  if (output !== null) {\n    output.textContent = "예상 총액: 8000원";\n  }\n</script>\n',
     explain: [
-      "DOM은 브라우저가 HTML을 읽어 만든 문서 객체 구조입니다. querySelector는 CSS 선택자로 첫 요소를 찾고, textContent는 해당 요소의 글자를 읽거나 바꿉니다.",
-      "찾는 요소가 없으면 null이 반환됩니다. 이 상태에서 .textContent에 접근하면 오류가 나므로 선택자·실행 시점·존재 여부를 확인합니다."
+      "브라우저는 HTML을 읽어 요소들이 이어진 문서 구조를 만듭니다. 이 구조가 DOM입니다. JavaScript는 그 안에서 요소를 찾아 내용을 바꿉니다.",
+      'querySelector("#total")은 id가 total인 요소를 찾습니다. textContent는 찾은 요소에 보여 줄 글자를 정합니다. 여기서는 ‘계산 전’을 금액 안내로 바꿉니다.'
     ],
     flow: [
-      "브라우저가 h2 요소를 만듭니다.",
-      "스크립트가 #total 요소를 찾습니다.",
-      "찾은 요소의 글자를 새 문구로 바꿉니다."
+      "브라우저가 h2 요소를 먼저 만듭니다.",
+      "JavaScript가 id로 그 요소를 찾습니다.",
+      "찾은 결과가 null이 아니면 글자를 바꿉니다."
     ],
     result: "계산 전 대신 예상 총액: 8000원이 보입니다.",
     edit: "id와 선택자를 함께 바꾸고, 한쪽만 바꿨을 때 어떤 차이가 나는지 확인하세요.",
     warning:
-      "사용자 입력을 글자로 보여 줄 때는 innerHTML로 HTML을 해석시키는 대신 textContent를 사용하세요.",
+      "찾은 요소가 없으면 null입니다. null에 textContent를 쓰려고 하지 말고 id, 선택자, 코드 실행 시점을 확인하세요.",
     mode: "html"
   },
   queryselector: {
     code: '<h2 id="total">계산 전</h2>\n<script>\n  const output = document.querySelector("#total");\n  if (output !== null) {\n    output.textContent = "예상 총액: 8000원";\n  }\n</script>\n',
     explain: [
-      "DOM은 브라우저가 HTML을 읽어 만든 문서 객체 구조입니다. querySelector는 CSS 선택자로 첫 요소를 찾고, textContent는 해당 요소의 글자를 읽거나 바꿉니다.",
-      "찾는 요소가 없으면 null이 반환됩니다. 이 상태에서 .textContent에 접근하면 오류가 나므로 선택자·실행 시점·존재 여부를 확인합니다."
+      "브라우저는 HTML을 읽어 요소들이 이어진 문서 구조를 만듭니다. 이 구조가 DOM입니다. JavaScript는 그 안에서 요소를 찾아 내용을 바꿉니다.",
+      'querySelector("#total")은 id가 total인 요소를 찾습니다. textContent는 찾은 요소에 보여 줄 글자를 정합니다. 여기서는 ‘계산 전’을 금액 안내로 바꿉니다.'
     ],
     flow: [
-      "브라우저가 h2 요소를 만듭니다.",
-      "스크립트가 #total 요소를 찾습니다.",
-      "찾은 요소의 글자를 새 문구로 바꿉니다."
+      "브라우저가 h2 요소를 먼저 만듭니다.",
+      "JavaScript가 id로 그 요소를 찾습니다.",
+      "찾은 결과가 null이 아니면 글자를 바꿉니다."
     ],
     result: "계산 전 대신 예상 총액: 8000원이 보입니다.",
     edit: "id와 선택자를 함께 바꾸고, 한쪽만 바꿨을 때 어떤 차이가 나는지 확인하세요.",
     warning:
-      "사용자 입력을 글자로 보여 줄 때는 innerHTML로 HTML을 해석시키는 대신 textContent를 사용하세요.",
+      "찾은 요소가 없으면 null입니다. null에 textContent를 쓰려고 하지 말고 id, 선택자, 코드 실행 시점을 확인하세요.",
     mode: "html"
   },
   textcontent: {
     code: '<h2 id="total">계산 전</h2>\n<script>\n  const output = document.querySelector("#total");\n  if (output !== null) {\n    output.textContent = "예상 총액: 8000원";\n  }\n</script>\n',
     explain: [
-      "DOM은 브라우저가 HTML을 읽어 만든 문서 객체 구조입니다. querySelector는 CSS 선택자로 첫 요소를 찾고, textContent는 해당 요소의 글자를 읽거나 바꿉니다.",
-      "찾는 요소가 없으면 null이 반환됩니다. 이 상태에서 .textContent에 접근하면 오류가 나므로 선택자·실행 시점·존재 여부를 확인합니다."
+      "브라우저는 HTML을 읽어 요소들이 이어진 문서 구조를 만듭니다. 이 구조가 DOM입니다. JavaScript는 그 안에서 요소를 찾아 내용을 바꿉니다.",
+      'querySelector("#total")은 id가 total인 요소를 찾습니다. textContent는 찾은 요소에 보여 줄 글자를 정합니다. 여기서는 ‘계산 전’을 금액 안내로 바꿉니다.'
     ],
     flow: [
-      "브라우저가 h2 요소를 만듭니다.",
-      "스크립트가 #total 요소를 찾습니다.",
-      "찾은 요소의 글자를 새 문구로 바꿉니다."
+      "브라우저가 h2 요소를 먼저 만듭니다.",
+      "JavaScript가 id로 그 요소를 찾습니다.",
+      "찾은 결과가 null이 아니면 글자를 바꿉니다."
     ],
     result: "계산 전 대신 예상 총액: 8000원이 보입니다.",
     edit: "id와 선택자를 함께 바꾸고, 한쪽만 바꿨을 때 어떤 차이가 나는지 확인하세요.",
     warning:
-      "사용자 입력을 글자로 보여 줄 때는 innerHTML로 HTML을 해석시키는 대신 textContent를 사용하세요.",
+      "찾은 요소가 없으면 null입니다. null에 textContent를 쓰려고 하지 말고 id, 선택자, 코드 실행 시점을 확인하세요.",
     mode: "html"
   },
   "텍스트와 html의 차이": {
     code: '<h2 id="total">계산 전</h2>\n<script>\n  const output = document.querySelector("#total");\n  if (output !== null) {\n    output.textContent = "예상 총액: 8000원";\n  }\n</script>\n',
     explain: [
-      "DOM은 브라우저가 HTML을 읽어 만든 문서 객체 구조입니다. querySelector는 CSS 선택자로 첫 요소를 찾고, textContent는 해당 요소의 글자를 읽거나 바꿉니다.",
-      "찾는 요소가 없으면 null이 반환됩니다. 이 상태에서 .textContent에 접근하면 오류가 나므로 선택자·실행 시점·존재 여부를 확인합니다."
+      "브라우저는 HTML을 읽어 요소들이 이어진 문서 구조를 만듭니다. 이 구조가 DOM입니다. JavaScript는 그 안에서 요소를 찾아 내용을 바꿉니다.",
+      'querySelector("#total")은 id가 total인 요소를 찾습니다. textContent는 찾은 요소에 보여 줄 글자를 정합니다. 여기서는 ‘계산 전’을 금액 안내로 바꿉니다.'
     ],
     flow: [
-      "브라우저가 h2 요소를 만듭니다.",
-      "스크립트가 #total 요소를 찾습니다.",
-      "찾은 요소의 글자를 새 문구로 바꿉니다."
+      "브라우저가 h2 요소를 먼저 만듭니다.",
+      "JavaScript가 id로 그 요소를 찾습니다.",
+      "찾은 결과가 null이 아니면 글자를 바꿉니다."
     ],
     result: "계산 전 대신 예상 총액: 8000원이 보입니다.",
     edit: "id와 선택자를 함께 바꾸고, 한쪽만 바꿨을 때 어떤 차이가 나는지 확인하세요.",
     warning:
-      "사용자 입력을 글자로 보여 줄 때는 innerHTML로 HTML을 해석시키는 대신 textContent를 사용하세요.",
+      "찾은 요소가 없으면 null입니다. null에 textContent를 쓰려고 하지 말고 id, 선택자, 코드 실행 시점을 확인하세요.",
     mode: "html"
   },
   "null 접근 오류": {
     code: '<h2 id="total">계산 전</h2>\n<script>\n  const output = document.querySelector("#total");\n  if (output !== null) {\n    output.textContent = "예상 총액: 8000원";\n  }\n</script>\n',
     explain: [
-      "DOM은 브라우저가 HTML을 읽어 만든 문서 객체 구조입니다. querySelector는 CSS 선택자로 첫 요소를 찾고, textContent는 해당 요소의 글자를 읽거나 바꿉니다.",
-      "찾는 요소가 없으면 null이 반환됩니다. 이 상태에서 .textContent에 접근하면 오류가 나므로 선택자·실행 시점·존재 여부를 확인합니다."
+      "브라우저는 HTML을 읽어 요소들이 이어진 문서 구조를 만듭니다. 이 구조가 DOM입니다. JavaScript는 그 안에서 요소를 찾아 내용을 바꿉니다.",
+      'querySelector("#total")은 id가 total인 요소를 찾습니다. textContent는 찾은 요소에 보여 줄 글자를 정합니다. 여기서는 ‘계산 전’을 금액 안내로 바꿉니다.'
     ],
     flow: [
-      "브라우저가 h2 요소를 만듭니다.",
-      "스크립트가 #total 요소를 찾습니다.",
-      "찾은 요소의 글자를 새 문구로 바꿉니다."
+      "브라우저가 h2 요소를 먼저 만듭니다.",
+      "JavaScript가 id로 그 요소를 찾습니다.",
+      "찾은 결과가 null이 아니면 글자를 바꿉니다."
     ],
     result: "계산 전 대신 예상 총액: 8000원이 보입니다.",
     edit: "id와 선택자를 함께 바꾸고, 한쪽만 바꿨을 때 어떤 차이가 나는지 확인하세요.",
     warning:
-      "사용자 입력을 글자로 보여 줄 때는 innerHTML로 HTML을 해석시키는 대신 textContent를 사용하세요.",
+      "찾은 요소가 없으면 null입니다. null에 textContent를 쓰려고 하지 말고 id, 선택자, 코드 실행 시점을 확인하세요.",
     mode: "html"
   },
   이벤트: {
     code: '<label>수량 <input id="quantity" value="1" /></label>\n<button id="check" type="button">확인</button>\n<p id="result"></p>\n<script>\n  document\n    .querySelector("#check")\n    .addEventListener("click", (event) => {\n      const value = document.querySelector("#quantity").value;\n      document.querySelector("#result").textContent =\n        `현재 입력: ${value}`;\n      console.log(event.type);\n    });\n</script>\n',
     explain: [
-      "이벤트 핸들러는 클릭이나 입력 같은 사건이 발생했을 때 호출할 함수입니다. addEventListener는 사건의 종류와 그때 실행할 함수를 연결합니다.",
-      "입력값은 사용자가 바꿀 수 있으므로 클릭했을 때 읽어야 현재 값을 얻습니다. 이벤트 객체에는 사건 종류와 대상 등 실행 시점의 정보가 들어 있습니다."
+      "클릭처럼 프로그램이 알아차릴 수 있는 사건을 이벤트라고 합니다. 그 사건이 생겼을 때 실행하도록 연결한 함수를 이벤트 핸들러라고 합니다.",
+      "예제는 확인 버튼에 클릭 함수를 연결합니다. 사용자가 수량을 고친 뒤 버튼을 누르면, 그때 입력칸의 값을 읽어 문구로 보여 줍니다."
     ],
     flow: [
-      "초기 화면에서 클릭 핸들러를 등록합니다.",
-      "사용자가 수량을 고친 뒤 확인을 누릅니다.",
-      "핸들러가 그 시점의 입력 문자열을 읽어 화면에 표시합니다."
+      "클릭할 때 실행할 함수를 버튼에 연결합니다.",
+      "사용자가 입력을 바꾸고 버튼을 누릅니다.",
+      "함수가 지금 입력된 값을 읽습니다.",
+      "읽은 값으로 안내 글자를 바꿉니다."
     ],
     result: "확인을 누른 시점의 수량이 안내에 표시됩니다.",
     edit: "입력값을 읽는 줄을 이벤트 핸들러 밖으로 옮긴 경우와 비교하세요.",
     warning:
-      "함수를 등록하는 것과 함수를 지금 호출하는 것은 다릅니다. addEventListener의 두 번째 인수에는 함수를 전달하세요.",
+      "입력값을 너무 일찍 읽어 두면 사용자가 나중에 바꾼 값이 반영되지 않을 수 있습니다. 최신 값이 필요할 때는 사건을 처리하는 순간에 읽으세요.",
     mode: "html"
   },
   "이벤트 핸들러": {
     code: '<label>수량 <input id="quantity" value="1" /></label>\n<button id="check" type="button">확인</button>\n<p id="result"></p>\n<script>\n  document\n    .querySelector("#check")\n    .addEventListener("click", (event) => {\n      const value = document.querySelector("#quantity").value;\n      document.querySelector("#result").textContent =\n        `현재 입력: ${value}`;\n      console.log(event.type);\n    });\n</script>\n',
     explain: [
-      "이벤트 핸들러는 클릭이나 입력 같은 사건이 발생했을 때 호출할 함수입니다. addEventListener는 사건의 종류와 그때 실행할 함수를 연결합니다.",
-      "입력값은 사용자가 바꿀 수 있으므로 클릭했을 때 읽어야 현재 값을 얻습니다. 이벤트 객체에는 사건 종류와 대상 등 실행 시점의 정보가 들어 있습니다."
+      "클릭처럼 프로그램이 알아차릴 수 있는 사건을 이벤트라고 합니다. 그 사건이 생겼을 때 실행하도록 연결한 함수를 이벤트 핸들러라고 합니다.",
+      "예제는 확인 버튼에 클릭 함수를 연결합니다. 사용자가 수량을 고친 뒤 버튼을 누르면, 그때 입력칸의 값을 읽어 문구로 보여 줍니다."
     ],
     flow: [
-      "초기 화면에서 클릭 핸들러를 등록합니다.",
-      "사용자가 수량을 고친 뒤 확인을 누릅니다.",
-      "핸들러가 그 시점의 입력 문자열을 읽어 화면에 표시합니다."
+      "클릭할 때 실행할 함수를 버튼에 연결합니다.",
+      "사용자가 입력을 바꾸고 버튼을 누릅니다.",
+      "함수가 지금 입력된 값을 읽습니다.",
+      "읽은 값으로 안내 글자를 바꿉니다."
     ],
     result: "확인을 누른 시점의 수량이 안내에 표시됩니다.",
     edit: "입력값을 읽는 줄을 이벤트 핸들러 밖으로 옮긴 경우와 비교하세요.",
     warning:
-      "함수를 등록하는 것과 함수를 지금 호출하는 것은 다릅니다. addEventListener의 두 번째 인수에는 함수를 전달하세요.",
+      "입력값을 너무 일찍 읽어 두면 사용자가 나중에 바꾼 값이 반영되지 않을 수 있습니다. 최신 값이 필요할 때는 사건을 처리하는 순간에 읽으세요.",
     mode: "html"
   },
   addeventlistener: {
     code: '<label>수량 <input id="quantity" value="1" /></label>\n<button id="check" type="button">확인</button>\n<p id="result"></p>\n<script>\n  document\n    .querySelector("#check")\n    .addEventListener("click", (event) => {\n      const value = document.querySelector("#quantity").value;\n      document.querySelector("#result").textContent =\n        `현재 입력: ${value}`;\n      console.log(event.type);\n    });\n</script>\n',
     explain: [
-      "이벤트 핸들러는 클릭이나 입력 같은 사건이 발생했을 때 호출할 함수입니다. addEventListener는 사건의 종류와 그때 실행할 함수를 연결합니다.",
-      "입력값은 사용자가 바꿀 수 있으므로 클릭했을 때 읽어야 현재 값을 얻습니다. 이벤트 객체에는 사건 종류와 대상 등 실행 시점의 정보가 들어 있습니다."
+      "클릭처럼 프로그램이 알아차릴 수 있는 사건을 이벤트라고 합니다. 그 사건이 생겼을 때 실행하도록 연결한 함수를 이벤트 핸들러라고 합니다.",
+      "예제는 확인 버튼에 클릭 함수를 연결합니다. 사용자가 수량을 고친 뒤 버튼을 누르면, 그때 입력칸의 값을 읽어 문구로 보여 줍니다."
     ],
     flow: [
-      "초기 화면에서 클릭 핸들러를 등록합니다.",
-      "사용자가 수량을 고친 뒤 확인을 누릅니다.",
-      "핸들러가 그 시점의 입력 문자열을 읽어 화면에 표시합니다."
+      "클릭할 때 실행할 함수를 버튼에 연결합니다.",
+      "사용자가 입력을 바꾸고 버튼을 누릅니다.",
+      "함수가 지금 입력된 값을 읽습니다.",
+      "읽은 값으로 안내 글자를 바꿉니다."
     ],
     result: "확인을 누른 시점의 수량이 안내에 표시됩니다.",
     edit: "입력값을 읽는 줄을 이벤트 핸들러 밖으로 옮긴 경우와 비교하세요.",
     warning:
-      "함수를 등록하는 것과 함수를 지금 호출하는 것은 다릅니다. addEventListener의 두 번째 인수에는 함수를 전달하세요.",
+      "입력값을 너무 일찍 읽어 두면 사용자가 나중에 바꾼 값이 반영되지 않을 수 있습니다. 최신 값이 필요할 때는 사건을 처리하는 순간에 읽으세요.",
     mode: "html"
   },
   "이벤트 객체": {
     code: '<label>수량 <input id="quantity" value="1" /></label>\n<button id="check" type="button">확인</button>\n<p id="result"></p>\n<script>\n  document\n    .querySelector("#check")\n    .addEventListener("click", (event) => {\n      const value = document.querySelector("#quantity").value;\n      document.querySelector("#result").textContent =\n        `현재 입력: ${value}`;\n      console.log(event.type);\n    });\n</script>\n',
     explain: [
-      "이벤트 핸들러는 클릭이나 입력 같은 사건이 발생했을 때 호출할 함수입니다. addEventListener는 사건의 종류와 그때 실행할 함수를 연결합니다.",
-      "입력값은 사용자가 바꿀 수 있으므로 클릭했을 때 읽어야 현재 값을 얻습니다. 이벤트 객체에는 사건 종류와 대상 등 실행 시점의 정보가 들어 있습니다."
+      "클릭처럼 프로그램이 알아차릴 수 있는 사건을 이벤트라고 합니다. 그 사건이 생겼을 때 실행하도록 연결한 함수를 이벤트 핸들러라고 합니다.",
+      "예제는 확인 버튼에 클릭 함수를 연결합니다. 사용자가 수량을 고친 뒤 버튼을 누르면, 그때 입력칸의 값을 읽어 문구로 보여 줍니다."
     ],
     flow: [
-      "초기 화면에서 클릭 핸들러를 등록합니다.",
-      "사용자가 수량을 고친 뒤 확인을 누릅니다.",
-      "핸들러가 그 시점의 입력 문자열을 읽어 화면에 표시합니다."
+      "클릭할 때 실행할 함수를 버튼에 연결합니다.",
+      "사용자가 입력을 바꾸고 버튼을 누릅니다.",
+      "함수가 지금 입력된 값을 읽습니다.",
+      "읽은 값으로 안내 글자를 바꿉니다."
     ],
     result: "확인을 누른 시점의 수량이 안내에 표시됩니다.",
     edit: "입력값을 읽는 줄을 이벤트 핸들러 밖으로 옮긴 경우와 비교하세요.",
     warning:
-      "함수를 등록하는 것과 함수를 지금 호출하는 것은 다릅니다. addEventListener의 두 번째 인수에는 함수를 전달하세요.",
+      "입력값을 너무 일찍 읽어 두면 사용자가 나중에 바꾼 값이 반영되지 않을 수 있습니다. 최신 값이 필요할 때는 사건을 처리하는 순간에 읽으세요.",
     mode: "html"
   },
   "이벤트 대상": {
     code: '<label>수량 <input id="quantity" value="1" /></label>\n<button id="check" type="button">확인</button>\n<p id="result"></p>\n<script>\n  document\n    .querySelector("#check")\n    .addEventListener("click", (event) => {\n      const value = document.querySelector("#quantity").value;\n      document.querySelector("#result").textContent =\n        `현재 입력: ${value}`;\n      console.log(event.type);\n    });\n</script>\n',
     explain: [
-      "이벤트 핸들러는 클릭이나 입력 같은 사건이 발생했을 때 호출할 함수입니다. addEventListener는 사건의 종류와 그때 실행할 함수를 연결합니다.",
-      "입력값은 사용자가 바꿀 수 있으므로 클릭했을 때 읽어야 현재 값을 얻습니다. 이벤트 객체에는 사건 종류와 대상 등 실행 시점의 정보가 들어 있습니다."
+      "클릭처럼 프로그램이 알아차릴 수 있는 사건을 이벤트라고 합니다. 그 사건이 생겼을 때 실행하도록 연결한 함수를 이벤트 핸들러라고 합니다.",
+      "예제는 확인 버튼에 클릭 함수를 연결합니다. 사용자가 수량을 고친 뒤 버튼을 누르면, 그때 입력칸의 값을 읽어 문구로 보여 줍니다."
     ],
     flow: [
-      "초기 화면에서 클릭 핸들러를 등록합니다.",
-      "사용자가 수량을 고친 뒤 확인을 누릅니다.",
-      "핸들러가 그 시점의 입력 문자열을 읽어 화면에 표시합니다."
+      "클릭할 때 실행할 함수를 버튼에 연결합니다.",
+      "사용자가 입력을 바꾸고 버튼을 누릅니다.",
+      "함수가 지금 입력된 값을 읽습니다.",
+      "읽은 값으로 안내 글자를 바꿉니다."
     ],
     result: "확인을 누른 시점의 수량이 안내에 표시됩니다.",
     edit: "입력값을 읽는 줄을 이벤트 핸들러 밖으로 옮긴 경우와 비교하세요.",
     warning:
-      "함수를 등록하는 것과 함수를 지금 호출하는 것은 다릅니다. addEventListener의 두 번째 인수에는 함수를 전달하세요.",
+      "입력값을 너무 일찍 읽어 두면 사용자가 나중에 바꾼 값이 반영되지 않을 수 있습니다. 최신 값이 필요할 때는 사건을 처리하는 순간에 읽으세요.",
     mode: "html"
   },
   "입력값 읽는 시점": {
     code: '<label>수량 <input id="quantity" value="1" /></label>\n<button id="check" type="button">확인</button>\n<p id="result"></p>\n<script>\n  document\n    .querySelector("#check")\n    .addEventListener("click", (event) => {\n      const value = document.querySelector("#quantity").value;\n      document.querySelector("#result").textContent =\n        `현재 입력: ${value}`;\n      console.log(event.type);\n    });\n</script>\n',
     explain: [
-      "이벤트 핸들러는 클릭이나 입력 같은 사건이 발생했을 때 호출할 함수입니다. addEventListener는 사건의 종류와 그때 실행할 함수를 연결합니다.",
-      "입력값은 사용자가 바꿀 수 있으므로 클릭했을 때 읽어야 현재 값을 얻습니다. 이벤트 객체에는 사건 종류와 대상 등 실행 시점의 정보가 들어 있습니다."
+      "클릭처럼 프로그램이 알아차릴 수 있는 사건을 이벤트라고 합니다. 그 사건이 생겼을 때 실행하도록 연결한 함수를 이벤트 핸들러라고 합니다.",
+      "예제는 확인 버튼에 클릭 함수를 연결합니다. 사용자가 수량을 고친 뒤 버튼을 누르면, 그때 입력칸의 값을 읽어 문구로 보여 줍니다."
     ],
     flow: [
-      "초기 화면에서 클릭 핸들러를 등록합니다.",
-      "사용자가 수량을 고친 뒤 확인을 누릅니다.",
-      "핸들러가 그 시점의 입력 문자열을 읽어 화면에 표시합니다."
+      "클릭할 때 실행할 함수를 버튼에 연결합니다.",
+      "사용자가 입력을 바꾸고 버튼을 누릅니다.",
+      "함수가 지금 입력된 값을 읽습니다.",
+      "읽은 값으로 안내 글자를 바꿉니다."
     ],
     result: "확인을 누른 시점의 수량이 안내에 표시됩니다.",
     edit: "입력값을 읽는 줄을 이벤트 핸들러 밖으로 옮긴 경우와 비교하세요.",
     warning:
-      "함수를 등록하는 것과 함수를 지금 호출하는 것은 다릅니다. addEventListener의 두 번째 인수에는 함수를 전달하세요.",
+      "입력값을 너무 일찍 읽어 두면 사용자가 나중에 바꾼 값이 반영되지 않을 수 있습니다. 최신 값이 필요할 때는 사건을 처리하는 순간에 읽으세요.",
     mode: "html"
   },
   "async / await": {
     code: 'function waitForPrice() {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(4000), 200);\n  });\n}\nasync function showPrice() {\n  console.log("기다리는 중");\n  const price = await waitForPrice();\n  console.log("받은 가격:", price);\n}\nshowPrice();\nconsole.log("다른 작업은 계속");\n',
     explain: [
-      "Promise는 아직 끝나지 않은 작업의 성공 값이나 실패 이유를 다루는 객체입니다. async 함수는 Promise를 반환하며, await는 그 함수의 나머지 실행을 결과가 준비될 때까지 미룹니다.",
-      "await가 브라우저 전체를 멈추는 것은 아닙니다. showPrice를 호출한 바깥 코드는 기다리는 동안에도 이어서 실행됩니다."
+      "서버에 물어본 가격이 바로 오지 않을 수 있습니다. Promise는 아직 끝나지 않은 일의 결과를 나중에 받도록 나타내는 객체입니다. 성공 값이나 실패 이유를 받을 수 있습니다.",
+      "await는 이 async 함수의 나머지 작업을 결과가 준비될 때까지 미룹니다. 함수 밖의 다른 작업까지 모두 멈추지는 않습니다. 예제에서는 실제 서버 대신 타이머로 기다림을 흉내 냅니다."
     ],
     flow: [
-      "showPrice가 기다리는 중을 출력합니다.",
-      "await에서 이 async 함수의 나머지 실행이 미뤄지고 바깥 로그가 실행됩니다.",
-      "타이머가 resolve한 뒤 await 다음 줄이 이어집니다."
+      "showPrice가 ‘기다리는 중’을 출력합니다.",
+      "가격이 준비되기를 기다리는 동안 함수 밖의 ‘다른 작업은 계속’이 출력됩니다.",
+      "타이머가 가격 4000을 준비하면 await 다음 줄이 이어집니다."
     ],
     result: "기다리는 중 → 다른 작업은 계속 → 받은 가격: 4000 순서입니다.",
     edit: "resolve를 reject로 바꾸려면 Promise 생성자에서 reject도 받고, 호출부에 try/catch를 추가해 실패를 처리하세요.",
     warning:
-      "await는 일반적인 동기 반환으로 Promise를 바꾸는 기능이 아닙니다. 실패하면 예외로 이어지므로 오류 처리를 설계합니다.",
+      "기다리던 일이 실패할 수도 있습니다. 실제 요청에서는 try/catch 등으로 실패했을 때 무엇을 보여 줄지도 정해야 합니다.",
     mode: "console"
   },
   promise: {
     code: 'function waitForPrice() {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(4000), 200);\n  });\n}\nasync function showPrice() {\n  console.log("기다리는 중");\n  const price = await waitForPrice();\n  console.log("받은 가격:", price);\n}\nshowPrice();\nconsole.log("다른 작업은 계속");\n',
     explain: [
-      "Promise는 아직 끝나지 않은 작업의 성공 값이나 실패 이유를 다루는 객체입니다. async 함수는 Promise를 반환하며, await는 그 함수의 나머지 실행을 결과가 준비될 때까지 미룹니다.",
-      "await가 브라우저 전체를 멈추는 것은 아닙니다. showPrice를 호출한 바깥 코드는 기다리는 동안에도 이어서 실행됩니다."
+      "서버에 물어본 가격이 바로 오지 않을 수 있습니다. Promise는 아직 끝나지 않은 일의 결과를 나중에 받도록 나타내는 객체입니다. 성공 값이나 실패 이유를 받을 수 있습니다.",
+      "await는 이 async 함수의 나머지 작업을 결과가 준비될 때까지 미룹니다. 함수 밖의 다른 작업까지 모두 멈추지는 않습니다. 예제에서는 실제 서버 대신 타이머로 기다림을 흉내 냅니다."
     ],
     flow: [
-      "showPrice가 기다리는 중을 출력합니다.",
-      "await에서 이 async 함수의 나머지 실행이 미뤄지고 바깥 로그가 실행됩니다.",
-      "타이머가 resolve한 뒤 await 다음 줄이 이어집니다."
+      "showPrice가 ‘기다리는 중’을 출력합니다.",
+      "가격이 준비되기를 기다리는 동안 함수 밖의 ‘다른 작업은 계속’이 출력됩니다.",
+      "타이머가 가격 4000을 준비하면 await 다음 줄이 이어집니다."
     ],
     result: "기다리는 중 → 다른 작업은 계속 → 받은 가격: 4000 순서입니다.",
     edit: "resolve를 reject로 바꾸려면 Promise 생성자에서 reject도 받고, 호출부에 try/catch를 추가해 실패를 처리하세요.",
     warning:
-      "await는 일반적인 동기 반환으로 Promise를 바꾸는 기능이 아닙니다. 실패하면 예외로 이어지므로 오류 처리를 설계합니다.",
+      "기다리던 일이 실패할 수도 있습니다. 실제 요청에서는 try/catch 등으로 실패했을 때 무엇을 보여 줄지도 정해야 합니다.",
     mode: "console"
   },
   비동기: {
     code: 'function waitForPrice() {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(4000), 200);\n  });\n}\nasync function showPrice() {\n  console.log("기다리는 중");\n  const price = await waitForPrice();\n  console.log("받은 가격:", price);\n}\nshowPrice();\nconsole.log("다른 작업은 계속");\n',
     explain: [
-      "Promise는 아직 끝나지 않은 작업의 성공 값이나 실패 이유를 다루는 객체입니다. async 함수는 Promise를 반환하며, await는 그 함수의 나머지 실행을 결과가 준비될 때까지 미룹니다.",
-      "await가 브라우저 전체를 멈추는 것은 아닙니다. showPrice를 호출한 바깥 코드는 기다리는 동안에도 이어서 실행됩니다."
+      "서버에 물어본 가격이 바로 오지 않을 수 있습니다. Promise는 아직 끝나지 않은 일의 결과를 나중에 받도록 나타내는 객체입니다. 성공 값이나 실패 이유를 받을 수 있습니다.",
+      "await는 이 async 함수의 나머지 작업을 결과가 준비될 때까지 미룹니다. 함수 밖의 다른 작업까지 모두 멈추지는 않습니다. 예제에서는 실제 서버 대신 타이머로 기다림을 흉내 냅니다."
     ],
     flow: [
-      "showPrice가 기다리는 중을 출력합니다.",
-      "await에서 이 async 함수의 나머지 실행이 미뤄지고 바깥 로그가 실행됩니다.",
-      "타이머가 resolve한 뒤 await 다음 줄이 이어집니다."
+      "showPrice가 ‘기다리는 중’을 출력합니다.",
+      "가격이 준비되기를 기다리는 동안 함수 밖의 ‘다른 작업은 계속’이 출력됩니다.",
+      "타이머가 가격 4000을 준비하면 await 다음 줄이 이어집니다."
     ],
     result: "기다리는 중 → 다른 작업은 계속 → 받은 가격: 4000 순서입니다.",
     edit: "resolve를 reject로 바꾸려면 Promise 생성자에서 reject도 받고, 호출부에 try/catch를 추가해 실패를 처리하세요.",
     warning:
-      "await는 일반적인 동기 반환으로 Promise를 바꾸는 기능이 아닙니다. 실패하면 예외로 이어지므로 오류 처리를 설계합니다.",
+      "기다리던 일이 실패할 수도 있습니다. 실제 요청에서는 try/catch 등으로 실패했을 때 무엇을 보여 줄지도 정해야 합니다.",
     mode: "console"
   },
   "resolve / reject": {
     code: 'function waitForPrice() {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(4000), 200);\n  });\n}\nasync function showPrice() {\n  console.log("기다리는 중");\n  const price = await waitForPrice();\n  console.log("받은 가격:", price);\n}\nshowPrice();\nconsole.log("다른 작업은 계속");\n',
     explain: [
-      "Promise는 아직 끝나지 않은 작업의 성공 값이나 실패 이유를 다루는 객체입니다. async 함수는 Promise를 반환하며, await는 그 함수의 나머지 실행을 결과가 준비될 때까지 미룹니다.",
-      "await가 브라우저 전체를 멈추는 것은 아닙니다. showPrice를 호출한 바깥 코드는 기다리는 동안에도 이어서 실행됩니다."
+      "서버에 물어본 가격이 바로 오지 않을 수 있습니다. Promise는 아직 끝나지 않은 일의 결과를 나중에 받도록 나타내는 객체입니다. 성공 값이나 실패 이유를 받을 수 있습니다.",
+      "await는 이 async 함수의 나머지 작업을 결과가 준비될 때까지 미룹니다. 함수 밖의 다른 작업까지 모두 멈추지는 않습니다. 예제에서는 실제 서버 대신 타이머로 기다림을 흉내 냅니다."
     ],
     flow: [
-      "showPrice가 기다리는 중을 출력합니다.",
-      "await에서 이 async 함수의 나머지 실행이 미뤄지고 바깥 로그가 실행됩니다.",
-      "타이머가 resolve한 뒤 await 다음 줄이 이어집니다."
+      "showPrice가 ‘기다리는 중’을 출력합니다.",
+      "가격이 준비되기를 기다리는 동안 함수 밖의 ‘다른 작업은 계속’이 출력됩니다.",
+      "타이머가 가격 4000을 준비하면 await 다음 줄이 이어집니다."
     ],
     result: "기다리는 중 → 다른 작업은 계속 → 받은 가격: 4000 순서입니다.",
     edit: "resolve를 reject로 바꾸려면 Promise 생성자에서 reject도 받고, 호출부에 try/catch를 추가해 실패를 처리하세요.",
     warning:
-      "await는 일반적인 동기 반환으로 Promise를 바꾸는 기능이 아닙니다. 실패하면 예외로 이어지므로 오류 처리를 설계합니다.",
+      "기다리던 일이 실패할 수도 있습니다. 실제 요청에서는 try/catch 등으로 실패했을 때 무엇을 보여 줄지도 정해야 합니다.",
     mode: "console"
   },
   "대기·성공·실패": {
     code: 'function waitForPrice() {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(4000), 200);\n  });\n}\nasync function showPrice() {\n  console.log("기다리는 중");\n  const price = await waitForPrice();\n  console.log("받은 가격:", price);\n}\nshowPrice();\nconsole.log("다른 작업은 계속");\n',
     explain: [
-      "Promise는 아직 끝나지 않은 작업의 성공 값이나 실패 이유를 다루는 객체입니다. async 함수는 Promise를 반환하며, await는 그 함수의 나머지 실행을 결과가 준비될 때까지 미룹니다.",
-      "await가 브라우저 전체를 멈추는 것은 아닙니다. showPrice를 호출한 바깥 코드는 기다리는 동안에도 이어서 실행됩니다."
+      "서버에 물어본 가격이 바로 오지 않을 수 있습니다. Promise는 아직 끝나지 않은 일의 결과를 나중에 받도록 나타내는 객체입니다. 성공 값이나 실패 이유를 받을 수 있습니다.",
+      "await는 이 async 함수의 나머지 작업을 결과가 준비될 때까지 미룹니다. 함수 밖의 다른 작업까지 모두 멈추지는 않습니다. 예제에서는 실제 서버 대신 타이머로 기다림을 흉내 냅니다."
     ],
     flow: [
-      "showPrice가 기다리는 중을 출력합니다.",
-      "await에서 이 async 함수의 나머지 실행이 미뤄지고 바깥 로그가 실행됩니다.",
-      "타이머가 resolve한 뒤 await 다음 줄이 이어집니다."
+      "showPrice가 ‘기다리는 중’을 출력합니다.",
+      "가격이 준비되기를 기다리는 동안 함수 밖의 ‘다른 작업은 계속’이 출력됩니다.",
+      "타이머가 가격 4000을 준비하면 await 다음 줄이 이어집니다."
     ],
     result: "기다리는 중 → 다른 작업은 계속 → 받은 가격: 4000 순서입니다.",
     edit: "resolve를 reject로 바꾸려면 Promise 생성자에서 reject도 받고, 호출부에 try/catch를 추가해 실패를 처리하세요.",
     warning:
-      "await는 일반적인 동기 반환으로 Promise를 바꾸는 기능이 아닙니다. 실패하면 예외로 이어지므로 오류 처리를 설계합니다.",
+      "기다리던 일이 실패할 수도 있습니다. 실제 요청에서는 try/catch 등으로 실패했을 때 무엇을 보여 줄지도 정해야 합니다.",
     mode: "console"
   },
   "async 함수의 반환값": {
     code: 'function waitForPrice() {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(4000), 200);\n  });\n}\nasync function showPrice() {\n  console.log("기다리는 중");\n  const price = await waitForPrice();\n  console.log("받은 가격:", price);\n}\nshowPrice();\nconsole.log("다른 작업은 계속");\n',
     explain: [
-      "Promise는 아직 끝나지 않은 작업의 성공 값이나 실패 이유를 다루는 객체입니다. async 함수는 Promise를 반환하며, await는 그 함수의 나머지 실행을 결과가 준비될 때까지 미룹니다.",
-      "await가 브라우저 전체를 멈추는 것은 아닙니다. showPrice를 호출한 바깥 코드는 기다리는 동안에도 이어서 실행됩니다."
+      "서버에 물어본 가격이 바로 오지 않을 수 있습니다. Promise는 아직 끝나지 않은 일의 결과를 나중에 받도록 나타내는 객체입니다. 성공 값이나 실패 이유를 받을 수 있습니다.",
+      "await는 이 async 함수의 나머지 작업을 결과가 준비될 때까지 미룹니다. 함수 밖의 다른 작업까지 모두 멈추지는 않습니다. 예제에서는 실제 서버 대신 타이머로 기다림을 흉내 냅니다."
     ],
     flow: [
-      "showPrice가 기다리는 중을 출력합니다.",
-      "await에서 이 async 함수의 나머지 실행이 미뤄지고 바깥 로그가 실행됩니다.",
-      "타이머가 resolve한 뒤 await 다음 줄이 이어집니다."
+      "showPrice가 ‘기다리는 중’을 출력합니다.",
+      "가격이 준비되기를 기다리는 동안 함수 밖의 ‘다른 작업은 계속’이 출력됩니다.",
+      "타이머가 가격 4000을 준비하면 await 다음 줄이 이어집니다."
     ],
     result: "기다리는 중 → 다른 작업은 계속 → 받은 가격: 4000 순서입니다.",
     edit: "resolve를 reject로 바꾸려면 Promise 생성자에서 reject도 받고, 호출부에 try/catch를 추가해 실패를 처리하세요.",
     warning:
-      "await는 일반적인 동기 반환으로 Promise를 바꾸는 기능이 아닙니다. 실패하면 예외로 이어지므로 오류 처리를 설계합니다.",
+      "기다리던 일이 실패할 수도 있습니다. 실제 요청에서는 try/catch 등으로 실패했을 때 무엇을 보여 줄지도 정해야 합니다.",
     mode: "console"
   },
   api: {
     code: 'async function loadMenu() {\n  const response = await fetch("/api/menu");\n  if (!response.ok) {\n    throw new Error(`요청 실패: ${response.status}`);\n  }\n  const menu = await response.json();\n  return menu;\n}\n\n// /api/menu를 제공하는 cafe-lab 서버에서 사용합니다.\n// loadMenu().then(console.log).catch(console.error);\n',
     explain: [
-      "fetch는 요청 결과를 Response로 받습니다. response.ok는 HTTP 상태가 성공 범위인지 나타내고, response.json()은 응답 본문을 JSON으로 읽는 비동기 작업입니다.",
-      "요청이 도착해 404나 500 응답을 받아도 fetch가 HTTP 상태만으로 자동 reject하는 것은 아닙니다. 그래서 ok를 검사해 실패로 처리합니다."
+      "브라우저가 서버에 ‘메뉴를 주세요’라고 요청하는 예제입니다. fetch는 응답을 받아 오고, response에는 상태 코드와 응답 본문 등을 읽는 기능이 들어 있습니다.",
+      "response.ok로 성공 상태인지 확인한 다음 response.json()으로 JSON 본문을 읽습니다. 응답을 받는 일과 본문을 값으로 읽는 일을 순서대로 기다립니다."
     ],
     flow: [
-      "정해진 서버의 /api/menu 주소로 GET 요청을 보냅니다.",
-      "HTTP 상태를 검사하고 실패 상태라면 오류를 던집니다.",
-      "성공한 응답 본문을 읽어 호출한 곳에 반환합니다."
+      "/api/menu로 GET 요청을 보냅니다.",
+      "서버가 돌려준 상태가 성공 범위인지 검사합니다.",
+      "실패 상태이면 throw로 오류를 발생시킵니다.",
+      "성공하면 JSON 본문을 읽어 호출한 곳에 돌려줍니다."
     ],
     result:
       "cafe-lab 서버에서 호출하면 메뉴 데이터가 반환됩니다. 이 정적 학습 사이트에는 해당 API가 없으므로 URL만 복사해 실행하면 같은 결과가 나오지 않습니다.",
     edit: "Network에서 실제 요청 주소·상태 코드·응답 본문을 확인하고 경로를 틀리게 했을 때와 서버를 껐을 때를 비교하세요.",
     warning:
-      "CORS, 서버 중단, HTTP 실패, 잘못된 JSON을 같은 원인으로 뭉뚱그리지 말고 실패한 단계를 확인하세요.",
+      "404 응답을 받았다고 fetch가 자동으로 실패 처리되는 것은 아닙니다. 연결 자체의 실패, HTTP 실패 상태, 잘못된 JSON을 나누어 확인하세요.",
     mode: "console"
   },
   fetch: {
     code: 'async function loadMenu() {\n  const response = await fetch("/api/menu");\n  if (!response.ok) {\n    throw new Error(`요청 실패: ${response.status}`);\n  }\n  const menu = await response.json();\n  return menu;\n}\n\n// /api/menu를 제공하는 cafe-lab 서버에서 사용합니다.\n// loadMenu().then(console.log).catch(console.error);\n',
     explain: [
-      "fetch는 요청 결과를 Response로 받습니다. response.ok는 HTTP 상태가 성공 범위인지 나타내고, response.json()은 응답 본문을 JSON으로 읽는 비동기 작업입니다.",
-      "요청이 도착해 404나 500 응답을 받아도 fetch가 HTTP 상태만으로 자동 reject하는 것은 아닙니다. 그래서 ok를 검사해 실패로 처리합니다."
+      "브라우저가 서버에 ‘메뉴를 주세요’라고 요청하는 예제입니다. fetch는 응답을 받아 오고, response에는 상태 코드와 응답 본문 등을 읽는 기능이 들어 있습니다.",
+      "response.ok로 성공 상태인지 확인한 다음 response.json()으로 JSON 본문을 읽습니다. 응답을 받는 일과 본문을 값으로 읽는 일을 순서대로 기다립니다."
     ],
     flow: [
-      "정해진 서버의 /api/menu 주소로 GET 요청을 보냅니다.",
-      "HTTP 상태를 검사하고 실패 상태라면 오류를 던집니다.",
-      "성공한 응답 본문을 읽어 호출한 곳에 반환합니다."
+      "/api/menu로 GET 요청을 보냅니다.",
+      "서버가 돌려준 상태가 성공 범위인지 검사합니다.",
+      "실패 상태이면 throw로 오류를 발생시킵니다.",
+      "성공하면 JSON 본문을 읽어 호출한 곳에 돌려줍니다."
     ],
     result:
       "cafe-lab 서버에서 호출하면 메뉴 데이터가 반환됩니다. 이 정적 학습 사이트에는 해당 API가 없으므로 URL만 복사해 실행하면 같은 결과가 나오지 않습니다.",
     edit: "Network에서 실제 요청 주소·상태 코드·응답 본문을 확인하고 경로를 틀리게 했을 때와 서버를 껐을 때를 비교하세요.",
     warning:
-      "CORS, 서버 중단, HTTP 실패, 잘못된 JSON을 같은 원인으로 뭉뚱그리지 말고 실패한 단계를 확인하세요.",
+      "404 응답을 받았다고 fetch가 자동으로 실패 처리되는 것은 아닙니다. 연결 자체의 실패, HTTP 실패 상태, 잘못된 JSON을 나누어 확인하세요.",
     mode: "console"
   },
   "response.ok": {
     code: 'async function loadMenu() {\n  const response = await fetch("/api/menu");\n  if (!response.ok) {\n    throw new Error(`요청 실패: ${response.status}`);\n  }\n  const menu = await response.json();\n  return menu;\n}\n\n// /api/menu를 제공하는 cafe-lab 서버에서 사용합니다.\n// loadMenu().then(console.log).catch(console.error);\n',
     explain: [
-      "fetch는 요청 결과를 Response로 받습니다. response.ok는 HTTP 상태가 성공 범위인지 나타내고, response.json()은 응답 본문을 JSON으로 읽는 비동기 작업입니다.",
-      "요청이 도착해 404나 500 응답을 받아도 fetch가 HTTP 상태만으로 자동 reject하는 것은 아닙니다. 그래서 ok를 검사해 실패로 처리합니다."
+      "브라우저가 서버에 ‘메뉴를 주세요’라고 요청하는 예제입니다. fetch는 응답을 받아 오고, response에는 상태 코드와 응답 본문 등을 읽는 기능이 들어 있습니다.",
+      "response.ok로 성공 상태인지 확인한 다음 response.json()으로 JSON 본문을 읽습니다. 응답을 받는 일과 본문을 값으로 읽는 일을 순서대로 기다립니다."
     ],
     flow: [
-      "정해진 서버의 /api/menu 주소로 GET 요청을 보냅니다.",
-      "HTTP 상태를 검사하고 실패 상태라면 오류를 던집니다.",
-      "성공한 응답 본문을 읽어 호출한 곳에 반환합니다."
+      "/api/menu로 GET 요청을 보냅니다.",
+      "서버가 돌려준 상태가 성공 범위인지 검사합니다.",
+      "실패 상태이면 throw로 오류를 발생시킵니다.",
+      "성공하면 JSON 본문을 읽어 호출한 곳에 돌려줍니다."
     ],
     result:
       "cafe-lab 서버에서 호출하면 메뉴 데이터가 반환됩니다. 이 정적 학습 사이트에는 해당 API가 없으므로 URL만 복사해 실행하면 같은 결과가 나오지 않습니다.",
     edit: "Network에서 실제 요청 주소·상태 코드·응답 본문을 확인하고 경로를 틀리게 했을 때와 서버를 껐을 때를 비교하세요.",
     warning:
-      "CORS, 서버 중단, HTTP 실패, 잘못된 JSON을 같은 원인으로 뭉뚱그리지 말고 실패한 단계를 확인하세요.",
+      "404 응답을 받았다고 fetch가 자동으로 실패 처리되는 것은 아닙니다. 연결 자체의 실패, HTTP 실패 상태, 잘못된 JSON을 나누어 확인하세요.",
     mode: "console"
   },
   "response.json()": {
     code: 'async function loadMenu() {\n  const response = await fetch("/api/menu");\n  if (!response.ok) {\n    throw new Error(`요청 실패: ${response.status}`);\n  }\n  const menu = await response.json();\n  return menu;\n}\n\n// /api/menu를 제공하는 cafe-lab 서버에서 사용합니다.\n// loadMenu().then(console.log).catch(console.error);\n',
     explain: [
-      "fetch는 요청 결과를 Response로 받습니다. response.ok는 HTTP 상태가 성공 범위인지 나타내고, response.json()은 응답 본문을 JSON으로 읽는 비동기 작업입니다.",
-      "요청이 도착해 404나 500 응답을 받아도 fetch가 HTTP 상태만으로 자동 reject하는 것은 아닙니다. 그래서 ok를 검사해 실패로 처리합니다."
+      "브라우저가 서버에 ‘메뉴를 주세요’라고 요청하는 예제입니다. fetch는 응답을 받아 오고, response에는 상태 코드와 응답 본문 등을 읽는 기능이 들어 있습니다.",
+      "response.ok로 성공 상태인지 확인한 다음 response.json()으로 JSON 본문을 읽습니다. 응답을 받는 일과 본문을 값으로 읽는 일을 순서대로 기다립니다."
     ],
     flow: [
-      "정해진 서버의 /api/menu 주소로 GET 요청을 보냅니다.",
-      "HTTP 상태를 검사하고 실패 상태라면 오류를 던집니다.",
-      "성공한 응답 본문을 읽어 호출한 곳에 반환합니다."
+      "/api/menu로 GET 요청을 보냅니다.",
+      "서버가 돌려준 상태가 성공 범위인지 검사합니다.",
+      "실패 상태이면 throw로 오류를 발생시킵니다.",
+      "성공하면 JSON 본문을 읽어 호출한 곳에 돌려줍니다."
     ],
     result:
       "cafe-lab 서버에서 호출하면 메뉴 데이터가 반환됩니다. 이 정적 학습 사이트에는 해당 API가 없으므로 URL만 복사해 실행하면 같은 결과가 나오지 않습니다.",
     edit: "Network에서 실제 요청 주소·상태 코드·응답 본문을 확인하고 경로를 틀리게 했을 때와 서버를 껐을 때를 비교하세요.",
     warning:
-      "CORS, 서버 중단, HTTP 실패, 잘못된 JSON을 같은 원인으로 뭉뚱그리지 말고 실패한 단계를 확인하세요.",
+      "404 응답을 받았다고 fetch가 자동으로 실패 처리되는 것은 아닙니다. 연결 자체의 실패, HTTP 실패 상태, 잘못된 JSON을 나누어 확인하세요.",
     mode: "console"
   },
   "http 요청과 응답": {
     code: 'async function loadMenu() {\n  const response = await fetch("/api/menu");\n  if (!response.ok) {\n    throw new Error(`요청 실패: ${response.status}`);\n  }\n  const menu = await response.json();\n  return menu;\n}\n\n// /api/menu를 제공하는 cafe-lab 서버에서 사용합니다.\n// loadMenu().then(console.log).catch(console.error);\n',
     explain: [
-      "fetch는 요청 결과를 Response로 받습니다. response.ok는 HTTP 상태가 성공 범위인지 나타내고, response.json()은 응답 본문을 JSON으로 읽는 비동기 작업입니다.",
-      "요청이 도착해 404나 500 응답을 받아도 fetch가 HTTP 상태만으로 자동 reject하는 것은 아닙니다. 그래서 ok를 검사해 실패로 처리합니다."
+      "브라우저가 서버에 ‘메뉴를 주세요’라고 요청하는 예제입니다. fetch는 응답을 받아 오고, response에는 상태 코드와 응답 본문 등을 읽는 기능이 들어 있습니다.",
+      "response.ok로 성공 상태인지 확인한 다음 response.json()으로 JSON 본문을 읽습니다. 응답을 받는 일과 본문을 값으로 읽는 일을 순서대로 기다립니다."
     ],
     flow: [
-      "정해진 서버의 /api/menu 주소로 GET 요청을 보냅니다.",
-      "HTTP 상태를 검사하고 실패 상태라면 오류를 던집니다.",
-      "성공한 응답 본문을 읽어 호출한 곳에 반환합니다."
+      "/api/menu로 GET 요청을 보냅니다.",
+      "서버가 돌려준 상태가 성공 범위인지 검사합니다.",
+      "실패 상태이면 throw로 오류를 발생시킵니다.",
+      "성공하면 JSON 본문을 읽어 호출한 곳에 돌려줍니다."
     ],
     result:
       "cafe-lab 서버에서 호출하면 메뉴 데이터가 반환됩니다. 이 정적 학습 사이트에는 해당 API가 없으므로 URL만 복사해 실행하면 같은 결과가 나오지 않습니다.",
     edit: "Network에서 실제 요청 주소·상태 코드·응답 본문을 확인하고 경로를 틀리게 했을 때와 서버를 껐을 때를 비교하세요.",
     warning:
-      "CORS, 서버 중단, HTTP 실패, 잘못된 JSON을 같은 원인으로 뭉뚱그리지 말고 실패한 단계를 확인하세요.",
+      "404 응답을 받았다고 fetch가 자동으로 실패 처리되는 것은 아닙니다. 연결 자체의 실패, HTTP 실패 상태, 잘못된 JSON을 나누어 확인하세요.",
     mode: "console"
   },
   "네트워크 실패와 http 오류": {
     code: 'async function loadMenu() {\n  const response = await fetch("/api/menu");\n  if (!response.ok) {\n    throw new Error(`요청 실패: ${response.status}`);\n  }\n  const menu = await response.json();\n  return menu;\n}\n\n// /api/menu를 제공하는 cafe-lab 서버에서 사용합니다.\n// loadMenu().then(console.log).catch(console.error);\n',
     explain: [
-      "fetch는 요청 결과를 Response로 받습니다. response.ok는 HTTP 상태가 성공 범위인지 나타내고, response.json()은 응답 본문을 JSON으로 읽는 비동기 작업입니다.",
-      "요청이 도착해 404나 500 응답을 받아도 fetch가 HTTP 상태만으로 자동 reject하는 것은 아닙니다. 그래서 ok를 검사해 실패로 처리합니다."
+      "브라우저가 서버에 ‘메뉴를 주세요’라고 요청하는 예제입니다. fetch는 응답을 받아 오고, response에는 상태 코드와 응답 본문 등을 읽는 기능이 들어 있습니다.",
+      "response.ok로 성공 상태인지 확인한 다음 response.json()으로 JSON 본문을 읽습니다. 응답을 받는 일과 본문을 값으로 읽는 일을 순서대로 기다립니다."
     ],
     flow: [
-      "정해진 서버의 /api/menu 주소로 GET 요청을 보냅니다.",
-      "HTTP 상태를 검사하고 실패 상태라면 오류를 던집니다.",
-      "성공한 응답 본문을 읽어 호출한 곳에 반환합니다."
+      "/api/menu로 GET 요청을 보냅니다.",
+      "서버가 돌려준 상태가 성공 범위인지 검사합니다.",
+      "실패 상태이면 throw로 오류를 발생시킵니다.",
+      "성공하면 JSON 본문을 읽어 호출한 곳에 돌려줍니다."
     ],
     result:
       "cafe-lab 서버에서 호출하면 메뉴 데이터가 반환됩니다. 이 정적 학습 사이트에는 해당 API가 없으므로 URL만 복사해 실행하면 같은 결과가 나오지 않습니다.",
     edit: "Network에서 실제 요청 주소·상태 코드·응답 본문을 확인하고 경로를 틀리게 했을 때와 서버를 껐을 때를 비교하세요.",
     warning:
-      "CORS, 서버 중단, HTTP 실패, 잘못된 JSON을 같은 원인으로 뭉뚱그리지 말고 실패한 단계를 확인하세요.",
+      "404 응답을 받았다고 fetch가 자동으로 실패 처리되는 것은 아닙니다. 연결 자체의 실패, HTTP 실패 상태, 잘못된 JSON을 나누어 확인하세요.",
     mode: "console"
   },
   localstorage: {
     code: 'const key = "practice-cafe-order";\nconst saved = { quantity: 2 };\nlocalStorage.setItem(key, JSON.stringify(saved));\nconst raw = localStorage.getItem(key);\nconst restored =\n  raw === null ? { quantity: 1 } : JSON.parse(raw);\nconsole.log(restored.quantity);\nlocalStorage.removeItem(key);\n',
     explain: [
-      "localStorage는 같은 출처의 브라우저 저장 공간에 문자열 키와 값을 보관합니다. 객체는 JSON 문자열로 바꾸어 넣고, 읽을 때 다시 값으로 바꿉니다.",
-      "값이 없으면 getItem은 null을 반환합니다. 저장 실패, 손상된 JSON, 예상과 다른 데이터 구조는 각각 별도로 처리해야 합니다."
+      "브라우저에서 수량을 기억해 두었다가 다시 읽는 예제입니다. localStorage에는 문자열만 저장하므로 객체를 JSON 글자로 바꾸어 넣습니다.",
+      "저장할 때 붙인 이름으로 값을 다시 읽습니다. 그 이름이 없으면 null을 받으므로 기본 수량 1을 사용합니다. 값이 있다면 JSON을 읽어 객체로 돌립니다."
     ],
     flow: [
-      "연습용 키에 JSON 문자열을 저장합니다.",
-      "해당 키를 읽고 없으면 기본값을 정합니다.",
-      "저장된 값을 파싱해 수량을 읽은 뒤 연습용 키를 삭제합니다."
+      "연습용 이름으로 수량 2를 저장합니다.",
+      "같은 이름으로 저장된 글자를 읽습니다.",
+      "값이 있으면 JSON을 읽고, 없으면 기본 수량 1을 사용합니다.",
+      "수량을 출력한 뒤 연습용 저장 항목을 지웁니다."
     ],
     result: "동일 출처에서 저장이 허용되면 2가 출력되고 연습용 키는 삭제됩니다.",
     edit: "저장하는 줄을 잠시 빼고 기본값 1이 사용되는지 확인하세요.",
     warning:
-      "서버의 주문 저장이나 로그인 비밀 값을 보관하는 용도로 이 예제를 그대로 사용하지 마세요. 여기서는 연습용 수량만 다룹니다.",
+      "이 예제는 브라우저 안에 연습용 수량을 보관합니다. 서버의 주문 저장과 다르며, 비밀번호나 비밀 키를 이렇게 넣어 두면 안 됩니다.",
     mode: "console"
   },
   "setitem / getitem / removeitem": {
     code: 'const key = "practice-cafe-order";\nconst saved = { quantity: 2 };\nlocalStorage.setItem(key, JSON.stringify(saved));\nconst raw = localStorage.getItem(key);\nconst restored =\n  raw === null ? { quantity: 1 } : JSON.parse(raw);\nconsole.log(restored.quantity);\nlocalStorage.removeItem(key);\n',
     explain: [
-      "localStorage는 같은 출처의 브라우저 저장 공간에 문자열 키와 값을 보관합니다. 객체는 JSON 문자열로 바꾸어 넣고, 읽을 때 다시 값으로 바꿉니다.",
-      "값이 없으면 getItem은 null을 반환합니다. 저장 실패, 손상된 JSON, 예상과 다른 데이터 구조는 각각 별도로 처리해야 합니다."
+      "브라우저에서 수량을 기억해 두었다가 다시 읽는 예제입니다. localStorage에는 문자열만 저장하므로 객체를 JSON 글자로 바꾸어 넣습니다.",
+      "저장할 때 붙인 이름으로 값을 다시 읽습니다. 그 이름이 없으면 null을 받으므로 기본 수량 1을 사용합니다. 값이 있다면 JSON을 읽어 객체로 돌립니다."
     ],
     flow: [
-      "연습용 키에 JSON 문자열을 저장합니다.",
-      "해당 키를 읽고 없으면 기본값을 정합니다.",
-      "저장된 값을 파싱해 수량을 읽은 뒤 연습용 키를 삭제합니다."
+      "연습용 이름으로 수량 2를 저장합니다.",
+      "같은 이름으로 저장된 글자를 읽습니다.",
+      "값이 있으면 JSON을 읽고, 없으면 기본 수량 1을 사용합니다.",
+      "수량을 출력한 뒤 연습용 저장 항목을 지웁니다."
     ],
     result: "동일 출처에서 저장이 허용되면 2가 출력되고 연습용 키는 삭제됩니다.",
     edit: "저장하는 줄을 잠시 빼고 기본값 1이 사용되는지 확인하세요.",
     warning:
-      "서버의 주문 저장이나 로그인 비밀 값을 보관하는 용도로 이 예제를 그대로 사용하지 마세요. 여기서는 연습용 수량만 다룹니다.",
+      "이 예제는 브라우저 안에 연습용 수량을 보관합니다. 서버의 주문 저장과 다르며, 비밀번호나 비밀 키를 이렇게 넣어 두면 안 됩니다.",
     mode: "console"
   },
   복원: {
     code: 'const key = "practice-cafe-order";\nconst saved = { quantity: 2 };\nlocalStorage.setItem(key, JSON.stringify(saved));\nconst raw = localStorage.getItem(key);\nconst restored =\n  raw === null ? { quantity: 1 } : JSON.parse(raw);\nconsole.log(restored.quantity);\nlocalStorage.removeItem(key);\n',
     explain: [
-      "localStorage는 같은 출처의 브라우저 저장 공간에 문자열 키와 값을 보관합니다. 객체는 JSON 문자열로 바꾸어 넣고, 읽을 때 다시 값으로 바꿉니다.",
-      "값이 없으면 getItem은 null을 반환합니다. 저장 실패, 손상된 JSON, 예상과 다른 데이터 구조는 각각 별도로 처리해야 합니다."
+      "브라우저에서 수량을 기억해 두었다가 다시 읽는 예제입니다. localStorage에는 문자열만 저장하므로 객체를 JSON 글자로 바꾸어 넣습니다.",
+      "저장할 때 붙인 이름으로 값을 다시 읽습니다. 그 이름이 없으면 null을 받으므로 기본 수량 1을 사용합니다. 값이 있다면 JSON을 읽어 객체로 돌립니다."
     ],
     flow: [
-      "연습용 키에 JSON 문자열을 저장합니다.",
-      "해당 키를 읽고 없으면 기본값을 정합니다.",
-      "저장된 값을 파싱해 수량을 읽은 뒤 연습용 키를 삭제합니다."
+      "연습용 이름으로 수량 2를 저장합니다.",
+      "같은 이름으로 저장된 글자를 읽습니다.",
+      "값이 있으면 JSON을 읽고, 없으면 기본 수량 1을 사용합니다.",
+      "수량을 출력한 뒤 연습용 저장 항목을 지웁니다."
     ],
     result: "동일 출처에서 저장이 허용되면 2가 출력되고 연습용 키는 삭제됩니다.",
     edit: "저장하는 줄을 잠시 빼고 기본값 1이 사용되는지 확인하세요.",
     warning:
-      "서버의 주문 저장이나 로그인 비밀 값을 보관하는 용도로 이 예제를 그대로 사용하지 마세요. 여기서는 연습용 수량만 다룹니다.",
+      "이 예제는 브라우저 안에 연습용 수량을 보관합니다. 서버의 주문 저장과 다르며, 비밀번호나 비밀 키를 이렇게 넣어 두면 안 됩니다.",
     mode: "console"
   },
   "초기값 처리": {
     code: 'const key = "practice-cafe-order";\nconst saved = { quantity: 2 };\nlocalStorage.setItem(key, JSON.stringify(saved));\nconst raw = localStorage.getItem(key);\nconst restored =\n  raw === null ? { quantity: 1 } : JSON.parse(raw);\nconsole.log(restored.quantity);\nlocalStorage.removeItem(key);\n',
     explain: [
-      "localStorage는 같은 출처의 브라우저 저장 공간에 문자열 키와 값을 보관합니다. 객체는 JSON 문자열로 바꾸어 넣고, 읽을 때 다시 값으로 바꿉니다.",
-      "값이 없으면 getItem은 null을 반환합니다. 저장 실패, 손상된 JSON, 예상과 다른 데이터 구조는 각각 별도로 처리해야 합니다."
+      "브라우저에서 수량을 기억해 두었다가 다시 읽는 예제입니다. localStorage에는 문자열만 저장하므로 객체를 JSON 글자로 바꾸어 넣습니다.",
+      "저장할 때 붙인 이름으로 값을 다시 읽습니다. 그 이름이 없으면 null을 받으므로 기본 수량 1을 사용합니다. 값이 있다면 JSON을 읽어 객체로 돌립니다."
     ],
     flow: [
-      "연습용 키에 JSON 문자열을 저장합니다.",
-      "해당 키를 읽고 없으면 기본값을 정합니다.",
-      "저장된 값을 파싱해 수량을 읽은 뒤 연습용 키를 삭제합니다."
+      "연습용 이름으로 수량 2를 저장합니다.",
+      "같은 이름으로 저장된 글자를 읽습니다.",
+      "값이 있으면 JSON을 읽고, 없으면 기본 수량 1을 사용합니다.",
+      "수량을 출력한 뒤 연습용 저장 항목을 지웁니다."
     ],
     result: "동일 출처에서 저장이 허용되면 2가 출력되고 연습용 키는 삭제됩니다.",
     edit: "저장하는 줄을 잠시 빼고 기본값 1이 사용되는지 확인하세요.",
     warning:
-      "서버의 주문 저장이나 로그인 비밀 값을 보관하는 용도로 이 예제를 그대로 사용하지 마세요. 여기서는 연습용 수량만 다룹니다.",
+      "이 예제는 브라우저 안에 연습용 수량을 보관합니다. 서버의 주문 저장과 다르며, 비밀번호나 비밀 키를 이렇게 넣어 두면 안 됩니다.",
     mode: "console"
   },
   "태그와 요소": {
@@ -2008,22 +2121,21 @@ window.GLOSSARY_NOTES = {
     mode: "node"
   },
   "node.js": {
-    code: '// server.mjs — Node.js에서 실행하는 파일\nconst port = Number(process.env.PORT ?? "4177");\nif (!Number.isInteger(port) || port < 1 || port > 65535) {\n  throw new Error("PORT는 1~65535의 정수여야 합니다.");\n}\nconsole.log(`사용할 포트: ${port}`);\n\n// 해당 파일 폴더의 터미널에서 실행:\n// node server.mjs\n',
+    code: 'console.log("이 코드는 Node.js에서 실행합니다.");\nconsole.log("Node 버전:", process.version);\n',
+    mode: "node",
     explain: [
-      "환경 변수는 실행 환경에서 프로그램으로 전달하는 문자열 설정입니다. Node에서는 process.env로 읽으며 숫자 설정은 변환과 검증이 필요합니다.",
-      "예제의 ??는 환경 변수가 없을 때 기본값을 고릅니다. .env.example은 필요한 설정 이름과 형식의 예시이고 실제 비밀 값을 넣는 파일이 아닙니다."
+      "JavaScript는 브라우저 안에서만 실행되는 언어가 아닙니다. Node.js를 설치하면 터미널에서 .js나 .mjs 파일을 실행할 수 있습니다.",
+      "파일을 읽거나 서버를 켜는 작업에는 브라우저에 없는 Node 기능을 사용합니다. 예제의 process.version은 실행 중인 Node의 버전을 읽습니다."
     ],
     flow: [
-      "실행 환경에서 PORT 문자열을 읽습니다.",
-      "없으면 기본 문자열을 고른 뒤 숫자로 바꿉니다.",
-      "정수와 유효 포트 범위를 확인하고 출력합니다."
+      "main.mjs 파일에 코드를 저장합니다.",
+      "그 파일이 있는 폴더의 터미널에서 node main.mjs를 실행합니다.",
+      "Node가 두 console.log를 실행하고 터미널에 글자를 출력합니다."
     ],
-    result:
-      "PORT를 지정하지 않았다면 사용하도록 고른 포트 4177이 출력됩니다. 이 코드만으로 실제 서버가 열리지는 않습니다.",
-    edit: "PORT를 5000으로 전달해 실행하고, 숫자가 아닌 값을 전달한 결과도 확인하세요.",
+    result: "안내 문구와 현재 설치된 Node 버전이 터미널에 보입니다.",
+    edit: "첫 console.log의 문구를 바꾸고 파일을 저장한 뒤 같은 명령으로 다시 실행해 보세요.",
     warning:
-      "Node 코드는 브라우저 콘솔에서 process나 파일 API를 쓸 수 있는 코드가 아닙니다. .env 파일이 언제 로드되는지도 실행 명령에 맞게 확인하세요.",
-    mode: "node"
+      "이 코드를 브라우저 콘솔에 그대로 넣으면 process가 없다는 오류가 날 수 있습니다. Node 코드는 Node에서 실행하세요."
   },
   "터미널과 현재 폴더": {
     code: '// server.mjs — Node.js에서 실행하는 파일\nconst port = Number(process.env.PORT ?? "4177");\nif (!Number.isInteger(port) || port < 1 || port > 65535) {\n  throw new Error("PORT는 1~65535의 정수여야 합니다.");\n}\nconsole.log(`사용할 포트: ${port}`);\n\n// 해당 파일 폴더의 터미널에서 실행:\n// node server.mjs\n',
