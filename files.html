@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="HTML, CSS, JavaScript, Node.js, React, Git을 코드 해설과 실행 실습으로 배우는 바이브 코더의 학습 노트"
+    />
+    <link rel="stylesheet" href="assets/css/academy.css" />
+    <script src="assets/data/curriculum.js" defer></script>
+    <script src="assets/data/solutions.js" defer></script>
+    <script src="assets/js/academy.js" defer></script>
+    <title>파일 안내 | 바이브 코더의 개발 노트</title>
+  </head>
+  <body data-page="files">
+    <a class="skip-link" href="#main">본문으로 이동</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="wordmark" href="index.html"
+          ><span aria-hidden="true">{ }</span> 바이브 코더의 개발 노트</a
+        ><button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          메뉴
+        </button>
+        <nav id="site-nav" aria-label="주 메뉴">
+          <a href="curriculum.html">전체 수업</a
+          ><a href="projects.html">실무 프로젝트</a
+          ><a href="troubleshoot.html">문제 해결</a><a href="glossary.html">용어 사전</a
+          ><a href="progress.html">내 학습</a>
+        </nav>
+        <form class="header-search" action="curriculum.html">
+          <label class="sr-only" for="global-search">수업과 용어 검색</label
+          ><input
+            id="global-search"
+            name="q"
+            type="search"
+            placeholder="예: props, 404, 가격 수정"
+          /><button aria-label="검색">찾기</button>
+        </form>
+      </div>
+    </header>
+    <main id="main" class="page-width interior files-page">
+      <p class="eyebrow">FILE MAP / 파일 안내</p>
+      <h1>파일마다 역할이 있습니다.<br />고칠 곳만 먼저 찾으세요.</h1>
+      <p class="page-lead">
+        현재 학습 사이트, 직접 실행할 프로젝트, 이전 수업 자료를 분리했습니다. 처음에는
+        index.html을 열고, 코딩할 때에는 필요한 프로젝트 하나만 꺼내 사용하세요.
+      </p>
+      <section class="file-start">
+        <h2>지금 하려는 일로 고르세요</h2>
+        <div class="file-route-grid">
+          <a href="index.html"
+            ><strong>공부 시작하기</strong
+            ><span>사이트의 index.html → 첫 수업 시작하기</span></a
+          ><a href="projects.html"
+            ><strong>내 코드 만들기</strong
+            ><span>실무 프로젝트 → ZIP 하나 받기 → README 순서대로 실행</span></a
+          ><a href="archive/previous-course/README.md"
+            ><strong>예전 자료 찾기</strong
+            ><span>archive/previous-course → DAY별 예제·기존 PDF</span></a
+          >
+        </div>
+      </section>
+      <section class="project-article">
+        <h2>1. 학습 사이트 폴더</h2>
+        <p>
+          맨 위에는 시작 화면과 각 메뉴의 HTML만 둡니다. 실제 동작과 자료는 역할별
+          폴더에 모았습니다.
+        </p>
+        <pre class="plain-code">
+바이브코딩_복습/
+├── index.html             ← 시작 화면: 이 파일부터 엽니다
+├── curriculum.html        ← 전체 수업
+├── lesson.html            ← 48개 수업이 사용하는 공통 학습 화면
+├── glossary.html          ← 사용 분야별 용어 사전
+├── projects.html          ← 실무 프로젝트 안내
+├── setup.html             ← 설치·실행 준비
+├── troubleshoot.html      ← 오류 해결
+├── progress.html          ← 학습 기록과 백업
+├── files.html             ← 지금 읽는 파일 안내
+├── assets/                ← 학습 사이트를 구성하는 파일
+│   ├── css/               ← 색상·크기·여백·배치
+│   ├── js/                ← 검색·실습 실행·학습 기록 등 동작
+│   ├── data/              ← 수업 본문과 과제 정답
+│   └── vendor/            ← React·Babel·코드 정리 도구와 라이선스
+├── projects/              ← 직접 실행하고 수정할 프로젝트 원본
+├── downloads/             ← 프로젝트별 ZIP 압축 파일
+└── archive/               ← 이전 자료 보관함
+    └── previous-course/
+        ├── DAY01/ …       ← 이전 날짜별 예제
+        ├── 공통/          ← 이전 예제 전용 실행 파일
+        └── 참고자료/      ← 이전 복습·발표 PDF</pre>
+        <p class="subtle">
+          README.md는 자세한 폴더 안내, 읽어주세요.txt는 시작 방법입니다. 404.html은
+          예전 주소와 없는 페이지를 안내합니다. .git·.gitignore·.nojekyll은 버전 관리와
+          배포에 사용하는 보조 항목입니다.
+        </p>
+      </section>
+      <section class="project-article">
+        <h2>2. 무엇을 바꾸려면 어떤 파일을 열까요?</h2>
+        <div class="file-table-wrap">
+          <table class="file-table">
+            <thead>
+              <tr>
+                <th scope="col">바꾸고 싶은 것</th>
+                <th scope="col">열 파일</th>
+                <th scope="col">확인 방법</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>학습 사이트의 제목·메뉴·기본 구조</td>
+                <td>해당 메뉴의 .html 파일</td>
+                <td>저장한 뒤 그 페이지를 새로고침합니다.</td>
+              </tr>
+              <tr>
+                <td>사이트 글자 크기·여백·색상</td>
+                <td>assets/css/academy.css</td>
+                <td>컴퓨터·휴대폰 너비에서 함께 확인합니다.</td>
+              </tr>
+              <tr>
+                <td>용어 사전 분류·검색 동작</td>
+                <td>assets/js/glossary.js</td>
+                <td>분야 선택과 검색 결과를 확인합니다.</td>
+              </tr>
+              <tr>
+                <td>수업 본문·용어 정의</td>
+                <td>assets/data/curriculum.js</td>
+                <td>해당 수업과 용어 사전을 함께 확인합니다.</td>
+              </tr>
+              <tr>
+                <td>학습 사이트의 실행·메모·진도 기능</td>
+                <td>assets/js/academy.js</td>
+                <td>관련 레슨에서 실행·저장·다시 열기를 확인합니다.</td>
+              </tr>
+              <tr>
+                <td>과제 정답과 풀이</td>
+                <td>assets/data/solutions.js</td>
+                <td>수업의 정답 해설을 펼쳐 확인합니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="subtle">
+          assets/vendor는 외부 도구 원본입니다. 수업 문구나 카페 기능을 바꾸기 위해 직접
+          수정할 파일은 아닙니다.
+        </p>
+      </section>
+      <section class="project-article">
+        <h2>3. 실습 프로젝트는 하나씩 꺼내 쓰세요</h2>
+        <p>
+          projects에는 아래 네 묶음만 있습니다. ZIP으로 받으면 같은 내용의 프로젝트
+          하나가 나옵니다. 각 폴더의 README.md에 실행 순서와 범위가 적혀 있습니다.
+        </p>
+        <div class="file-table-wrap">
+          <table class="file-table">
+            <thead>
+              <tr>
+                <th scope="col">프로젝트</th>
+                <th scope="col">수정할 파일</th>
+                <th scope="col">시작 방법</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>browser-lab</strong><br />HTML·CSS·JavaScript 첫 실습</td>
+                <td>index.html: 내용<br />style.css: 디자인<br />app.js: 계산·클릭</td>
+                <td>index.html을 브라우저로 엽니다.</td>
+              </tr>
+              <tr>
+                <td><strong>node-examples</strong><br />Node 수업별 작은 예제</td>
+                <td>node-01부터 node-06까지<br />각 레슨 폴더의 .mjs 파일</td>
+                <td>해당 폴더에서 README에 적힌 node 명령을 실행합니다.</td>
+              </tr>
+              <tr>
+                <td><strong>cafe-lab</strong><br />화면·API·파일 저장 연결</td>
+                <td>
+                  server.mjs: 서버<br />public/app.js: 일반 JS 화면<br />public/react-app.jsx:
+                  React 화면
+                </td>
+                <td>README에 따라 Node 서버를 켜고 표시된 주소로 접속합니다.</td>
+              </tr>
+              <tr>
+                <td><strong>react-lab</strong><br />실제 React 프로젝트</td>
+                <td>src/App.jsx: 컴포넌트·상태<br />src/style.css: 화면 스타일</td>
+                <td>프로젝트 폴더에서 npm install 후 npm run dev를 실행합니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <a class="button" href="projects.html">프로젝트 선택하고 받기 ↗</a>
+      </section>
+      <section class="project-article">
+        <h2>4. 이전 자료는 한곳에 보관했습니다</h2>
+        <p>
+          루트에 흩어져 있던 DAY별 폴더, 예전 공통 파일, PDF를 archive/previous-course에
+          모았습니다. 현재 48개 레슨을 공부할 때에는 이 폴더를 함께 열 필요가 없습니다.
+        </p>
+        <p>
+          <a href="archive/previous-course/참고자료/바이브코딩_DAY01-DAY29_통합복습.pdf"
+            >이전 통합 복습 PDF</a
+          >
+          ·
+          <a href="archive/previous-course/참고자료/바이브코딩_DAY01-DAY29_학습발표.pdf"
+            >이전 발표 PDF</a
+          >
+        </p>
+        <p class="subtle">
+          이전 PDF는 보관된 당시 내용입니다. 새 과정의 전체 본문을 PDF로 다시 만든
+          파일은 아닙니다. 브라우저에 저장된 메모·진도는 폴더 파일과 별개이며, ‘내
+          학습’에서 백업할 수 있습니다.
+        </p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div>
+        <strong>코드를 읽는 힘이, 수정할 자신감으로.</strong>
+        <p>
+          실제 작성·변경·검증을 위한 학습 노트입니다. 예제의 실행 환경과 적용 범위를
+          함께 확인하세요.
+        </p>
+      </div>
+      <div>
+        <a href="curriculum.html">처음부터 배우기</a
+        ><a href="projects.html">완성 프로젝트 받기</a
+        ><a href="progress.html">학습 기록 백업</a><a href="files.html">파일 안내</a>
+        <p>공식 문서 참고 / 내용 정리 2026.11.13</p>
+      </div>
+    </footer>
+    <div id="toast" class="toast" role="status"></div>
+  </body>
+</html>

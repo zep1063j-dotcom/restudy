@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>페이지 안내 | 바이브 코더의 개발 노트</title>
+    <style>
+      body {
+        font:
+          18px/1.9 -apple-system,
+          sans-serif;
+        color: #172e2a;
+        background: #f7f7f2;
+        max-width: 680px;
+        margin: 12vh auto;
+        padding: 24px;
+      }
+      a {
+        color: #24745b;
+      }
+      h1 {
+        font-size: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>페이지 위치를 확인해 주세요.</h1>
+    <p id="message">자료를 정리하면서 일부 예전 주소가 바뀌었습니다.</p>
+    <a id="home" href="/restudy/">학습 사이트 첫 화면으로 이동</a>
+    <script>
+      const base = location.hostname.endsWith("github.io") ? "/restudy/" : "/";
+      document.getElementById("home").href = base;
+      const days = {
+        DAY07: "git-01",
+        DAY08: "css-05",
+        DAY06: "css-06",
+        DAY01: "html-01",
+        DAY12: "js-03",
+        DAY15: "js-06",
+        DAY14: "js-05",
+        DAY13: "js-04",
+        DAY04: "css-01",
+        DAY03: "html-03",
+        DAY02: "html-04",
+        DAY05: "css-02",
+        DAY27: "node-01",
+        DAY18: "js-09",
+        DAY20: "js-10",
+        DAY16: "js-07",
+        DAY29: "react-02",
+        DAY11: "js-02",
+        DAY10: "js-01",
+        DAY17: "js-08",
+        DAY28: "react-01",
+        DAY21: "node-02",
+        DAY19: "js-03",
+      };
+      let path = "";
+      try {
+        path = decodeURIComponent(location.pathname);
+      } catch {}
+      const match = path.match(/\/(DAY\d{2})\/(학습|예제)\.html$/);
+      if (match && days[match[1]]) {
+        const target =
+          match[2] === "예제"
+            ? "archive/previous-course/" + match[1] + "/예제.html"
+            : "lesson.html?id=" + days[match[1]];
+        location.replace(base + target);
+      } else if (path.endsWith("/00_처음_코드읽기.html"))
+        location.replace(base + "lesson.html?id=start-01");
+    </script>
+  </body>
+</html>
