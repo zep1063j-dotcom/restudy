@@ -8,6 +8,13 @@
 - 레슨마다 개념·정의·실행 예제·줄별 흐름·수정 과제·정답·오류·메모를 제공합니다.
 - Node와 Git 명령은 브라우저 실습과 구분해 터미널에서 수행합니다.
 
+## 추천 커리큘럼
+
+- roadmap.html: 노베이스에서 작은 앱 수정까지 14단계·핵심 40개·보강 8개 수업
+- 각 단계의 수업 링크와 이전·다음 버튼은 추천 학습 순서를 따릅니다.
+- assets/data/roadmap.js: 단계 순서·미션·완료 기준
+- assets/js/roadmap.js: 단계 목록·이어 배우기·완료 표시
+
 ## 바로 실습하기
 - downloads/browser-lab.zip: 설치 없는 HTML/CSS/JS 화면
 - downloads/node-examples.zip: Node 레슨별 실행 파일
